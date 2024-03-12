@@ -25,7 +25,7 @@ import nest_asyncio
 nest_asyncio.apply()
 
 # BasedAI code and protocol version.
-__version__ = "1.0.1"
+__version__ = "1.0.5"
 
 version_split = __version__.split(".")
 __version_as_int__ = (

@@ -32,7 +32,7 @@ def register_extrinsic(
     wait_for_inclusion: bool = False,
     wait_for_finalization: bool = True,
     prompt: bool = False,
-    max_allowed_attempts: int = 3,
+    max_allowed_attempts: int = 5,
     output_in_place: bool = True,
     cuda: bool = False,
     dev_id: Union[List[int], int] = 0,
@@ -466,7 +466,7 @@ def run_faucet_extrinsic(
         except MaxSuccessException:
             return True, f"Max successes reached: {3}"
 
-        except MaxAttemptedException:
+        except MaxAttemptsException:
             return False, f"Max attempts reached: {max_allowed_attempts}"
 
 

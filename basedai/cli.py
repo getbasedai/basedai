@@ -239,7 +239,7 @@ class cli:
         cli.check_config(self.config)
 
         # If no_version_checking is not set or set as False in the config, version checking is done.
-        if not self.config.get("no_version_checking", d=True):
+        if not self.config.get("no_version_checking", d=False):
             try:
                 basedai.utils.version_checking()
             except:
