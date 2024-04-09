@@ -321,6 +321,7 @@ def burned_register_extrinsic(
                 basedai.__console__.print(
                     ":cross_mark: [red]Unknown error. Agent not found.[/red]"
                 )
+    return False
 
 
 class MaxSuccessException(Exception):

@@ -21,7 +21,7 @@ import time
 from rich.prompt import Confirm
 
 import basedai
-import basedai.utils.networking as net
+from ..commands.network import HYPERPARAMS
 
 
 def register_subnetwork_extrinsic(
@@ -103,9 +103,6 @@ def register_subnetwork_extrinsic(
                     f":white_heavy_check_mark: [green]Successful memorization at Brain netuid: {response.triggered_events[1].value['event']['attributes'][0]}[/green]"
                 )
                 return True
-
-
-from ..commands.network import HYPERPARAMS
 
 
 def set_hyperparameter_extrinsic(

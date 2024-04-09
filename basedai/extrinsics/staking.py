@@ -29,7 +29,7 @@ def add_stake_extrinsic(
     basednode: "basedai.basednode",
     wallet: "basedai.wallet",
     computekey_ss58: Optional[str] = None,
-    amount: Union[Balance, float] = None,
+    amount: Optional[Union[Balance, float]] = None,
     wait_for_inclusion: bool = True,
     wait_for_finalization: bool = False,
     prompt: bool = False,

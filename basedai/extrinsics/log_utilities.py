@@ -364,8 +364,8 @@ class ValidatorLogger:
 
         # === Synergy table ===
         table = Table(width=self.console_width, box=None)
-        table.title = f"[white] Synergy table [/white] | Pairwise synergy"
-        table.caption = f"loss decrease"
+        table.title = "[white] Synergy table [/white] | Pairwise synergy"
+        table.caption = "loss decrease"
 
         for (
             col,
