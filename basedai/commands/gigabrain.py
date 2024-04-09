@@ -508,7 +508,7 @@ class GigaBrainsResignCommand:
             basednode: "basedai.basednode" = basedai.basednode(
                 config=config, log_verbose=False
             )
-            GigaBrainResignCommand._run(cli, basednode)
+            GigaBrainsResignCommand._run(cli, basednode)
         finally:
             if "basednode" in locals():
                 basednode.close()
