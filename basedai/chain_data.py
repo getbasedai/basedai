@@ -14,18 +14,19 @@
 # THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-import torch
-import basedai
 
-import json
-from enum import Enum
 from dataclasses import dataclass, asdict
-from scalecodec.types import GenericCall
+from enum import Enum
+import json
 from typing import List, Tuple, Dict, Optional, Any, TypedDict, Union
+
+from scalecodec.types import GenericCall
 from scalecodec.base import RuntimeConfiguration, ScaleBytes
 from scalecodec.type_registry import load_type_registry_preset
 from scalecodec.utils.ss58 import ss58_encode
+import torch
 
+import basedai
 from .utils import networking as net, U16_MAX, U16_NORMALIZED_FLOAT
 from .utils.balance import Balance
 

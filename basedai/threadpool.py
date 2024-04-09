@@ -17,8 +17,9 @@ import time
 from typing import Callable
 import weakref
 
-import basedai
 from loguru import logger
+
+import basedai
 
 # Workers are created as daemon threads. This is done to allow the interpreter
 # to exit when there are still idle threads in a ThreadPoolExecutor's thread

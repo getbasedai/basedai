@@ -18,7 +18,7 @@
 from dataclasses import dataclass
 import os
 import sys
-from typing import List, Dict, Any, Optional
+from typing import Any, List, Dict, Optional
 
 import requests
 from rich.prompt import Confirm, PromptBase
@@ -80,7 +80,7 @@ def check_netuid_set(
                 )
 
 
-def check_for_cuda_reg_config(config: "basedai.config") -> None:
+def check_for_cuda_reg_config(config: basedai.config) -> None:
     """Checks, when CUDA is available, if the user would like to register with their CUDA device."""
     if torch.cuda.is_available():
         if not config.no_prompt:
@@ -133,7 +133,7 @@ def check_for_cuda_reg_config(config: "basedai.config") -> None:
                 config.pow_register.cuda.use_cuda = defaults.pow_register.cuda.use_cuda
 
 
-def get_computekey_wallets_for_wallet(wallet) -> List["basedai.wallet"]:
+def get_computekey_wallets_for_wallet(wallet) -> List[basedai.wallet]:
     computekey_wallets = []
     computekeys_path = wallet.path + "/" + wallet.name + "/computekeys"
     try:
@@ -155,14 +155,13 @@ def get_computekey_wallets_for_wallet(wallet) -> List["basedai.wallet"]:
     return computekey_wallets
 
 
-def get_personalkey_wallets_for_path(path: str) -> List["basedai.wallet"]:
+def get_personalkey_wallets_for_path(path: str) -> List[basedai.wallet]:
     try:
         wallet_names = next(os.walk(os.path.expanduser(path)))[1]
         return [basedai.wallet(path=path, name=name) for name in wallet_names]
     except StopIteration:
         # No wallet files found.
-        wallets = []
-    return wallets
+        return []
 
 
 def get_all_wallets_for_path(path: str) -> List["basedai.wallet"]:
@@ -208,7 +207,7 @@ class DelegatesDetails:
     signature: str
 
     @classmethod
-    def from_json(cls, json: Dict[str, any]) -> "DelegatesDetails":
+    def from_json(cls, json: Dict[str, Any]) -> "DelegatesDetails":
         return cls(
             name=json["name"],
             url=json["url"],

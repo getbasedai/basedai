@@ -16,21 +16,21 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import copy
-import torch
 import argparse
-import basedai
-import scalecodec
-
-from retry import retry
-from loguru import logger
+import copy
+import os
 from typing import List, Dict, Union, Optional, Tuple, TypedDict, Any
+
+from loguru import logger
+from retry import retry
+import scalecodec
 from substrateinterface.base import QueryMapResult, SubstrateInterface
 from scalecodec.base import RuntimeConfiguration
 from scalecodec.type_registry import load_type_registry_preset
+import torch
 
 # Local imports.
+import basedai
 from .chain_data import (
     NeuronInfo,
     DelegateInfo,
@@ -44,7 +44,7 @@ from .chain_data import (
     IPInfo,
     custom_rpc_type_registry,
 )
-from .errors import ConnectionRefusedError, IdentityError, NominationError, StakeError
+from .errors import IdentityError, NominationError, StakeError
 from .extrinsics.network import (
     register_subnetwork_extrinsic,
     set_hyperparameter_extrinsic,
@@ -64,7 +64,7 @@ from .extrinsics.registration import (
     swap_computekey_extrinsic,
 )
 from .extrinsics.transfer import transfer_extrinsic
-from .extrinsics.set_weights import set_weights_extrinsic, ttl_set_weights_extrinsic
+from .extrinsics.set_weights import ttl_set_weights_extrinsic
 from .extrinsics.prometheus import prometheus_extrinsic
 from .extrinsics.delegation import (
     delegate_extrinsic,
@@ -363,7 +363,7 @@ class basednode:
                 url=self.chain_endpoint,
                 type_registry=basedai.__type_registry__,
             )
-        except ConnectionRefusedError as e:
+        except ConnectionRefusedError:
             basedai.logging.error(
                 f"Could not connect to {self.network} network with {self.chain_endpoint} chain endpoint. Exiting..."
             )

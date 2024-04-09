@@ -18,16 +18,18 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import copy
 import argparse
-import basedai
+import copy
 import hashlib
-from termcolor import colored
-from substrateinterface import Keypair
+import os
 from typing import Optional, Union, Tuple, Dict, overload
-from basedai.utils import is_valid_basedai_address_or_public_key
+
+from substrateinterface import Keypair
 from substrateinterface.utils.ss58 import ss58_decode
+from termcolor import colored
+
+import basedai
+from basedai.utils import is_valid_basedai_address_or_public_key
 
 
 def ss58_to_ethereum(ss58_address):

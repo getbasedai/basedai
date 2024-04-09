@@ -23,7 +23,7 @@ from rich.prompt import Confirm
 
 import basedai
 from basedai.utils.balance import Balance
-from ..errors import *
+from ..errors import NominationError, NotDelegateError, NotRegisteredError, StakeError
 
 logger = logger.opt(colors=True)
 
@@ -356,7 +356,7 @@ def undelegate_extrinsic(
             basedai.__console__.print(":cross_mark: [red]Failed[/red]: Error unknown.")
             return False
 
-    except NotRegisteredError as e:
+    except NotRegisteredError:
         basedai.__console__.print(
             ":cross_mark: [red]Computekey: {} has not been memorized.[/red]".format(
                 wallet.computekey_str

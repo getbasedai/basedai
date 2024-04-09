@@ -22,8 +22,8 @@ from typing import Optional, Union, List
 import msgpack
 import msgpack_numpy
 import numpy
-import torch
 import pydantic
+import torch
 
 TORCH_DTYPES = {
     "torch.float16": torch.float16,

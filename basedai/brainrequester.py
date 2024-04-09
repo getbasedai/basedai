@@ -20,13 +20,15 @@
 from __future__ import annotations
 
 import asyncio
-import uuid
 import time
-import torch
+from typing import Optional, List, Union, AsyncGenerator, Any
+import uuid
+
 import aiohttp
-import basedai
 from fastapi import Response
-from typing import Union, Optional, List, Union, AsyncGenerator, Any
+import torch
+
+import basedai
 
 
 class brainrequester(torch.nn.Module):

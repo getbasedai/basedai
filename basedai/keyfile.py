@@ -554,7 +554,7 @@ class keyfile:
                     stored_mnemonic = False
                     while not stored_mnemonic:
                         basedai.__console__.print(
-                            f"\nPlease make sure you have the mnemonic stored in case an error occurs during the transfer.",
+                            "\nPlease make sure you have the mnemonic stored in case an error occurs during the transfer.",
                             style="white on red",
                         )
                         stored_mnemonic = Confirm.ask("Have you stored the mnemonic?")

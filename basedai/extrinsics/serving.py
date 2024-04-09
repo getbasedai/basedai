@@ -17,12 +17,17 @@
 # DEALINGS IN THE SOFTWARE.
 
 import json
+from typing import TYPE_CHECKING, Optional
 
+from retry import retry
 from rich.prompt import Confirm
 
 import basedai
 import basedai.utils.networking as net
 from ..errors import MetadataError
+
+if TYPE_CHECKING:
+    from ..types import BrainportServeCallParams
 
 
 def serve_extrinsic(
@@ -266,10 +271,6 @@ def publish_metadata(
             return True
         else:
             raise MetadataError(response.error_message)
-
-
-from retry import retry
-from typing import Optional
 
 
 def get_metadata(

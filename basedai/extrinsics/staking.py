@@ -190,7 +190,7 @@ def add_stake_extrinsic(
             basedai.__console__.print(":cross_mark: [red]Failed[/red]: Error unknown.")
             return False
 
-    except basedai.errors.NotRegisteredError as e:
+    except basedai.errors.NotRegisteredError:
         basedai.__console__.print(
             ":cross_mark: [red]Computekey: {} has not been memorized.[/red]".format(
                 wallet.computekey_str
@@ -280,7 +280,7 @@ def add_stake_multiple_extrinsic(
             )
 
     # Remove existential balance to keep key alive.
-    ## Keys must maintain a balance of at least 1000 rao to stay alive.
+    # Keys must maintain a balance of at least 1000 rao to stay alive.
     total_staking_rao = sum(
         [amount.rao if amount is not None else 0 for amount in amounts]
     )
@@ -294,7 +294,7 @@ def add_stake_multiple_extrinsic(
         pass
     else:
         # Staking more than 1000 rao to the wallets.
-        ## Reduce the amount to stake to each wallet to keep the balance above 1000 rao.
+        # Reduce the amount to stake to each wallet to keep the balance above 1000 rao.
         percent_reduction = 1 - (1000 / total_staking_rao)
         amounts = [
             Balance.from_based(amount.based * percent_reduction) for amount in amounts
@@ -396,7 +396,7 @@ def add_stake_multiple_extrinsic(
                 )
                 continue
 
-        except basedai.errors.NotRegisteredError as e:
+        except basedai.errors.NotRegisteredError:
             basedai.__console__.print(
                 ":cross_mark: [red]Computekey: {} has not been memorized.[/red]".format(
                     computekey_ss58

@@ -19,31 +19,29 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import uuid
-import copy
-import json
-import time
-import base64
-import asyncio
-import inspect
-import uvicorn
 import argparse
-import traceback
-import threading
-import basedai
+import asyncio
 import contextlib
-
+import copy
+import inspect
 from inspect import signature, Signature, Parameter
+import json
+import os
+import threading
+import time
+import traceback
+from typing import Optional, Tuple, Callable, Any
+import uuid
+
+from fastapi import FastAPI, APIRouter, Depends
 from fastapi.responses import JSONResponse
-from substrateinterface import Keypair
-from fastapi import FastAPI, APIRouter, Request, Response, Depends
-from starlette.types import Scope, Message
 from starlette.responses import Response
 from starlette.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from typing import Dict, Optional, Tuple, Union, List, Callable, Any
+from substrateinterface import Keypair
+import uvicorn
 
+import basedai
 from basedai.errors import (
     InvalidRequestNameError,
     BrainresponderParsingError,
@@ -358,12 +356,12 @@ class brainport:
         self.port = self.config.brainport.port
         self.external_ip = (
             self.config.brainport.external_ip
-            if self.config.brainport.external_ip != None
+            if self.config.brainport.external_ip is not None
             else basedai.utils.networking.get_external_ip()
         )
         self.external_port = (
             self.config.brainport.external_port
-            if self.config.brainport.external_port != None
+            if self.config.brainport.external_port is not None
             else self.config.brainport.port
         )
         self.full_address = (
