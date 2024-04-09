@@ -170,7 +170,7 @@ def serve_brainport_extrinsic(
     external_port = brainport.external_port
 
     # ---- Get external ip ----
-    if brainport.external_ip == None:
+    if brainport.external_ip is None:
         try:
             external_ip = net.get_external_ip()
             basedai.__console__.print(
@@ -282,7 +282,7 @@ def get_metadata(
                 module="Commitments",
                 storage_function="CommitmentOf",
                 params=[netuid, computekey],
-                block_hash=None if block == None else substrate.get_block_hash(block),
+                block_hash=None if block is None else substrate.get_block_hash(block),
             )
 
     commit_data = make_substrate_call_with_retry()

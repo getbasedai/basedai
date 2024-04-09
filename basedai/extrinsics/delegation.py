@@ -138,7 +138,7 @@ def delegate_extrinsic(
     )
 
     # Convert to basedai.Balance
-    if amount == None:
+    if amount is None:
         # Stake it all.
         staking_balance = basedai.Balance.from_based(my_prev_personalkey_balance.based)
     elif not isinstance(amount, basedai.Balance):
@@ -276,7 +276,7 @@ def undelegate_extrinsic(
     )
 
     # Convert to basedai.Balance
-    if amount == None:
+    if amount is None:
         # Stake it all.
         unstaking_balance = basedai.Balance.from_based(my_prev_delegated_stake.based)
 

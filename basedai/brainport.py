@@ -860,7 +860,7 @@ class brainport:
             The ``serve`` method is crucial for integrating the Brainport into the Basedai network, allowing it
             to start receiving and processing requests from other neurons.
         """
-        if basednode == None:
+        if basednode is None:
             basednode = basedai.basednode()
         basednode.serve_brainport(netuid=netuid, brainport=self)
         return self

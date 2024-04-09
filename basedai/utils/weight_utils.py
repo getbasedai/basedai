@@ -18,9 +18,11 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import torch
-import basedai
 from typing import Tuple, List
+
+import torch
+
+import basedai
 
 U32_MAX = 4294967295
 U16_MAX = 65535
@@ -223,7 +225,7 @@ def process_weights_for_netuid(
     basedai.logging.debug("stem", stem)
 
     # Get latest stem from chain if stem is None.
-    if stem == None:
+    if stem is None:
         stem = basednode.stem(netuid)
 
     # Cast weights to floats.

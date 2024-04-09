@@ -4,7 +4,6 @@ import math
 import multiprocessing
 import os
 import random
-import sys
 import time
 from dataclasses import dataclass
 from datetime import timedelta
@@ -12,12 +11,12 @@ from queue import Empty, Full
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import backoff
-import basedai
-import torch
 from Crypto.Hash import keccak
 from rich import console as rich_console
 from rich import status as rich_status
+import torch
 
+import basedai
 from .formatting import get_human_readable, millify
 from ._register_cuda import solve_cuda
 
@@ -486,7 +485,7 @@ def _solve_for_difficulty_fast(
         while still updating the block information after a different number of nonces,
         to increase the transparency of the process while still keeping the speed.
     """
-    if num_processes == None:
+    if num_processes is None:
         # get the number of allowed processes for this process
         num_processes = min(1, get_cpu_count())
 
@@ -704,7 +703,7 @@ class _UsingSpawnStartMethod:
 
     def __enter__(self):
         self._old_start_method = multiprocessing.get_start_method(allow_none=True)
-        if self._old_start_method == None:
+        if self._old_start_method is None:
             self._old_start_method = "spawn"  # default to spawn
 
         multiprocessing.set_start_method("spawn", force=self._force)

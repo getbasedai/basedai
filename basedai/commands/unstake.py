@@ -253,7 +253,7 @@ class UnStakeCommand:
                     personalkey_ss58=wallet.personalkeypub.ss58_address,
                 )
             )
-            if unstake_amount_based == None:
+            if unstake_amount_based is None:
                 unstake_amount_based = computekey_stake.based
             if cli.config.get("max_stake"):
                 # Get the current stake of the computekey from this personalkey.

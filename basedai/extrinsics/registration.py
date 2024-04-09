@@ -396,7 +396,7 @@ def run_faucet_extrinsic(
     while True:
         try:
             pow_result = None
-            while pow_result == None or pow_result.is_stale(basednode=basednode):
+            while pow_result is None or pow_result.is_stale(basednode=basednode):
                 # Solve latest POW.
                 if cuda:
                     if not torch.cuda.is_available():

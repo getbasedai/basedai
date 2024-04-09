@@ -565,7 +565,7 @@ class keyfile:
                             break
 
                     decrypted_keyfile_data = None
-                    while decrypted_keyfile_data == None and not terminate:
+                    while decrypted_keyfile_data is None and not terminate:
                         try:
                             password = getpass.getpass(
                                 "\nEnter password to update account file: "

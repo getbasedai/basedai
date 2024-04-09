@@ -149,7 +149,7 @@ def set_hyperparameter_extrinsic(
     wallet.personalkey  # unlock personalkey
 
     extrinsic = HYPERPARAMS.get(parameter)
-    if extrinsic == None:
+    if extrinsic is None:
         basedai.__console__.print(
             ":cross_mark: [red]Invalid parameter specified.[/red]"
         )

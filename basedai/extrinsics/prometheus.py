@@ -55,7 +55,7 @@ def prometheus_extrinsic(
     """
 
     # ---- Get external ip ----
-    if ip == None:
+    if ip is None:
         try:
             external_ip = net.get_external_ip()
             basedai.__console__.print(

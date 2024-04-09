@@ -93,7 +93,7 @@ def add_stake_extrinsic(
         )
 
     # Convert to basedai.Balance
-    if amount == None:
+    if amount is None:
         # Stake it all.
         staking_balance = basedai.Balance.from_based(old_balance.based)
     elif not isinstance(amount, basedai.Balance):
@@ -306,7 +306,7 @@ def add_stake_multiple_extrinsic(
     ):
         staking_all = False
         # Convert to basedai.Balance
-        if amount == None:
+        if amount is None:
             # Stake it all.
             staking_balance = basedai.Balance.from_based(old_balance.based)
             staking_all = True

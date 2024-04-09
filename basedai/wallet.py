@@ -447,7 +447,7 @@ class wallet:
             KeyFileError: Raised if the file is corrupt of non-existent.
             CryptoKeyError: Raised if the user enters an incorrec password for an encrypted keyfile.
         """
-        if self._computekey == None:
+        if self._computekey is None:
             self._computekey = self.computekey_file.keypair
         return self._computekey
 
@@ -461,7 +461,7 @@ class wallet:
             KeyFileError: Raised if the file is corrupt of non-existent.
             CryptoKeyError: Raised if the user enters an incorrec password for an encrypted keyfile.
         """
-        if self._personalkey == None:
+        if self._personalkey is None:
             self._personalkey = self.personalkey_file.keypair
         return self._personalkey
 
@@ -475,7 +475,7 @@ class wallet:
             KeyFileError: Raised if the file is corrupt of non-existent.
             CryptoKeyError: Raised if the user enters an incorrect password for an encrypted keyfile.
         """
-        if self._personalkeypub == None:
+        if self._personalkeypub is None:
             self._personalkeypub = self.personalkeypub_file.keypair
         return self._personalkeypub
 

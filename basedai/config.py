@@ -72,7 +72,7 @@ class config(DefaultMunch):
 
         self["__is_set"] = {}
 
-        if parser == None:
+        if parser is None:
             return None
 
         # Optionally add config specific arguments
@@ -82,7 +82,7 @@ class config(DefaultMunch):
                 type=str,
                 help="If set, defaults are overridden by passed file.",
             )
-        except:
+        except Exception:
             # this can fail if --config has already been added.
             pass
 
@@ -93,7 +93,7 @@ class config(DefaultMunch):
                 help="""If flagged, config will check that only exact arguments have been set.""",
                 default=False,
             )
-        except:
+        except Exception:
             # this can fail if --strict has already been added.
             pass
 
@@ -104,7 +104,7 @@ class config(DefaultMunch):
                 help="Set ``true`` to stop cli version checking.",
                 default=True,
             )
-        except:
+        except Exception:
             # this can fail if --no_version_checking has already been added.
             pass
 
@@ -116,12 +116,12 @@ class config(DefaultMunch):
                 help="Set ``true`` to stop cli from prompting the user.",
                 default=False,
             )
-        except:
+        except Exception:
             # this can fail if --no_version_checking has already been added.
             pass
 
         # Get args from argv if not passed in.
-        if args == None:
+        if args is None:
             args = sys.argv[1:]
 
         # 1.1 Optionally load defaults if the --config is set.
@@ -131,17 +131,17 @@ class config(DefaultMunch):
                 + "/"
                 + vars(parser.parse_known_args(args)[0])["config"]
             )
-        except Exception as e:
+        except Exception:
             config_file_path = None
 
         # Parse args not strict
         config_params = config.__parse_args__(args=args, parser=parser, strict=False)
 
         # 2. Optionally check for --strict
-        ## strict=True when passed in OR when --strict is set
+        # strict=True when passed in OR when --strict is set
         strict = config_params.strict or strict
 
-        if config_file_path != None:
+        if config_file_path is not None:
             config_file_path = os.path.expanduser(config_file_path)
             try:
                 with open(config_file_path) as f:
@@ -162,36 +162,36 @@ class config(DefaultMunch):
         # Make the is_set map
         _config["__is_set"] = {}
 
-        ## Reparse args using default of unset
+        # Reparse args using default of unset
         parser_no_defaults = copy.deepcopy(parser)
 
         # Only command as the arg, else no args
         default_param_args = (
             [_config.get("command")]
-            if _config.get("command") != None and _config.get("subcommand") == None
+            if _config.get("command") is not None and _config.get("subcommand") is None
             else []
         )
-        if _config.get("command") != None and _config.get("subcommand") != None:
+        if _config.get("command") is not None and _config.get("subcommand") is not None:
             default_param_args = [_config.get("command"), _config.get("subcommand")]
 
-        ## Get all args by name
+        # Get all args by name
         default_params = parser.parse_args(args=default_param_args)
 
         all_default_args = default_params.__dict__.keys() | []
-        ## Make a dict with keys as args and values as argparse.SUPPRESS
+        # Make a dict with keys as args and values as argparse.SUPPRESS
         defaults_as_suppress = {key: argparse.SUPPRESS for key in all_default_args}
-        ## Set the defaults to argparse.SUPPRESS, should remove them from the namespace
+        # Set the defaults to argparse.SUPPRESS, should remove them from the namespace
         parser_no_defaults.set_defaults(**defaults_as_suppress)
         parser_no_defaults._defaults.clear()  # Needed for quirk of argparse
 
-        ### Check for subparsers and do the same
-        if parser_no_defaults._subparsers != None:
+        # Check for subparsers and do the same
+        if parser_no_defaults._subparsers is not None:
             for action in parser_no_defaults._subparsers._actions:
                 # Should only be the "command" subparser action
                 if isinstance(action, argparse._SubParsersAction):
                     # Set the defaults to argparse.SUPPRESS, should remove them from the namespace
                     # Each choice is the keyword for a command, we need to set the defaults for each of these
-                    ## Note: we also need to clear the _defaults dict for each, this is a quirk of argparse
+                    # Note: we also need to clear the _defaults dict for each, this is a quirk of argparse
                     cmd_parser: argparse.ArgumentParser
                     for cmd_parser in action.choices.values():
                         # If this choice is also a subparser, set defaults recursively
@@ -207,12 +207,12 @@ class config(DefaultMunch):
                             cmd_parser.set_defaults(**defaults_as_suppress)
                             cmd_parser._defaults.clear()  # Needed for quirk of argparse
 
-        ## Reparse the args, but this time with the defaults as argparse.SUPPRESS
+        # Reparse the args, but this time with the defaults as argparse.SUPPRESS
         params_no_defaults = config.__parse_args__(
             args=args, parser=parser_no_defaults, strict=strict
         )
 
-        ## Diff the params and params_no_defaults to get the is_set map
+        # Diff the params and params_no_defaults to get the is_set map
         _config["__is_set"] = {
             arg_key: True
             for arg_key in [
@@ -233,7 +233,7 @@ class config(DefaultMunch):
             keys = split_keys
             while len(keys) > 1:
                 if (
-                    hasattr(head, keys[0]) and head[keys[0]] != None
+                    hasattr(head, keys[0]) and head[keys[0]] is not None
                 ):  # Needs to be Config
                     head = getattr(head, keys[0])
                     keys = keys[1:]

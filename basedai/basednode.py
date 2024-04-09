@@ -41,11 +41,10 @@ from .chain_data import (
     NeuronInfoLite,
     BrainportInfo,
     ProposalVoteData,
-    ProposalCallData,
     IPInfo,
     custom_rpc_type_registry,
 )
-from .errors import *
+from .errors import ConnectionRefusedError, IdentityError, NominationError, StakeError
 from .extrinsics.network import (
     register_subnetwork_extrinsic,
     set_hyperparameter_extrinsic,
@@ -144,7 +143,7 @@ class basednode:
 
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser, prefix: str = None):
-        prefix_str = "" if prefix == None else prefix + "."
+        prefix_str = "" if prefix is None else prefix + "."
         try:
             default_network = os.getenv("BT_BASEDNODE_NETWORK") or "prometheus"
             default_chain_endpoint = (
@@ -194,7 +193,7 @@ class basednode:
             network (str): The network flag.
             chain_endpoint (str): The chain endpoint flag. If set, overrides the ``network`` argument.
         """
-        if network == None:
+        if network is None:
             return None, None
         if network in ["prometheus", "local", "test", "archive"]:
             if network == "prometheus":
@@ -313,7 +312,7 @@ class basednode:
 
         # Check if network is a config object. (Single argument passed as first positional)
         if isinstance(network, basedai.config):
-            if network.basednode == None:
+            if network.basednode is None:
                 basedai.logging.warning(
                     "If passing a basedai config object, it must not be empty. Using default basednode config."
                 )
@@ -322,7 +321,7 @@ class basednode:
                 config = network
             network = None
 
-        if config == None:
+        if config is None:
             config = basednode.config()
         self.config = copy.deepcopy(config)
 
@@ -348,7 +347,7 @@ class basednode:
         # Returns a mocked connection with a background chain connection.
         self.config.basednode._mock = (
             _mock
-            if _mock != None
+            if _mock is not None
             else self.config.basednode.get("_mock", basedai.defaults.basednode._mock)
         )
         if self.config.basednode._mock:
@@ -375,7 +374,7 @@ class basednode:
 
         try:
             self.substrate.websocket.settimeout(600)
-        except:
+        except Exception:
             basedai.logging.warning("Could not set websocket timeout.")
 
         # if log_verbose:
@@ -1549,7 +1548,7 @@ class basednode:
         self,
         wallet: "basedai.wallet",
         computekey_ss58s: List[str],
-        amounts: List[Union[Balance, float]] = None,
+        amounts: List[Union[Balance, float]] | None = None,
         wait_for_inclusion: bool = True,
         wait_for_finalization: bool = False,
         prompt: bool = False,
@@ -1586,7 +1585,7 @@ class basednode:
         self,
         wallet: "basedai.wallet",
         computekey_ss58: Optional[str] = None,
-        amount: Union[Balance, float] = None,
+        amount: Union[Balance, float] | None = None,
         wait_for_inclusion: bool = True,
         wait_for_finalization: bool = False,
         prompt: bool = False,
@@ -2063,7 +2062,7 @@ class basednode:
                     storage_function="IdentityOf",
                     params=[key],
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
@@ -2100,7 +2099,7 @@ class basednode:
         This function plays a vital role in maintaining the accuracy and currency of neuron identities in the
         Basedai network, ensuring that the network's governance and consensus mechanisms operate effectively.
         """
-        if identified == None:
+        if identified is None:
             identified = wallet.personalkey.ss58_address
 
         call_params = basedai.utils.wallet_utils.create_identity_dict(**params)
@@ -2184,7 +2183,7 @@ class basednode:
                     storage_function=name,
                     params=params,
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
@@ -2222,7 +2221,7 @@ class basednode:
                     storage_function=name,
                     params=params,
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
@@ -2256,7 +2255,7 @@ class basednode:
                     module_name=module_name,
                     constant_name=constant_name,
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
@@ -2297,7 +2296,7 @@ class basednode:
                     storage_function=name,
                     params=params,
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
@@ -2337,7 +2336,7 @@ class basednode:
                     storage_function=name,
                     params=params,
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
@@ -2368,7 +2367,7 @@ class basednode:
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry():
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = [method, data]
                 if block_hash:
                     params = params + [block_hash]
@@ -3038,7 +3037,7 @@ class basednode:
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry():
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = []
                 if block_hash:
                     params = params + [block_hash]
@@ -3076,7 +3075,7 @@ class basednode:
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry():
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = [netuid]
                 if block_hash:
                     params = params + [block_hash]
@@ -3117,7 +3116,7 @@ class basednode:
             block=block,
         )
 
-        if hex_bytes_result == None:
+        if hex_bytes_result is None:
             return []
 
         if hex_bytes_result.startswith("0x"):
@@ -3235,7 +3234,7 @@ class basednode:
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry(encoded_computekey: List[int]):
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = [encoded_computekey]
                 if block_hash:
                     params = params + [block_hash]
@@ -3271,7 +3270,7 @@ class basednode:
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry():
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = []
                 if block_hash:
                     params = params + [block_hash]
@@ -3309,7 +3308,7 @@ class basednode:
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry(encoded_personalkey: List[int]):
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = [encoded_personalkey]
                 if block_hash:
                     params = params + [block_hash]
@@ -3357,7 +3356,7 @@ class basednode:
             block=block,
         )
 
-        if hex_bytes_result == None:
+        if hex_bytes_result is None:
             return None
 
         if hex_bytes_result.startswith("0x"):
@@ -3396,7 +3395,7 @@ class basednode:
             block=block,
         )
 
-        if hex_bytes_result == None:
+        if hex_bytes_result is None:
             return None
 
         if hex_bytes_result.startswith("0x"):
@@ -3473,7 +3472,7 @@ class basednode:
         in understanding whether a neuron is eligible to participate in network processes such as consensus,
         validation, and incentive distribution based on its registration status.
         """
-        if netuid == None:
+        if netuid is None:
             return self.is_computekey_registered_any(computekey_ss58, block)
         else:
             return self.is_computekey_registered_on_subnet(
@@ -3653,13 +3652,13 @@ class basednode:
         This function is crucial for analyzing individual neurons' contributions and status within a specific
         subnet, offering insights into their roles in the network's consensus and validation mechanisms.
         """
-        if uid == None:
+        if uid is None:
             return NeuronInfo._null_neuron()
 
         @retry(delay=2, tries=3, backoff=2, max_delay=4)
         def make_substrate_call_with_retry():
             with self.substrate as substrate:
-                block_hash = None if block == None else substrate.get_block_hash(block)
+                block_hash = None if block is None else substrate.get_block_hash(block)
                 params = [netuid, uid]
                 if block_hash:
                     params = params + [block_hash]
@@ -3725,7 +3724,7 @@ class basednode:
         This function is useful for quick and efficient analyses of neuron status and activities within a
         subnet without the need for comprehensive data retrieval.
         """
-        if uid == None:
+        if uid is None:
             return NeuronInfoLite._null_neuron()
 
         hex_bytes_result = self.query_runtime_api(
@@ -3738,7 +3737,7 @@ class basednode:
             block=block,
         )
 
-        if hex_bytes_result == None:
+        if hex_bytes_result is None:
             return NeuronInfoLite._null_neuron()
 
         if hex_bytes_result.startswith("0x"):
@@ -3773,7 +3772,7 @@ class basednode:
             block=block,
         )
 
-        if hex_bytes_result == None:
+        if hex_bytes_result is None:
             return []
 
         if hex_bytes_result.startswith("0x"):
@@ -3917,7 +3916,7 @@ class basednode:
             block=block,
         )
 
-        if hex_bytes_result == None:
+        if hex_bytes_result is None:
             return None
 
         if hex_bytes_result.startswith("0x"):
@@ -3948,7 +3947,7 @@ class basednode:
             block=block,
         )
 
-        if lock_cost == None:
+        if lock_cost is None:
             return None
 
         return lock_cost
@@ -4070,7 +4069,7 @@ class basednode:
     #### Legacy ####
     ################
 
-    def get_balance(self, address: str, block: int = None) -> Balance:
+    def get_balance(self, address: str, block: Optional[int] = None) -> Balance:
         """
         Retrieves the token balance of a specific address within the Basedai network. This function queries
         the blockchain to determine the amount of Based held by a given account.
@@ -4095,7 +4094,7 @@ class basednode:
                         storage_function="Account",
                         params=[address],
                         block_hash=(
-                            None if block == None else substrate.get_block_hash(block)
+                            None if block is None else substrate.get_block_hash(block)
                         ),
                     )
 
@@ -4148,7 +4147,7 @@ class basednode:
                     module="System",
                     storage_function="Account",
                     block_hash=(
-                        None if block == None else substrate.get_block_hash(block)
+                        None if block is None else substrate.get_block_hash(block)
                     ),
                 )
 
