@@ -515,7 +515,7 @@ class GigaBrainsResignCommand:
                 basedai.logging.debug("closing basednode connection")
 
     @staticmethod
-    def _run(cli: "basedai.cli", basednode: "basedai.cli"):
+    def _run(cli: "basedai.cli", basednode: "basedai.node"):
         r"""Discard membership in BasedAI's governance protocol proposals"""
         wallet = basedai.wallet(config=cli.config)
 
