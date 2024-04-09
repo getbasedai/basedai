@@ -276,9 +276,7 @@ class basednode:
                 )
 
         return (
-            basedai.utils.networking.get_formatted_ws_endpoint_url(
-                evaluated_endpoint
-            ),
+            basedai.utils.networking.get_formatted_ws_endpoint_url(evaluated_endpoint),
             evaluated_network,
         )
 
@@ -380,7 +378,7 @@ class basednode:
         except:
             basedai.logging.warning("Could not set websocket timeout.")
 
-        #if log_verbose:
+        # if log_verbose:
         #    basedai.logging.info(
         #        f"Connected to {self.network} network and {self.chain_endpoint}."
         #    )
@@ -1519,7 +1517,10 @@ class basednode:
                 call = substrate.compose_call(
                     call_module="BasedNode",
                     call_function="add_stake",
-                    call_params={"computekey": computekey_ss58, "amount_staked": amount.rao},
+                    call_params={
+                        "computekey": computekey_ss58,
+                        "amount_staked": amount.rao,
+                    },
                 )
                 extrinsic = substrate.create_signed_extrinsic(
                     call=call, keypair=wallet.personalkey
@@ -1646,7 +1647,10 @@ class basednode:
                 call = substrate.compose_call(
                     call_module="BasedNode",
                     call_function="remove_stake",
-                    call_params={"computekey": computekey_ss58, "amount_unstaked": amount.rao},
+                    call_params={
+                        "computekey": computekey_ss58,
+                        "amount_unstaked": amount.rao,
+                    },
                 )
                 extrinsic = substrate.create_signed_extrinsic(
                     call=call, keypair=wallet.personalkey
@@ -1769,7 +1773,9 @@ class basednode:
             prompt,
         )
 
-    def is_senate_member(self, computekey_ss58: str, block: Optional[int] = None) -> bool:
+    def is_senate_member(
+        self, computekey_ss58: str, block: Optional[int] = None
+    ) -> bool:
         """
         Checks if a given neuron (identified by its computekey SS58 address) is a member of the Basedai senate.
         The senate is a key governance body within the Basedai network, responsible for overseeing and
@@ -2724,7 +2730,9 @@ class basednode:
     ) -> Optional["Balance"]:
         """Returns the stake under a personalkey - computekey pairing"""
         return Balance.from_rao(
-            self.query_basednode("Stake", block, [computekey_ss58, personalkey_ss58]).value
+            self.query_basednode(
+                "Stake", block, [computekey_ss58, personalkey_ss58]
+            ).value
         )
 
     def get_stake(
@@ -2736,7 +2744,9 @@ class basednode:
             for r in self.query_map_basednode("Stake", block, [computekey_ss58])
         ]
 
-    def does_computekey_exist(self, computekey_ss58: str, block: Optional[int] = None) -> bool:
+    def does_computekey_exist(
+        self, computekey_ss58: str, block: Optional[int] = None
+    ) -> bool:
         """Returns true if the computekey is known by the chain and there are accounts."""
         return (
             self.query_basednode("Owner", block, [computekey_ss58]).value
@@ -3139,7 +3149,9 @@ class basednode:
     ####################
     #### Nomination ####
     ####################
-    def is_computekey_delegate(self, computekey_ss58: str, block: Optional[int] = None) -> bool:
+    def is_computekey_delegate(
+        self, computekey_ss58: str, block: Optional[int] = None
+    ) -> bool:
         """
         Determines whether a given computekey (public key) is a delegate on the Basedai network. This function
         checks if the neuron associated with the computekey is part of the network's delegation system.
@@ -3373,7 +3385,8 @@ class basednode:
         accounts simultaneously, offering a broader perspective on network participation and investment strategies.
         """
         encoded_personalkeys = [
-            ss58_to_vec_u8(personalkey_ss58) for personalkey_ss58 in personalkey_ss58_list
+            ss58_to_vec_u8(personalkey_ss58)
+            for personalkey_ss58 in personalkey_ss58_list
         ]
 
         hex_bytes_result = self.query_runtime_api(
@@ -3431,7 +3444,10 @@ class basednode:
         This function helps in assessing the participation of a neuron in a particular subnet,
         indicating its specific area of operation or influence within the network.
         """
-        return self.get_uid_for_computekey_on_subnet(computekey_ss58, netuid, block) != None
+        return (
+            self.get_uid_for_computekey_on_subnet(computekey_ss58, netuid, block)
+            != None
+        )
 
     def is_computekey_registered(
         self,
@@ -3460,7 +3476,9 @@ class basednode:
         if netuid == None:
             return self.is_computekey_registered_any(computekey_ss58, block)
         else:
-            return self.is_computekey_registered_on_subnet(computekey_ss58, netuid, block)
+            return self.is_computekey_registered_on_subnet(
+                computekey_ss58, netuid, block
+            )
 
     def get_uid_for_computekey_on_subnet(
         self, computekey_ss58: str, netuid: int, block: Optional[int] = None
@@ -3566,7 +3584,10 @@ class basednode:
         contributions across the Basedai network.
         """
         netuids = self.get_netuids_for_computekey(computekey_ss58, block)
-        uids = [self.get_uid_for_computekey_on_subnet(computekey_ss58, net) for net in netuids]
+        uids = [
+            self.get_uid_for_computekey_on_subnet(computekey_ss58, net)
+            for net in netuids
+        ]
         return [self.neuron_for_uid(uid, net) for uid, net in list(zip(uids, netuids))]
 
     def neuron_has_validator_permit(
@@ -3783,9 +3804,7 @@ class basednode:
         The stem is an essential tool for understanding the topology and dynamics of the Basedai
         network's decentralized architecture, particularly in relation to neuron interconnectivity and consensus processes.
         """
-        stem_ = basedai.stem(
-            network=self.network, netuid=netuid, lite=lite, sync=False
-        )
+        stem_ = basedai.stem(network=self.network, netuid=netuid, lite=lite, sync=False)
         stem_.sync(block=block, lite=lite, basednode=self)
 
         return stem_
@@ -3952,7 +3971,10 @@ class basednode:
                 call = substrate.compose_call(
                     call_module="BasedNode",
                     call_function="add_stake",
-                    call_params={"computekey": delegate_ss58, "amount_staked": amount.rao},
+                    call_params={
+                        "computekey": delegate_ss58,
+                        "amount_staked": amount.rao,
+                    },
                 )
                 extrinsic = substrate.create_signed_extrinsic(
                     call=call, keypair=wallet.personalkey

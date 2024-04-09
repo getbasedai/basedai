@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -15,10 +15,10 @@
 # THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-import basedai
 
 import json
-from rich.prompt import Confirm
+
+import basedai
 import basedai.utils.networking as net
 
 
@@ -126,7 +126,7 @@ def prometheus_extrinsic(
         )
 
         if wait_for_inclusion or wait_for_finalization:
-            if success == True:
+            if success:
                 basedai.__console__.print(
                     ":white_heavy_check_mark: [green]Served prometheus[/green]\n  [bold white]{}[/bold white]".format(
                         json.dumps(call_params, indent=4, sort_keys=True)

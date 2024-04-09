@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -16,14 +16,14 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import basedai
-from ..errors import *
-from rich.prompt import Confirm
-from typing import List, Dict, Union, Optional
-from basedai.utils.balance import Balance
-from .staking import __do_add_stake_single
+from typing import Union, Optional
 
 from loguru import logger
+from rich.prompt import Confirm
+
+import basedai
+from basedai.utils.balance import Balance
+from ..errors import *
 
 logger = logger.opt(colors=True)
 
@@ -48,7 +48,9 @@ def nominate_extrinsic(
     # Check if the computekey is already a delegate.
     if basednode.is_computekey_delegate(wallet.computekey.ss58_address):
         logger.error(
-            "Computekey {} is already a delegate.".format(wallet.computekey.ss58_address)
+            "Computekey {} is already a delegate.".format(
+                wallet.computekey.ss58_address
+            )
         )
         return False
 
@@ -64,7 +66,7 @@ def nominate_extrinsic(
                 wait_for_finalization=wait_for_finalization,
             )
 
-            if success == True:
+            if success:
                 basedai.__console__.print(
                     ":white_heavy_check_mark: [green]Finalized[/green]"
                 )
@@ -122,14 +124,17 @@ def delegate_extrinsic(
     # Decrypt keys,
     wallet.personalkey
     if not basednode.is_computekey_delegate(delegate_ss58):
-        raise NotDelegateError("Computekey: {} is not a delegate.".format(delegate_ss58))
+        raise NotDelegateError(
+            "Computekey: {} is not a delegate.".format(delegate_ss58)
+        )
 
     # Get state.
     my_prev_personalkey_balance = basednode.get_balance(wallet.personalkey.ss58_address)
     delegate_take = basednode.get_delegate_take(delegate_ss58)
     delegate_owner = basednode.get_computekey_owner(delegate_ss58)
     my_prev_delegated_stake = basednode.get_stake_for_personalkey_and_computekey(
-        personalkey_ss58=wallet.personalkeypub.ss58_address, computekey_ss58=delegate_ss58
+        personalkey_ss58=wallet.personalkeypub.ss58_address,
+        computekey_ss58=delegate_ss58,
     )
 
     # Convert to basedai.Balance
@@ -179,7 +184,7 @@ def delegate_extrinsic(
                 wait_for_finalization=wait_for_finalization,
             )
 
-        if staking_response == True:  # If we successfully staked.
+        if staking_response:  # If we successfully staked.
             # We only wait here if we expect finalization.
             if not wait_for_finalization and not wait_for_inclusion:
                 return True
@@ -192,7 +197,9 @@ def delegate_extrinsic(
                     basednode.network
                 )
             ):
-                new_balance = basednode.get_balance(address=wallet.personalkey.ss58_address)
+                new_balance = basednode.get_balance(
+                    address=wallet.personalkey.ss58_address
+                )
                 block = basednode.get_current_block()
                 new_delegate_stake = basednode.get_stake_for_personalkey_and_computekey(
                     personalkey_ss58=wallet.personalkeypub.ss58_address,
@@ -212,9 +219,7 @@ def delegate_extrinsic(
                 )
                 return True
         else:
-            basedai.__console__.print(
-                ":cross_mark: [red]Failed[/red]: Error unknown."
-            )
+            basedai.__console__.print(":cross_mark: [red]Failed[/red]: Error unknown.")
             return False
 
     except NotRegisteredError as e:
@@ -257,14 +262,17 @@ def undelegate_extrinsic(
     # Decrypt keys,
     wallet.personalkey
     if not basednode.is_computekey_delegate(delegate_ss58):
-        raise NotDelegateError("Computekey: {} is not a delegate.".format(delegate_ss58))
+        raise NotDelegateError(
+            "Computekey: {} is not a delegate.".format(delegate_ss58)
+        )
 
     # Get state.
     my_prev_personalkey_balance = basednode.get_balance(wallet.personalkey.ss58_address)
     delegate_take = basednode.get_delegate_take(delegate_ss58)
     delegate_owner = basednode.get_computekey_owner(delegate_ss58)
     my_prev_delegated_stake = basednode.get_stake_for_personalkey_and_computekey(
-        personalkey_ss58=wallet.personalkeypub.ss58_address, computekey_ss58=delegate_ss58
+        personalkey_ss58=wallet.personalkeypub.ss58_address,
+        computekey_ss58=delegate_ss58,
     )
 
     # Convert to basedai.Balance
@@ -310,7 +318,7 @@ def undelegate_extrinsic(
                 wait_for_finalization=wait_for_finalization,
             )
 
-        if staking_response == True:  # If we successfully staked.
+        if staking_response:  # If we successfully staked.
             # We only wait here if we expect finalization.
             if not wait_for_finalization and not wait_for_inclusion:
                 return True
@@ -323,7 +331,9 @@ def undelegate_extrinsic(
                     basednode.network
                 )
             ):
-                new_balance = basednode.get_balance(address=wallet.personalkey.ss58_address)
+                new_balance = basednode.get_balance(
+                    address=wallet.personalkey.ss58_address
+                )
                 block = basednode.get_current_block()
                 new_delegate_stake = basednode.get_stake_for_personalkey_and_computekey(
                     personalkey_ss58=wallet.personalkeypub.ss58_address,
@@ -343,9 +353,7 @@ def undelegate_extrinsic(
                 )
                 return True
         else:
-            basedai.__console__.print(
-                ":cross_mark: [red]Failed[/red]: Error unknown."
-            )
+            basedai.__console__.print(":cross_mark: [red]Failed[/red]: Error unknown.")
             return False
 
     except NotRegisteredError as e:

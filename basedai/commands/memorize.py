@@ -15,12 +15,14 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
 import argparse
-import basedai
-from rich.prompt import Prompt, Confirm
-from .utils import check_netuid_set, check_for_cuda_reg_config
 from copy import deepcopy
+import sys
+
+from rich.prompt import Prompt, Confirm
+
+import basedai
+from .utils import check_netuid_set, check_for_cuda_reg_config
 
 from . import defaults
 
@@ -152,7 +154,9 @@ class MemorizeCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
 
@@ -349,7 +353,9 @@ class PowMemorizeCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
         if not config.no_prompt:
@@ -586,9 +592,13 @@ class SwapComputekeyCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter old computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter old computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
         if not config.is_set("wallet.computekey_b") and not config.no_prompt:
-            computekey = Prompt.ask("Enter new computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter new computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey_b = str(computekey)

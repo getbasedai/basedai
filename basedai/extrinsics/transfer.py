@@ -16,10 +16,11 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import basedai
+from typing import Union
 
 from rich.prompt import Confirm
-from typing import List, Dict, Union
+
+import basedai
 from ..utils.balance import Balance
 from ..utils import is_valid_basedai_address_or_public_key
 
@@ -105,7 +106,11 @@ def transfer_extrinsic(
     if prompt:
         if not Confirm.ask(
             "Do you want to transfer:[bold white]\n  amount: {}\n  from: {}:{}\n  to: {}\n  for fee: {}[/bold white]".format(
-                transfer_balance, wallet.name, wallet.personalkey.ss58_address, dest, fee
+                transfer_balance,
+                wallet.name,
+                wallet.personalkey.ss58_address,
+                dest,
+                fee,
             )
         ):
             return False

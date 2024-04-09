@@ -25,9 +25,10 @@ import basedai
 import hashlib
 from termcolor import colored
 from substrateinterface import Keypair
-from typing import Optional, Union, List, Tuple, Dict, overload
+from typing import Optional, Union, Tuple, Dict, overload
 from basedai.utils import is_valid_basedai_address_or_public_key
 from substrateinterface.utils.ss58 import ss58_decode
+
 
 def ss58_to_ethereum(ss58_address):
     public_key = ss58_decode(ss58_address)
@@ -35,7 +36,8 @@ def ss58_to_ethereum(ss58_address):
     keccak_hash = hashlib.sha3_256(bytes.fromhex(public_key)).digest()
     eth_address = keccak_hash[-20:]
 
-    return '0x' + eth_address.hex()
+    return "0x" + eth_address.hex()
+
 
 def display_mnemonic_msg(keypair: Keypair, key_type: str):
     """
@@ -118,7 +120,7 @@ class wallet:
     """
 
     @classmethod
-    def config(cls) -> "basedai.config":
+    def config(cls) -> basedai.config:
         """
         Get config from the argument parser.
 
@@ -140,7 +142,7 @@ class wallet:
         parser.print_help()
 
     @classmethod
-    def add_args(cls, parser: argparse.ArgumentParser, prefix: str = None):
+    def add_args(cls, parser: argparse.ArgumentParser, prefix: str | None = None):
         """
         Accept specific arguments from parser.
 
@@ -148,7 +150,7 @@ class wallet:
             parser (argparse.ArgumentParser): Argument parser object.
             prefix (str): Argument prefix.
         """
-        prefix_str = "" if prefix == None else prefix + "."
+        prefix_str = "" if prefix is None else prefix + "."
         try:
             default_name = os.getenv("BT_WALLET_NAME") or "default"
             default_computekey = os.getenv("BT_WALLET_NAME") or "default"
@@ -172,15 +174,15 @@ class wallet:
                 default=default_path,
                 help="The path to your basedai wallets",
             )
-        except argparse.ArgumentError as e:
+        except argparse.ArgumentError:
             pass
 
     def __init__(
         self,
-        name: str = None,
-        computekey: str = None,
-        path: str = None,
-        config: "basedai.config" = None,
+        name: str | None = None,
+        computekey: str | None = None,
+        path: str | None = None,
+        config: basedai.config | None = None,
     ):
         r"""
         Initialize the basedai wallet object containing a hot and personalkey.
@@ -232,7 +234,9 @@ class wallet:
         return self.__str__()
 
     def create_if_non_existent(
-        self, personalkey_use_password: bool = True, computekey_use_password: bool = False
+        self,
+        personalkey_use_password: bool = True,
+        computekey_use_password: bool = False,
     ) -> "wallet":
         """
         Checks for existing personalkeypub and computekeys, and creates them if non-existent.
@@ -247,7 +251,9 @@ class wallet:
         return self.create(personalkey_use_password, computekey_use_password)
 
     def create(
-        self, personalkey_use_password: bool = True, computekey_use_password: bool = False
+        self,
+        personalkey_use_password: bool = True,
+        computekey_use_password: bool = False,
     ) -> "wallet":
         """
         Checks for existing personalkeypub and computekeys, and creates them if non-existent.
@@ -264,13 +270,17 @@ class wallet:
             not self.personalkey_file.exists_on_device()
             and not self.personalkeypub_file.exists_on_device()
         ):
-            self.create_new_personalkey(n_words=12, use_password=personalkey_use_password)
+            self.create_new_personalkey(
+                n_words=12, use_password=personalkey_use_password
+            )
         if not self.computekey_file.exists_on_device():
             self.create_new_computekey(n_words=12, use_password=computekey_use_password)
         return self
 
     def recreate(
-        self, personalkey_use_password: bool = True, computekey_use_password: bool = False
+        self,
+        personalkey_use_password: bool = True,
+        computekey_use_password: bool = False,
     ) -> "wallet":
         """
         Checks for existing personalkeypub and computekeys and creates them if non-existent.
@@ -328,7 +338,7 @@ class wallet:
         keypair: "basedai.Keypair",
         encrypt: bool = False,
         overwrite: bool = False,
-    ) -> "basedai.keyfile":
+    ) -> basedai.keyfile:
         """
         Sets the computekey for the wallet.
 
@@ -342,13 +352,14 @@ class wallet:
         """
         self._computekey = keypair
         self.computekey_file.set_keypair(keypair, encrypt=encrypt, overwrite=overwrite)
+        return self.computekey_file
 
     def set_personalkeypub(
         self,
         keypair: "basedai.Keypair",
         encrypt: bool = False,
         overwrite: bool = False,
-    ) -> "basedai.keyfile":
+    ) -> basedai.keyfile:
         """
         Sets the personalkeypub for the wallet.
 
@@ -364,13 +375,14 @@ class wallet:
         self.personalkeypub_file.set_keypair(
             self._personalkeypub, encrypt=encrypt, overwrite=overwrite
         )
+        return self.personalkeypub_file
 
     def set_personalkey(
         self,
         keypair: "basedai.Keypair",
         encrypt: bool = True,
         overwrite: bool = False,
-    ) -> "basedai.keyfile":
+    ) -> basedai.keyfile:
         """
         Sets the personalkey for the wallet.
 
@@ -386,8 +398,9 @@ class wallet:
         self.personalkey_file.set_keypair(
             self._personalkey, encrypt=encrypt, overwrite=overwrite
         )
+        return self.personalkey_file
 
-    def get_personalkey(self, password: str = None) -> "basedai.Keypair":
+    def get_personalkey(self, password: str | None = None) -> basedai.Keypair:
         """
         Gets the personalkey from the wallet.
 
@@ -540,6 +553,7 @@ class wallet:
                 This object with newly created personalkey.
         """
         self.create_new_personalkey(n_words, use_password, overwrite, suppress)
+        return self
 
     def create_new_personalkey(
         self,
@@ -590,6 +604,7 @@ class wallet:
                 This object with newly created computekey.
         """
         self.create_new_computekey(n_words, use_password, overwrite, suppress)
+        return self
 
     def create_new_computekey(
         self,

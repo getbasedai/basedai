@@ -18,11 +18,13 @@
 # DEALINGS IN THE SOFTWARE.
 
 import os
-import torch
-import basedai
 from os import listdir
 from os.path import join
 from typing import List, Optional
+
+import torch
+
+import basedai
 
 
 def get_save_dir(network: str, netuid: int) -> str:
@@ -60,7 +62,7 @@ def latest_block_path(dir_path: str) -> int:
             if block_number > latest_block:
                 latest_block = block_number
                 latest_file_full_path = full_path_filename
-        except Exception as e:
+        except Exception:
             pass
     if not latest_file_full_path:
         raise ValueError(f"Stem not found at: {dir_path}")
@@ -375,7 +377,11 @@ class stem(torch.nn.Module):
         }
 
     def __init__(
-        self, netuid: int, network: str = "prometheus", lite: bool = True, sync: bool = True
+        self,
+        netuid: int,
+        network: str = "prometheus",
+        lite: bool = True,
+        sync: bool = True,
     ) -> "stem":
         """
         Initializes a new instance of the stem object, setting up the basic structure and parameters based on the provided arguments.

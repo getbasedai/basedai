@@ -331,8 +331,12 @@ class brainport:
         if config is None:
             config = brainport.config()
         config = copy.deepcopy(config)
-        config.brainport.ip = ip or config.brainport.get("ip", basedai.defaults.brainport.ip)
-        config.brainport.port = port or config.brainport.get("port", basedai.defaults.brainport.port)
+        config.brainport.ip = ip or config.brainport.get(
+            "ip", basedai.defaults.brainport.ip
+        )
+        config.brainport.port = port or config.brainport.get(
+            "port", basedai.defaults.brainport.port
+        )
         config.brainport.external_ip = external_ip or config.brainport.get(
             "external_ip", basedai.defaults.brainport.external_ip
         )
@@ -362,7 +366,9 @@ class brainport:
             if self.config.brainport.external_port != None
             else self.config.brainport.port
         )
-        self.full_address = str(self.config.brainport.ip) + ":" + str(self.config.brainport.port)
+        self.full_address = (
+            str(self.config.brainport.ip) + ":" + str(self.config.brainport.port)
+        )
         self.started = False
 
         # Build middleware
@@ -383,7 +389,10 @@ class brainport:
         self.app = FastAPI()
         log_level = "trace" if basedai.logging.__trace_on__ else "critical"
         self.fast_config = uvicorn.Config(
-            self.app, host="0.0.0.0", port=self.config.brainport.port, log_level=log_level
+            self.app,
+            host="0.0.0.0",
+            port=self.config.brainport.port,
+            log_level=log_level,
         )
         self.fast_server = FastAPIThreadedServer(config=self.fast_config)
         self.router = APIRouter()
@@ -612,8 +621,12 @@ class brainport:
             # Get default values from environment variables or use default values
             default_brainport_port = os.getenv("BT_BRAINPORT_PORT") or 8091
             default_brainport_ip = os.getenv("BT_BRAINPORT_IP") or "[::]"
-            default_brainport_external_port = os.getenv("BT_BRAINPORT_EXTERNAL_PORT") or None
-            default_brainport_external_ip = os.getenv("BT_BRAINPORT_EXTERNAL_IP") or None
+            default_brainport_external_port = (
+                os.getenv("BT_BRAINPORT_EXTERNAL_PORT") or None
+            )
+            default_brainport_external_ip = (
+                os.getenv("BT_BRAINPORT_EXTERNAL_IP") or None
+            )
             default_brainport_max_workers = os.getenv("BT_BRAINPORT_MAX_WORERS") or 10
 
             # Add command-line arguments to the parser
@@ -731,7 +744,8 @@ class brainport:
         ), "Brainport port must be in range [1024, 65535]"
 
         assert config.brainport.external_port is None or (
-            config.brainport.external_port > 1024 and config.brainport.external_port < 65535
+            config.brainport.external_port > 1024
+            and config.brainport.external_port < 65535
         ), "External port must be in range [1024, 65535]"
 
     def to_string(self):
@@ -937,7 +951,10 @@ def create_error_response(brainresponder: basedai.Brainresponder):
 
 
 def log_and_handle_error(
-    brainresponder: basedai.brainresponder, exception: Exception, status_code: int, start_time: int
+    brainresponder: basedai.brainresponder,
+    exception: Exception,
+    status_code: int,
+    start_time: int,
 ):
     # Display the traceback for user clarity.
     basedai.logging.trace(f"Forward exception: {traceback.format_exc()}")
@@ -1093,7 +1110,9 @@ class BrainportMiddleware(BaseHTTPMiddleware):
 
         # Handle all other errors.
         except Exception as e:
-            log_and_handle_error(brainresponder, InternalServerError(str(e)), 500, start_time)
+            log_and_handle_error(
+                brainresponder, InternalServerError(str(e)), 500, start_time
+            )
             response = create_error_response(brainresponder)
 
         # Logs the end of request processing and returns the response
@@ -1171,7 +1190,9 @@ class BrainportMiddleware(BaseHTTPMiddleware):
 
         # Signs the brainresponder from the brainport side using the wallet computekey.
         message = f"{brainresponder.brainport.nonce}.{brainresponder.brainrequester.computekey}.{brainresponder.brainport.computekey}.{brainresponder.brainport.uuid}"
-        brainresponder.brainport.signature = f"0x{self.brainport.wallet.computekey.sign(message).hex()}"
+        brainresponder.brainport.signature = (
+            f"0x{self.brainport.wallet.computekey.sign(message).hex()}"
+        )
 
         # Return the setup brainresponder.
         return brainresponder
@@ -1329,7 +1350,9 @@ class BrainportMiddleware(BaseHTTPMiddleware):
                 brainresponder.brainport.status_code = "408"
 
                 # Raise an exception to stop the process and return an appropriate error message to the requester.
-                raise PriorityException(f"Response timeout after: {brainresponder.timeout}s")
+                raise PriorityException(
+                    f"Response timeout after: {brainresponder.timeout}s"
+                )
 
     async def run(
         self,
@@ -1375,7 +1398,10 @@ class BrainportMiddleware(BaseHTTPMiddleware):
         return response
 
     async def postprocess(
-        self, brainresponder: basedai.Brainresponder, response: Response, start_time: float
+        self,
+        brainresponder: basedai.Brainresponder,
+        response: Response,
+        start_time: float,
     ) -> Response:
         """
         Performs the final processing on the response before sending it back to the client. This method

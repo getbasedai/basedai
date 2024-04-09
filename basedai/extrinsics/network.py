@@ -15,12 +15,13 @@
 # THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
-import json
+
 import time
+
+from rich.prompt import Confirm
+
 import basedai
 import basedai.utils.networking as net
-from dataclasses import asdict
-from rich.prompt import Confirm
 
 
 def register_subnetwork_extrinsic(
@@ -55,7 +56,9 @@ def register_subnetwork_extrinsic(
         return False
 
     if prompt:
-        basedai.__console__.print(f"Your $BASED balance is: [green]{your_balance}[/green]")
+        basedai.__console__.print(
+            f"Your $BASED balance is: [green]{your_balance}[/green]"
+        )
         if not Confirm.ask(
             f"Do you want to have stem memorize a new Brain for [green]{ burn_cost }[/green]?"
         ):

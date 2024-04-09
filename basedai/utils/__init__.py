@@ -16,14 +16,14 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-from typing import Callable, Union, List, Optional, Dict, Literal, Type, Any
+import hashlib
+from typing import Callable, Union, List, Optional, Dict, Literal
 
 import basedai
-import hashlib
 import requests
-import torch
 import scalecodec
 from substrateinterface.utils import ss58 as ss58
+import torch
 
 from .wallet_utils import *
 from .registration import create_pow as create_pow
@@ -182,9 +182,7 @@ def get_explorer_url_for_network(
 
 def ss58_address_to_bytes(ss58_address: str) -> bytes:
     """Converts a ss58 address to a bytes object."""
-    account_id_hex: str = scalecodec.ss58_decode(
-        ss58_address, basedai.__ss58_format__
-    )
+    account_id_hex: str = scalecodec.ss58_decode(ss58_address, basedai.__ss58_format__)
     return bytes.fromhex(account_id_hex)
 
 

@@ -15,18 +15,20 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import time
 import argparse
-import basedai
 import hashlib
-from . import defaults
+from typing import List, Optional, Dict
+
 from rich.prompt import Prompt
 from rich.table import Table
 from substrateinterface.utils.ss58 import ss58_decode
-from typing import List, Optional, Dict
+
+import basedai
+from . import defaults
 from .utils import get_delegates_details, DelegatesDetails, check_netuid_set
 
 console = basedai.__console__
+
 
 def ss58_to_ethereum(ss58_address):
     public_key = ss58_decode(ss58_address)
@@ -34,7 +36,8 @@ def ss58_to_ethereum(ss58_address):
     keccak_hash = hashlib.sha3_256(bytes.fromhex(public_key)).digest()
     eth_address = keccak_hash[-20:]
 
-    return '0x' + eth_address.hex()
+    return "0x" + eth_address.hex()
+
 
 class LinkBrainCommand:
     """
@@ -106,6 +109,7 @@ class LinkBrainCommand:
         basedai.wallet.add_args(parser)
         basedai.basednode.add_args(parser)
 
+
 class BrainListCommand:
     """
     The "list" command is executed to enumerate all active Brains along with their detailed network information. This command is tailored to furnish users with comprehensive insights into each Brain within the network, encompassing unique identifiers (netuids), neuron counts, maximum Agent capacities, emission rates, tempos, recycle register costs (burn), proof of work (PoW) difficulties, and the identity (either name or SS58 address) of the Brain's owner.
@@ -170,7 +174,9 @@ class BrainListCommand:
                     f"{subnet.burn!s:8.8}",
                     f"0",
                     f"{delegate_info[subnet.owner_ss58].name if subnet.owner_ss58 in delegate_info else subnet.owner_ss58}",
-                    ss58_to_ethereum(f"{delegate_info[subnet.owner_ss58].name if subnet.owner_ss58 in delegate_info else subnet.owner_ss58}")
+                    ss58_to_ethereum(
+                        f"{delegate_info[subnet.owner_ss58].name if subnet.owner_ss58 in delegate_info else subnet.owner_ss58}"
+                    ),
                 )
             )
         table = Table(
@@ -407,9 +413,7 @@ class BrainParametersCommand:
 
     @staticmethod
     def add_args(parser: argparse.ArgumentParser):
-        parser = parser.add_parser(
-            "parameters", help="""View Brain Parameters"""
-        )
+        parser = parser.add_parser("parameters", help="""View Brain Parameters""")
         parser.add_argument(
             "--netuid", dest="netuid", type=int, required=False, default=False
         )

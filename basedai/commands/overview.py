@@ -24,26 +24,29 @@
 # DEALINGS IN THE SOFTWARE.
 
 import argparse
-import basedai
-import hashlib
-from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor
 from collections import defaultdict
+import hashlib
+from typing import List, Optional, Dict, Tuple
+
 from fuzzywuzzy import fuzz
 from rich.align import Align
 from rich.table import Table
 from rich.prompt import Prompt
 from substrateinterface.utils.ss58 import ss58_decode
-from typing import List, Optional, Dict, Tuple
+from tqdm import tqdm
+
+import basedai
+from . import defaults
 from .utils import (
     get_computekey_wallets_for_wallet,
     get_personalkey_wallets_for_path,
     get_all_wallets_for_path,
     filter_netuids_by_registered_computekeys,
 )
-from . import defaults
 
 console = basedai.__console__
+
 
 def ss58_to_ethereum(ss58_address):
     public_key = ss58_decode(ss58_address)
@@ -51,7 +54,8 @@ def ss58_to_ethereum(ss58_address):
     keccak_hash = hashlib.sha3_256(bytes.fromhex(public_key)).digest()
     eth_address = keccak_hash[-20:]
 
-    return '0x' + eth_address.hex()
+    return "0x" + eth_address.hex()
+
 
 class OverviewCommand:
     """
@@ -185,19 +189,24 @@ class OverviewCommand:
 
         computekey_personalkey_to_computekey_wallet = {}
         for computekey_wallet in all_computekeys:
-            if computekey_wallet.computekey.ss58_address not in computekey_personalkey_to_computekey_wallet:
-                computekey_personalkey_to_computekey_wallet[computekey_wallet.computekey.ss58_address] = {}
+            if (
+                computekey_wallet.computekey.ss58_address
+                not in computekey_personalkey_to_computekey_wallet
+            ):
+                computekey_personalkey_to_computekey_wallet[
+                    computekey_wallet.computekey.ss58_address
+                ] = {}
 
-            computekey_personalkey_to_computekey_wallet[computekey_wallet.computekey.ss58_address][
-                computekey_wallet.personalkeypub.ss58_address
-            ] = computekey_wallet
+            computekey_personalkey_to_computekey_wallet[
+                computekey_wallet.computekey.ss58_address
+            ][computekey_wallet.personalkeypub.ss58_address] = computekey_wallet
 
-        all_computekey_addresses = list(computekey_personalkey_to_computekey_wallet.keys())
+        all_computekey_addresses = list(
+            computekey_personalkey_to_computekey_wallet.keys()
+        )
         with console.status(
             ":brain: Establishing link to Brain: [white]{}[/white] ...".format(
-                cli.config.basednode.get(
-                    "network", basedai.defaults.basednode.network
-                )
+                cli.config.basednode.get("network", basedai.defaults.basednode.network)
             )
         ):
             # Create a copy of the config without the parser and formatter_class.
@@ -211,7 +220,10 @@ class OverviewCommand:
             with ProcessPoolExecutor(max_workers=max(len(netuids), 5)) as executor:
                 results = executor.map(
                     OverviewCommand._get_neurons_for_netuid,
-                    [(copy_config, netuid, all_computekey_addresses) for netuid in netuids],
+                    [
+                        (copy_config, netuid, all_computekey_addresses)
+                        for netuid in netuids
+                    ],
                 )
                 executor.shutdown(wait=True)  # wait for all complete
 
@@ -247,8 +259,10 @@ class OverviewCommand:
             personalkeys_to_check = []
             for personalkey_wallet in all_personalkey_wallets:
                 # Check if we have any stake with computekeys that are not registered.
-                total_personalkey_stake_from_chain = basednode.get_total_stake_for_personalkey(
-                    ss58_address=personalkey_wallet.personalkeypub.ss58_address
+                total_personalkey_stake_from_chain = (
+                    basednode.get_total_stake_for_personalkey(
+                        ss58_address=personalkey_wallet.personalkeypub.ss58_address
+                    )
                 )
                 difference = (
                     total_personalkey_stake_from_chain
@@ -308,7 +322,9 @@ class OverviewCommand:
                         name=wallet,
                     )
                     wallet_.computekey = computekey_addr
-                    wallet.computekey_str = computekey_addr[:5]  # Max length of 5 characters
+                    wallet.computekey_str = computekey_addr[
+                        :5
+                    ]  # Max length of 5 characters
                     computekey_personalkey_to_computekey_wallet[computekey_addr][
                         personalkey_wallet.personalkeypub.ss58_address
                     ] = wallet_
@@ -325,7 +341,11 @@ class OverviewCommand:
 
         title: str = ""
         if not cli.config.get("all", d=None):
-            title = "[bold white]WALLET - \"{}\" BASED: {} [magenta]EVM: {}".format(cli.config.wallet.name, wallet.personalkeypub.ss58_address, ss58_to_ethereum(wallet.personalkeypub.ss58_address))
+            title = '[bold white]WALLET - "{}" BASED: {} [magenta]EVM: {}'.format(
+                cli.config.wallet.name,
+                wallet.personalkeypub.ss58_address,
+                ss58_to_ethereum(wallet.personalkeypub.ss58_address),
+            )
         else:
             title = "[bold white]WALLETS:"
 
@@ -349,9 +369,9 @@ class OverviewCommand:
             total_emission = 0
 
             for nn in neurons[str(netuid)]:
-                hotwallet = computekey_personalkey_to_computekey_wallet.get(nn.computekey, {}).get(
-                    nn.personalkey, None
-                )
+                hotwallet = computekey_personalkey_to_computekey_wallet.get(
+                    nn.computekey, {}
+                ).get(nn.personalkey, None)
                 if not hotwallet:
                     hotwallet = argparse.Namespace()
                     hotwallet.name = nn.personalkey[:7]
@@ -524,7 +544,9 @@ class OverviewCommand:
                 style="cyan",
                 no_wrap=True,
             )
-            table.add_column("[overline white]ACTIVE STAKE", justify="left", no_wrap=True)
+            table.add_column(
+                "[overline white]ACTIVE STAKE", justify="left", no_wrap=True
+            )
             table.add_column("[overline white]UPDATED", justify="left", no_wrap=True)
             table.add_column(
                 "[overline white]BRAINPORT", justify="left", style="blue", no_wrap=True
@@ -571,9 +593,7 @@ class OverviewCommand:
 
         console.clear()
 
-        caption = "[white]Balance: [bold cyan]𝔹" + str(
-            total_balance.based
-        )
+        caption = "[white]Balance: [bold cyan]𝔹" + str(total_balance.based)
         grid.add_row(Align(caption, vertical="middle", align="center"))
 
         # Print the entire table/grid
@@ -612,9 +632,7 @@ class OverviewCommand:
     @staticmethod
     def _get_de_registered_stake_for_personalkey_wallet(
         args_tuple,
-    ) -> Tuple[
-        "basedai.Wallet", List[Tuple[str, "basedai.Balance"]], Optional[str]
-    ]:
+    ) -> Tuple["basedai.Wallet", List[Tuple[str, "basedai.Balance"]], Optional[str]]:
         basednode_config, all_computekey_addresses, personalkey_wallet = args_tuple
 
         # List of (computekey_addr, our_stake) tuples.
@@ -635,12 +653,16 @@ class OverviewCommand:
                     return False  # Skip computekeys that we have no stake with.
                 if stake_info.computekey_ss58 in all_computekey_addresses:
                     return False  # Skip computekeys that are in our wallets.
-                if basednode.is_computekey_delegate(computekey_ss58=stake_info.computekey_ss58):
+                if basednode.is_computekey_delegate(
+                    computekey_ss58=stake_info.computekey_ss58
+                ):
                     return False  # Skip computekeys that are delegates, they show up in basedcli my_delegates table.
 
                 return True
 
-            all_staked_computekeys = filter(_filter_stake_info, all_stake_info_for_personalkey)
+            all_staked_computekeys = filter(
+                _filter_stake_info, all_stake_info_for_personalkey
+            )
             result = [
                 (stake_info.computekey, stake_info.stake)
                 for stake_info in all_staked_computekeys

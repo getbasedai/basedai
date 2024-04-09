@@ -29,14 +29,57 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
-import shtab
 import argparse
-import basedai
 import os
-import requests
+import sys
 from typing import List, Optional
-from .commands import *
+
+import shtab
+import requests
+
+import basedai
+from .commands import (
+    StakeCommand,
+    StakeShow,
+    UnStakeCommand,
+    OverviewCommand,
+    PowMemorizeCommand,
+    MemorizeCommand,
+    RunFaucetCommand,
+    SwapComputekeyCommand,
+    NominateCommand,
+    ListDelegatesCommand,
+    DelegateStakeCommand,
+    DelegateUnstakeCommand,
+    PortfolioCommand,
+    NewPersonalkeyCommand,
+    NewComputekeyCommand,
+    RegenPersonalkeyCommand,
+    RegenPersonalkeypubCommand,
+    RegenComputekeyCommand,
+    WalletCreateCommand,
+    WalletBalanceCommand,
+    GetWalletHistoryCommand,
+    TransferCommand,
+    InspectCommand,
+    StemCommand,
+    ListCommand,
+    GigaBrainsCommand,
+    ProposalsCommand,
+    VoteCommand,
+    LinkBrainCommand,
+    BrainListCommand,
+    BrainParametersCommand,
+    BrainSetParametersCommand,
+    BrainGetParametersCommand,
+    CoreMemorizeCommand,
+    CoreList,
+    CoreSetWeightsCommand,
+    CoreGetWeightsCommand,
+    CoreSetIncreaseCommand,
+    CoreSetDecreaseCommand,
+    BrainStoreListCommand,
+)
 
 # Create a console instance for CLI display.
 console = basedai.__console__
@@ -81,9 +124,7 @@ COMMANDS = {
         "name": "brainstore",
         "aliases": ["brainstore"],
         "help": "Commands for managing and community approved Brains.",
-        "commands": {
-            "list": BrainStoreListCommand
-        },
+        "commands": {"list": BrainStoreListCommand},
     },
     "core": {
         "name": "core",
@@ -125,8 +166,8 @@ COMMANDS = {
             "faucet": RunFaucetCommand,
             "swap_computekey": SwapComputekeyCommand,
             "history": GetWalletHistoryCommand,
-            #"set_identity": SetIdentityCommand,
-            #"get_identity": GetIdentityCommand,
+            # "set_identity": SetIdentityCommand,
+            # "get_identity": GetIdentityCommand,
         },
     },
     "stake": {
@@ -147,12 +188,13 @@ COMMANDS = {
             "set": BrainSetParametersCommand,
             "get": BrainGetParametersCommand,
         },
-    }
+    },
 }
+
 
 def print_status_bar():
     # Clear terminal
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
     header = r"""
   _ )    \     __|  __|  _ \       \   _ _|
@@ -162,26 +204,26 @@ def print_status_bar():
 
     ansi_color = "\033[1;36m"
     ansi_reset = "\033[0m"
-    #height = basedai.stem(0).block.item()
+    # height = basedai.stem(0).block.item()
     height = "TESTNET (1 of 2)"
 
     try:
         response = requests.get("http://basedainet.com:5051")
         price = response.text.strip('"')
-    except Exception as e:
+    except Exception:
         price = "NA"
 
-    #status_bar_content = f"NETWORK: {ansi_color}prometheus{ansi_reset} | COST: {ansi_color}${price}{ansi_reset} (𝔹) | STATUS: {ansi_color}{height}{ansi_reset}"
+    # status_bar_content = f"NETWORK: {ansi_color}prometheus{ansi_reset} | COST: {ansi_color}${price}{ansi_reset} (𝔹) | STATUS: {ansi_color}{height}{ansi_reset}"
     status_bar_content = f"NETWORK: {ansi_color}prometheus{ansi_reset} | COST: ${price} (𝔹) | STATUS: {height}"
     print(header)
     border_length = len(status_bar_content.strip()) - 9
-    #print('═' * (len(status_bar_content.strip()) - 11))
-    #print(status_bar_content)
-    #print('═' * (len(status_bar_content.strip()) - 11))
+    # print('═' * (len(status_bar_content.strip()) - 11))
+    # print(status_bar_content)
+    # print('═' * (len(status_bar_content.strip()) - 11))
 
-    print('╔' + '═' * (border_length) + '╗')
+    print("╔" + "═" * (border_length) + "╗")
     print(f"║ {status_bar_content} ║")
-    print('╚' + '═' * (border_length) + '╝')
+    print("╚" + "═" * (border_length) + "╝")
 
 
 class CLIErrorParser(argparse.ArgumentParser):
@@ -223,8 +265,8 @@ class cli:
         basedai.turn_console_on()
 
         # If no config is provided, create a new one from args.
-        if config == None:
-            config = cli.create_config(args)
+        if config is None:
+            config = cli.create_config(args or [])
 
         self.config = config
         if self.config.command in ALIAS_TO_COMMAND:
@@ -242,7 +284,7 @@ class cli:
         if not self.config.get("no_version_checking", d=False):
             try:
                 basedai.utils.version_checking()
-            except:
+            except Exception:
                 # If version checking fails, inform user with an exception.
                 raise RuntimeError(
                     "To avoid internet-based version checking, pass --no_version_checking while running the CLI."
@@ -324,7 +366,7 @@ class cli:
             command_data = COMMANDS[command]
 
             if isinstance(command_data, dict):
-                if config["subcommand"] != None:
+                if config["subcommand"] is not None:
                     command_data["commands"][config["subcommand"]].check_config(config)
                 else:
                     console.print(

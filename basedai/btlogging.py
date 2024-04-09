@@ -18,14 +18,16 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import sys
-import copy
-import torch
 import argparse
-import basedai
+import copy
+import os
+import re
+import sys
 
 from loguru import logger
+import torch
+
+import basedai
 
 logger = logger.opt(colors=True)
 # Remove default sink.
@@ -33,8 +35,6 @@ try:
     logger.remove(0)
 except Exception:
     pass
-
-import re
 
 
 def _remove_loguru_ansi_directive(text: str) -> str:
@@ -95,9 +95,9 @@ class logging:
             pass
 
         # Optionally Remove other sinks.
-        if cls.__std_sink__ != None:
+        if cls.__std_sink__ is not None:
             logger.remove(cls.__std_sink__)
-        if cls.__file_sink__ != None:
+        if cls.__file_sink__ is not None:
             logger.remove(cls.__file_sink__)
 
         # Add filtered sys.stdout.

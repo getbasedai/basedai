@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 # Copyright © 2023 Based Labs
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
@@ -95,9 +95,7 @@ class brainrequester(torch.nn.Module):
         >>> d( basedai.brainport(), basedai.Brainresponder )
     """
 
-    def __init__(
-        self, wallet: Optional[Union[basedai.wallet, basedai.keypair]] = None
-    ):
+    def __init__(self, wallet: Optional[Union[basedai.wallet, basedai.keypair]] = None):
         """
         Initializes the Brainrequester object, setting up essential properties.
 
@@ -335,7 +333,13 @@ class brainrequester(torch.nn.Module):
         deserialize: bool = True,
         run_async: bool = True,
         streaming: bool = False,
-    ) -> List[Union[AsyncGenerator[Any], bittenst.Brainresponder, basedai.StreamingBrainresponder]]:
+    ) -> List[
+        Union[
+            AsyncGenerator[Any],
+            bittenst.Brainresponder,
+            basedai.StreamingBrainresponder,
+        ]
+    ]:
         """
         Asynchronously sends requests to one or multiple Brainports and collates their responses.
 
@@ -400,7 +404,11 @@ class brainrequester(torch.nn.Module):
 
         async def query_all_brainports(
             is_stream: bool,
-        ) -> Union[AsyncGenerator[Any], bittenst.Brainresponder, basedai.StreamingBrainresponder]:
+        ) -> Union[
+            AsyncGenerator[Any],
+            bittenst.Brainresponder,
+            basedai.StreamingBrainresponder,
+        ]:
             """
             Handles the processing of requests to all targeted brainports, accommodating both streaming and non-streaming responses.
 
@@ -421,7 +429,9 @@ class brainrequester(torch.nn.Module):
             async def single_brainport_response(
                 target_brainport,
             ) -> Union[
-                AsyncGenerator[Any], bittenst.Brainresponder, basedai.StreamingBrainresponder
+                AsyncGenerator[Any],
+                bittenst.Brainresponder,
+                basedai.StreamingBrainresponder,
             ]:
                 """
                 Manages the request and response process for a single brainport, supporting both streaming and non-streaming modes.
@@ -460,11 +470,15 @@ class brainrequester(torch.nn.Module):
             # If run_async flag is False, get responses one by one.
             if not run_async:
                 return [
-                    await single_brainport_response(target_brainport) for target_brainport in brainports
+                    await single_brainport_response(target_brainport)
+                    for target_brainport in brainports
                 ]
             # If run_async flag is True, get responses concurrently using asyncio.gather().
             return await asyncio.gather(
-                *(single_brainport_response(target_brainport) for target_brainport in brainports)
+                *(
+                    single_brainport_response(target_brainport)
+                    for target_brainport in brainports
+                )
             )
 
         # Get responses for all brainports.
@@ -512,7 +526,9 @@ class brainrequester(torch.nn.Module):
         url = self._get_endpoint_url(target_brainport, request_name=request_name)
 
         # Preprocess brainresponder for making a request
-        brainresponder = self.preprocess_brainresponder_for_request(target_brainport, brainresponder, timeout)
+        brainresponder = self.preprocess_brainresponder_for_request(
+            target_brainport, brainresponder, timeout
+        )
 
         try:
             # Log outgoing request
@@ -594,7 +610,9 @@ class brainrequester(torch.nn.Module):
         url = f"http://{endpoint}/{request_name}"
 
         # Preprocess brainresponder for making a request
-        brainresponder = self.preprocess_brainresponder_for_request(target_brainport, brainresponder, timeout)
+        brainresponder = self.preprocess_brainresponder_for_request(
+            target_brainport, brainresponder, timeout
+        )
 
         try:
             # Log outgoing request
@@ -679,7 +697,9 @@ class brainrequester(torch.nn.Module):
 
         # Sign the request using the brainrequester, brainport info, and the brainresponder body hash
         message = f"{brainresponder.brainrequester.nonce}.{brainresponder.brainrequester.computekey}.{brainresponder.brainport.computekey}.{brainresponder.brainrequester.uuid}.{brainresponder.body_hash}"
-        brainresponder.brainrequester.signature = f"0x{self.keypair.sign(message).hex()}"
+        brainresponder.brainrequester.signature = (
+            f"0x{self.keypair.sign(message).hex()}"
+        )
 
         return brainresponder
 
@@ -711,7 +731,9 @@ class brainrequester(torch.nn.Module):
                 try:
                     # Set the attribute in the local brainresponder from the corresponding
                     # attribute in the server brainresponder
-                    setattr(local_brainresponder, key, getattr(server_brainresponder, key))
+                    setattr(
+                        local_brainresponder, key, getattr(server_brainresponder, key)
+                    )
                 except:
                     # Ignore errors during attribute setting
                     pass
@@ -736,8 +758,12 @@ class brainrequester(torch.nn.Module):
         )
 
         # Update the status code and status message of the brainrequester to match the brainport
-        local_brainresponder.brainrequester.status_code = local_brainresponder.brainport.status_code
-        local_brainresponder.brainrequester.status_message = local_brainresponder.brainport.status_message
+        local_brainresponder.brainrequester.status_code = (
+            local_brainresponder.brainport.status_code
+        )
+        local_brainresponder.brainrequester.status_message = (
+            local_brainresponder.brainport.status_message
+        )
 
     def __str__(self) -> str:
         """

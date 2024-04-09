@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -16,10 +16,12 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
 import argparse
-import basedai
+import sys
+
 from rich.prompt import Prompt
+
+import basedai
 from . import defaults
 
 console = basedai.__console__
@@ -77,7 +79,9 @@ class TransferCommand:
     @staticmethod
     def check_config(config: "basedai.config"):
         if not config.is_set("wallet.name") and not config.no_prompt:
-            wallet_name = Prompt.ask("Enter wallet name to transfer from", default=defaults.wallet.name)
+            wallet_name = Prompt.ask(
+                "Enter wallet name to transfer from", default=defaults.wallet.name
+            )
             config.wallet.name = str(wallet_name)
 
         # Get destination.
@@ -93,7 +97,9 @@ class TransferCommand:
             wallet = basedai.wallet(config=config)
             basednode = basedai.basednode(config=config, log_verbose=False)
             with basedai.__console__.status(":brain: Checking Balance..."):
-                account_balance = basednode.get_balance(wallet.personalkeypub.ss58_address)
+                account_balance = basednode.get_balance(
+                    wallet.personalkeypub.ss58_address
+                )
                 basedai.__console__.print(
                     "Balance: [green]{}[/green]".format(account_balance)
                 )

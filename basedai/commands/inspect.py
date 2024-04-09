@@ -15,28 +15,25 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import json
 import argparse
-import basedai
-from tqdm import tqdm
+import os
+from typing import List, Tuple, Optional, Dict
+
 from rich.table import Table
 from rich.prompt import Prompt
+from tqdm import tqdm
+
+import basedai
 from .utils import (
-    check_netuid_set,
     get_delegates_details,
     DelegatesDetails,
     get_computekey_wallets_for_wallet,
-    get_personalkey_wallets_for_path,
     get_all_wallets_for_path,
     filter_netuids_by_registered_computekeys,
 )
 from . import defaults
 
 console = basedai.__console__
-
-import os
-import basedai
-from typing import List, Tuple, Optional, Dict
 
 
 def _get_personalkey_wallets_for_path(path: str) -> List["basedai.wallet"]:
@@ -128,7 +125,7 @@ class InspectCommand:
 
     @staticmethod
     def _run(cli: "basedai.cli", basednode: "basedai.basednode"):
-        if cli.config.get("all", d=False) == True:
+        if cli.config.get("all", d=False):
             wallets = _get_personalkey_wallets_for_path(cli.config.wallet.path)
             all_computekeys = get_all_wallets_for_path(cli.config.wallet.path)
         else:
@@ -157,7 +154,9 @@ class InspectCommand:
 
         table = Table(show_footer=True, pad_edge=False, box=None, expand=True)
         table.add_column(
-            "[overline white]Personalkey", footer_style="overline white", style="bold white"
+            "[overline white]Personalkey",
+            footer_style="overline white",
+            style="bold white",
         )
         table.add_column(
             "[overline white]Balance", footer_style="overline white", style="green"
@@ -186,7 +185,9 @@ class InspectCommand:
         for wallet in tqdm(wallets):
             delegates: List[
                 Tuple(basedai.DelegateInfo, basedai.Balance)
-            ] = basednode.get_delegated(personalkey_ss58=wallet.personalkeypub.ss58_address)
+            ] = basednode.get_delegated(
+                personalkey_ss58=wallet.personalkeypub.ss58_address
+            )
             if not wallet.personalkeypub_file.exists_on_device():
                 continue
             cold_balance = basednode.get_balance(wallet.personalkeypub.ss58_address)

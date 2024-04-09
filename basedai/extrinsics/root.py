@@ -16,15 +16,16 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import basedai
-
 import time
-import torch
-from rich.prompt import Confirm
-from typing import Union, List
-import basedai.utils.weight_utils as weight_utils
+from typing import Union
 
 from loguru import logger
+from rich.prompt import Confirm
+import torch
+
+import basedai
+import basedai.utils.weight_utils as weight_utils
+
 
 logger = logger.opt(colors=True)
 
@@ -68,7 +69,9 @@ def root_register_extrinsic(
         if not Confirm.ask(f"Instruct core network to memorize?"):
             return False
 
-    with basedai.__console__.status(":brain: Creating link to core permanent memory..."):
+    with basedai.__console__.status(
+        ":brain: Creating link to core permanent memory..."
+    ):
         success, err_msg = basednode._do_root_register(
             wallet=wallet,
             wait_for_inclusion=wait_for_inclusion,
@@ -191,7 +194,7 @@ def set_root_weights_extrinsic(
             if not wait_for_finalization and not wait_for_inclusion:
                 return True
 
-            if success == True:
+            if success:
                 basedai.__console__.print(
                     ":white_heavy_check_mark: [green]Finalized[/green]"
                 )

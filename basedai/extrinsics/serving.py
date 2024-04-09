@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -15,11 +15,13 @@
 # THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
+
 import json
-import basedai
-from dataclasses import asdict
-import basedai.utils.networking as net
+
 from rich.prompt import Confirm
+
+import basedai
+import basedai.utils.networking as net
 from ..errors import MetadataError
 
 
@@ -124,7 +126,7 @@ def serve_extrinsic(
     )
 
     if wait_for_inclusion or wait_for_finalization:
-        if success == True:
+        if success:
             basedai.logging.debug(
                 f"Brainport served with: BrainportInfo({wallet.computekey.ss58_address},{ip}:{port}) on {basednode.network}:{netuid} "
             )
@@ -248,7 +250,9 @@ def publish_metadata(
             call_params={"netuid": netuid, "info": {"fields": [[{f"{type}": data}]]}},
         )
 
-        extrinsic = substrate.create_signed_extrinsic(call=call, keypair=wallet.computekey)
+        extrinsic = substrate.create_signed_extrinsic(
+            call=call, keypair=wallet.computekey
+        )
         response = substrate.submit_extrinsic(
             extrinsic,
             wait_for_inclusion=wait_for_inclusion,
@@ -268,7 +272,9 @@ from retry import retry
 from typing import Optional
 
 
-def get_metadata(self, netuid: int, computekey: str, block: Optional[int] = None) -> str:
+def get_metadata(
+    self, netuid: int, computekey: str, block: Optional[int] = None
+) -> str:
     @retry(delay=2, tries=3, backoff=2, max_delay=4)
     def make_substrate_call_with_retry():
         with self.substrate as substrate:

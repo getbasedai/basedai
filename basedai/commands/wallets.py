@@ -21,17 +21,19 @@
 # DEALINGS IN THE SOFTWARE.
 
 import argparse
-import basedai
+import hashlib
 import os
 import sys
-import hashlib
-from rich.prompt import Prompt, Confirm
-from rich.table import Table
 from typing import Optional, List
-from . import defaults
+
 import requests
-from ..utils import RAOPERBASED
+from rich.prompt import Prompt
+from rich.table import Table
 from substrateinterface.utils.ss58 import ss58_decode
+
+import basedai
+from . import defaults
+from ..utils import RAOPERBASED
 
 
 class RegenPersonalkeyCommand:
@@ -306,7 +308,9 @@ class RegenComputekeyCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
         if (
             config.mnemonic == None
@@ -329,7 +333,8 @@ class RegenComputekeyCommand:
     @staticmethod
     def add_args(parser: argparse.ArgumentParser):
         regen_computekey_parser = parser.add_parser(
-            "import_computekey", help="""Regenerates a computekey from a passed mnemonic"""
+            "import_computekey",
+            help="""Regenerates a computekey from a passed mnemonic""",
         )
         regen_computekey_parser.add_argument(
             "--mnemonic",
@@ -419,7 +424,9 @@ class NewComputekeyCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
     @staticmethod
@@ -578,7 +585,9 @@ class WalletCreateCommand:
             wallet_name = Prompt.ask("Enter wallet name", default=defaults.wallet.name)
             config.wallet.name = str(wallet_name)
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
     @staticmethod
@@ -633,6 +642,7 @@ def _get_personalkey_wallets_for_path(path: str) -> List["basedai.wallet"]:
         wallets = []
     return wallets
 
+
 def _get_personalkey_ss58_addresses_for_path(path: str) -> List[str]:
     """Get all personalkey ss58 addresses from path."""
 
@@ -655,13 +665,15 @@ def _get_personalkey_ss58_addresses_for_path(path: str) -> List[str]:
         for file in list_personalkeypub_files(path)
     ]
 
+
 def ss58_to_ethereum(ss58_address):
     public_key = ss58_decode(ss58_address)
 
     keccak_hash = hashlib.sha3_256(bytes.fromhex(public_key)).digest()
     eth_address = keccak_hash[-20:]
 
-    return '0x' + eth_address.hex()
+    return "0x" + eth_address.hex()
+
 
 class WalletBalanceCommand:
     """
@@ -782,7 +794,8 @@ class WalletBalanceCommand:
     @staticmethod
     def add_args(parser: argparse.ArgumentParser):
         balance_parser = parser.add_parser(
-            "balance", help="""Checks the different types of balances in the wallet with EVM and native addresses."""
+            "balance",
+            help="""Checks the different types of balances in the wallet with EVM and native addresses.""",
         )
         basedai.wallet.add_args(balance_parser)
         basedai.basednode.add_args(balance_parser)
@@ -790,12 +803,14 @@ class WalletBalanceCommand:
     @staticmethod
     def check_config(config: "basedai.config"):
         if not config.is_set("wallet.path") and not config.no_prompt:
-            path = Prompt.ask("Where are you wallets located? Default:", default=defaults.wallet.path)
+            path = Prompt.ask(
+                "Where are you wallets located? Default:", default=defaults.wallet.path
+            )
             config.wallet.path = str(path)
 
         if not config.is_set("basednode.network") and not config.no_prompt:
             network = Prompt.ask(
-                    "Create link with stem: ",
+                "Create link with stem: ",
                 default=defaults.basednode.network,
                 choices=basedai.__networks__,
             )

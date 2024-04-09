@@ -20,13 +20,15 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
 import argparse
-import basedai
-from tqdm import tqdm
-from rich.prompt import Confirm, Prompt
-from basedai.utils.balance import Balance
+import sys
 from typing import List, Union, Optional, Dict, Tuple
+
+from rich.prompt import Confirm, Prompt
+from tqdm import tqdm
+
+import basedai
+from basedai.utils.balance import Balance
 from .utils import get_computekey_wallets_for_wallet
 from . import defaults
 
@@ -101,9 +103,13 @@ class StakeCommand:
         elif config.get("computekeys"):
             # Stake to specific computekeys.
             for computekey_ss58_or_computekey_name in config.get("computekeys"):
-                if basedai.utils.is_valid_ss58_address(computekey_ss58_or_computekey_name):
+                if basedai.utils.is_valid_ss58_address(
+                    computekey_ss58_or_computekey_name
+                ):
                     # If the computekey is a valid ss58 address, we add it to the list.
-                    computekeys_to_stake_to.append((None, computekey_ss58_or_computekey_name))
+                    computekeys_to_stake_to.append(
+                        (None, computekey_ss58_or_computekey_name)
+                    )
                 else:
                     # If the computekey is not a valid ss58 address, we assume it is a computekey name.
                     #  We then get the computekey from the wallet and add it to the list.
@@ -121,7 +127,9 @@ class StakeCommand:
                 computekeys_to_stake_to = [(None, computekey_ss58_or_name)]
             else:
                 # Computekey is not a valid ss58 address, so we assume it is a computekey name.
-                wallet_ = basedai.wallet(config=config, computekey=computekey_ss58_or_name)
+                wallet_ = basedai.wallet(
+                    config=config, computekey=computekey_ss58_or_name
+                )
                 computekeys_to_stake_to = [
                     (wallet_.computekey_str, wallet_.computekey.ss58_address)
                 ]
@@ -134,12 +142,18 @@ class StakeCommand:
             ]
 
         # Get personalkey balance
-        wallet_balance: Balance = basednode.get_balance(wallet.personalkeypub.ss58_address)
+        wallet_balance: Balance = basednode.get_balance(
+            wallet.personalkeypub.ss58_address
+        )
         final_computekeys: List[Tuple[str, str]] = []
         final_amounts: List[Union[float, Balance]] = []
         for computekey in tqdm(computekeys_to_stake_to):
-            computekey: Tuple[Optional[str], str]  # (computekey_name (or None), computekey_ss58)
-            if not basednode.is_computekey_registered_any(computekey_ss58=computekey[1]):
+            computekey: Tuple[
+                Optional[str], str
+            ]  # (computekey_name (or None), computekey_ss58)
+            if not basednode.is_computekey_registered_any(
+                computekey_ss58=computekey[1]
+            ):
                 # Computekey is not registered.
                 if len(computekeys_to_stake_to) == 1:
                     # Only one computekey, error
@@ -157,26 +171,37 @@ class StakeCommand:
             stake_amount_based: float = config.get("amount")
             if config.get("max_stake"):
                 # Get the current stake of the computekey from this personalkey.
-                computekey_stake: Balance = basednode.get_stake_for_personalkey_and_computekey(
-                    computekey_ss58=computekey[1], personalkey_ss58=wallet.personalkeypub.ss58_address
+                computekey_stake: Balance = (
+                    basednode.get_stake_for_personalkey_and_computekey(
+                        computekey_ss58=computekey[1],
+                        personalkey_ss58=wallet.personalkeypub.ss58_address,
+                    )
                 )
-                stake_amount_based: float = config.get("max_stake") - computekey_stake.based
+                stake_amount_based: float = (
+                    config.get("max_stake") - computekey_stake.based
+                )
 
                 # If the max_stake is greater than the current wallet balance, stake the entire balance.
-                stake_amount_based: float = min(stake_amount_based, wallet_balance.based)
+                stake_amount_based: float = min(
+                    stake_amount_based, wallet_balance.based
+                )
                 if (
                     stake_amount_based <= 0.00001
                 ):  # Threshold because of fees, might create a loop otherwise
                     # Skip computekey if max_stake is less than current stake.
                     continue
-                wallet_balance = Balance.from_based(wallet_balance.based - stake_amount_based)
+                wallet_balance = Balance.from_based(
+                    wallet_balance.based - stake_amount_based
+                )
 
                 if wallet_balance.based < 0:
                     # No more balance to stake.
                     break
 
             final_amounts.append(stake_amount_based)
-            final_computekeys.append(computekey)  # add both the name and the ss58 address.
+            final_computekeys.append(
+                computekey
+            )  # add both the name and the ss58 address.
 
         if len(final_computekeys) == 0:
             # No computekeys to stake to.
@@ -210,7 +235,9 @@ class StakeCommand:
 
         basednode.add_stake_multiple(
             wallet=wallet,
-            computekey_ss58s=[computekey_ss58 for _, computekey_ss58 in final_computekeys],
+            computekey_ss58s=[
+                computekey_ss58 for _, computekey_ss58 in final_computekeys
+            ],
             amounts=None if config.get("stake_all") else final_amounts,
             wait_for_inclusion=True,
             prompt=False,
@@ -228,7 +255,9 @@ class StakeCommand:
             and not config.wallet.get("all_computekeys")
             and not config.wallet.get("computekeys")
         ):
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
         # Get amount.
@@ -258,7 +287,8 @@ class StakeCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
         stake_parser = parser.add_parser(
-            "add", help="""Add stake to your computekey accounts from your personalkey."""
+            "add",
+            help="""Add stake to your computekey accounts from your personalkey.""",
         )
         stake_parser.add_argument("--all", dest="stake_all", action="store_true")
         stake_parser.add_argument("--uid", dest="uid", type=int, required=False)
@@ -393,7 +423,7 @@ class StakeShow:
     @staticmethod
     def _run(cli: "basedai.cli", basednode: "basedai.basednode"):
         r"""Show all stake accounts."""
-        if cli.config.get("all", d=False) == True:
+        if cli.config.get("all"):
             wallets = _get_personalkey_wallets_for_path(cli.config.wallet.path)
         else:
             wallets = [basedai.wallet(config=cli.config)]
@@ -527,7 +557,9 @@ class StakeShow:
                 total_rate += float(value["rate"])
         table = Table(show_footer=True, pad_edge=False, box=None, expand=False)
         table.add_column(
-            "[overline white]PERSONALKEY", footer_style="overline white", style="bold white"
+            "[overline white]PERSONALKEY",
+            footer_style="overline white",
+            style="bold white",
         )
         table.add_column(
             "[overline white]BALANCE",

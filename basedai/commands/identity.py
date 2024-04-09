@@ -1,8 +1,8 @@
 import argparse
-from rich import print
+from sys import getsizeof
+
 from rich.table import Table
 from rich.prompt import Prompt
-from sys import getsizeof
 
 import basedai
 
@@ -125,12 +125,16 @@ class SetIdentityCommand:
                     params=id_dict,
                 )
             except Exception as e:
-                console.print(f"[red]:cross_mark: Identity memorization failed![/red] {e}")
+                console.print(
+                    f"[red]:cross_mark: Identity memorization failed![/red] {e}"
+                )
                 exit(1)
 
             console.print(":white_heavy_check_mark: Success!")
 
-        identity = basednode.query_identity(identified or wallet.personalkey.ss58_address)
+        identity = basednode.query_identity(
+            identified or wallet.personalkey.ss58_address
+        )
 
         table = Table(title="[bold white italic]Memorized On-Chain Identity")
         table.add_column("Key", justify="right", style="cyan", no_wrap=True)

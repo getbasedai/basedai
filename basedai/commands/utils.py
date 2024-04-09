@@ -15,14 +15,16 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
-import os
-import torch
-import basedai
-from typing import List, Dict, Any, Optional
-from rich.prompt import Confirm, Prompt, PromptBase
-import requests
 from dataclasses import dataclass
+import os
+import sys
+from typing import List, Dict, Any, Optional
+
+import requests
+from rich.prompt import Confirm, PromptBase
+import torch
+
+import basedai
 from . import defaults
 
 console = basedai.__console__
@@ -73,7 +75,9 @@ def check_netuid_set(
             try:
                 config.netuid = int(netuid)
             except:
-                raise ValueError('Brain ID must be an integer or "None" (if applicable)')
+                raise ValueError(
+                    'Brain ID must be an integer or "None" (if applicable)'
+                )
 
 
 def check_for_cuda_reg_config(config: "basedai.config") -> None:
@@ -178,7 +182,9 @@ def filter_netuids_by_registered_computekeys(
 ) -> List[int]:
     netuids_with_registered_computekeys = []
     for wallet in all_computekeys:
-        netuids_list = basednode.get_netuids_for_computekey(wallet.computekey.ss58_address)
+        netuids_list = basednode.get_netuids_for_computekey(
+            wallet.computekey.ss58_address
+        )
         basedai.logging.debug(
             f"Computekey {wallet.computekey.ss58_address} memorized in the following agents: {netuids_list}"
         )

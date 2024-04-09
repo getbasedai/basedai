@@ -15,23 +15,21 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
-import os
 import argparse
-import basedai
-from typing import List, Optional
+import os
+import sys
+from typing import List, Dict, Optional
+
 from rich.table import Table
 from rich.prompt import Prompt
 from rich.prompt import Confirm
 from rich.console import Text
 from tqdm import tqdm
 from substrateinterface.exceptions import SubstrateRequestException
+
+import basedai
 from .utils import get_delegates_details, DelegatesDetails
 from . import defaults
-
-import os
-import basedai
-from typing import List, Dict, Optional
 
 
 def _get_personalkey_wallets_for_path(path: str) -> List["basedai.wallet"]:
@@ -132,9 +130,7 @@ def show_delegates(
     table.add_column(
         "[overline white]NOMINATORS", justify="left", style="cyan", no_wrap=True
     )
-    table.add_column(
-        "[overline white]DELEGATE STAKE(𝔹)", justify="left", no_wrap=True
-    )
+    table.add_column("[overline white]DELEGATE STAKE(𝔹)", justify="left", no_wrap=True)
     table.add_column(
         "[overline white]TOTAL STAKE(𝔹)",
         justify="left",
@@ -311,7 +307,9 @@ class DelegateStakeCommand:
             delegates.sort(key=lambda delegate: delegate.total_stake, reverse=True)
             show_delegates(delegates, prev_delegates=prev_delegates)
             delegate_index = Prompt.ask("Enter delegate index")
-            config.delegate_ss58key = str(delegates[int(delegate_index)].computekey_ss58)
+            config.delegate_ss58key = str(
+                delegates[int(delegate_index)].computekey_ss58
+            )
             console.print(
                 "Selected: [yellow]{}[/yellow]".format(config.delegate_ss58key)
             )
@@ -450,7 +448,9 @@ class DelegateUnstakeCommand:
             delegates.sort(key=lambda delegate: delegate.total_stake, reverse=True)
             show_delegates(delegates, prev_delegates=prev_delegates)
             delegate_index = Prompt.ask("Enter delegate index")
-            config.delegate_ss58key = str(delegates[int(delegate_index)].computekey_ss58)
+            config.delegate_ss58key = str(
+                delegates[int(delegate_index)].computekey_ss58
+            )
             console.print(
                 "Selected: [yellow]{}[/yellow]".format(config.delegate_ss58key)
             )
@@ -634,7 +634,9 @@ class NominateCommand:
             )
         else:
             # Check if we are a delegate.
-            is_delegate: bool = basednode.is_computekey_delegate(wallet.computekey.ss58_address)
+            is_delegate: bool = basednode.is_computekey_delegate(
+                wallet.computekey.ss58_address
+            )
             if not is_delegate:
                 basedai.__console__.print(
                     "Could not became a delegate on [white]{}[/white]".format(
@@ -663,7 +665,9 @@ class NominateCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
 
@@ -726,7 +730,7 @@ class PortfolioCommand:
     def _run(cli: "basedai.cli", basednode: "basedai.basednode"):
         """Delegates stake to a chain delegate."""
         config = cli.config.copy()
-        if config.get("all", d=None) == True:
+        if config.get("all", d=None):
             wallets = _get_personalkey_wallets_for_path(config.wallet.path)
         else:
             wallets = [basedai.wallet(config=config)]
@@ -757,9 +761,7 @@ class PortfolioCommand:
         table.add_column(
             "[overline white]NOMS", justify="center", style="cyan", no_wrap=True
         )
-        table.add_column(
-            "[overline white]OWNER STAKE(𝔹)", justify="left", no_wrap=True
-        )
+        table.add_column("[overline white]OWNER STAKE(𝔹)", justify="left", no_wrap=True)
         table.add_column(
             "[overline white]TOTAL STAKE(𝔹)",
             justify="left",
@@ -817,7 +819,9 @@ class PortfolioCommand:
                     delegate_name = registered_delegate_info[
                         delegate[0].computekey_ss58
                     ].name
-                    delegate_url = registered_delegate_info[delegate[0].computekey_ss58].url
+                    delegate_url = registered_delegate_info[
+                        delegate[0].computekey_ss58
+                    ].url
                     delegate_description = registered_delegate_info[
                         delegate[0].computekey_ss58
                     ].description

@@ -4,7 +4,7 @@ Implementation of the config class, which manages the configuration of different
 
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -20,14 +20,15 @@ Implementation of the config class, which manages the configuration of different
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import sys
-import yaml
+import argparse
 import copy
 from copy import deepcopy
+import os
+import sys
+from typing import Optional, Dict, Any, TypeVar, Type
+import yaml
+
 from munch import DefaultMunch
-from typing import List, Optional, Dict, Any, TypeVar, Type
-import argparse
 
 
 class InvalidConfigFile(Exception):
@@ -62,8 +63,8 @@ class config(DefaultMunch):
 
     def __init__(
         self,
-        parser: argparse.ArgumentParser = None,
-        args: Optional[List[str]] = None,
+        parser: argparse.ArgumentParser | None = None,
+        args: Optional[list[str]] = None,
         strict: bool = False,
         default: Optional[Any] = None,
     ) -> None:
@@ -245,13 +246,13 @@ class config(DefaultMunch):
 
     @staticmethod
     def __parse_args__(
-        args: List[str], parser: argparse.ArgumentParser = None, strict: bool = False
+        args: list[str], parser: argparse.ArgumentParser | None = None, strict: bool = False
     ) -> argparse.Namespace:
         """Parses the passed args use the passed parser.
 
         Args:
-            args (List[str]):
-                List of arguments to parse.
+            args (list[str]):
+                list of arguments to parse.
             parser (argparse.ArgumentParser):
                 Command line parser object.
             strict (bool):
@@ -346,14 +347,14 @@ class config(DefaultMunch):
         self = self._merge(self, b)
 
     @classmethod
-    def merge_all(cls, configs: List["config"]) -> "config":
+    def merge_all(cls, configs: list["config"]) -> "config":
         """
         Merge all configs in the list into one config.
         If there is a conflict, the value from the last configuration in the list will take precedence.
 
         Args:
             configs (list of config):
-                List of configs to be merged.
+                list of configs to be merged.
 
         Returns:
             config:

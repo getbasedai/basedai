@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 # Copyright © 2023 Based Labs
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated

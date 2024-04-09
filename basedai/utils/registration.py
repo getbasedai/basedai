@@ -367,7 +367,9 @@ def _update_curr_block(
     with lock:
         curr_block_num.value = block_number
         # Hash the block with the computekey
-        block_and_computekey_hash_bytes = _hash_block_with_computekey(block_bytes, computekey_bytes)
+        block_and_computekey_hash_bytes = _hash_block_with_computekey(
+            block_bytes, computekey_bytes
+        )
         for i in range(32):
             curr_block[i] = block_and_computekey_hash_bytes[i]
         _registration_diff_pack(diff, curr_diff)
@@ -505,7 +507,9 @@ def _solve_for_difficulty_fast(
     check_block = multiprocessing.Lock()
 
     computekey_bytes = (
-        wallet.personalkeypub.public_key if netuid == -1 else wallet.computekey.public_key
+        wallet.personalkeypub.public_key
+        if netuid == -1
+        else wallet.computekey.public_key
     )
     # Start consumers
     solvers = [
@@ -687,9 +691,7 @@ def _get_block_with_retry(
     difficulty = 1_000_000 if netuid == -1 else basednode.difficulty(netuid=netuid)
     block_hash = basednode.get_block_hash(block_number)
     if block_hash is None:
-        raise Exception(
-            "Network error. Could not connect to BasedAI to get block hash"
-        )
+        raise Exception("Network error. Could not connect to BasedAI to get block hash")
     if difficulty is None:
         raise ValueError("Chain error. Difficulty is None")
     return block_number, difficulty, block_hash

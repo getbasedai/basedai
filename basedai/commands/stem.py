@@ -21,9 +21,10 @@
 # DEALINGS IN THE SOFTWARE.
 
 import argparse
-import basedai
-from rich.prompt import Prompt
+
 from rich.table import Table
+
+import basedai
 from .utils import check_netuid_set
 
 console = basedai.__console__
@@ -257,9 +258,7 @@ class StemCommand:
 
     @staticmethod
     def add_args(parser: argparse.ArgumentParser):
-        stem_parser = parser.add_parser(
-            "stem", help="""View Brain stem information."""
-        )
+        stem_parser = parser.add_parser("stem", help="""View Brain stem information.""")
         stem_parser.add_argument(
             "--netuid",
             dest="netuid",

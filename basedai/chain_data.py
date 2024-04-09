@@ -223,7 +223,10 @@ class BrainportInfo:
 
     def __str__(self):
         return "BrainportInfo( {}, {}, {}, {} )".format(
-            str(self.ip_str()), str(self.computekey), str(self.personalkey), self.version
+            str(self.ip_str()),
+            str(self.computekey),
+            str(self.personalkey),
+            self.version,
         )
 
     def __repr__(self):
@@ -492,7 +495,10 @@ class NeuronInfo:
     @staticmethod
     def _neuron_dict_to_namespace(neuron_dict) -> "NeuronInfo":
         # TODO: Legacy: remove?
-        if neuron_dict["computekey"] == "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM":
+        if (
+            neuron_dict["computekey"]
+            == "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM"
+        ):
             return NeuronInfo._null_neuron()
         else:
             neuron = NeuronInfo(**neuron_dict)
@@ -647,7 +653,10 @@ class NeuronInfoLite:
     @staticmethod
     def _neuron_dict_to_namespace(neuron_dict) -> "NeuronInfoLite":
         # TODO: Legacy: remove?
-        if neuron_dict["computekey"] == "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM":
+        if (
+            neuron_dict["computekey"]
+            == "5C4hrfjw9DjXZTzV3MwzrrAr9P1MJhSrvWGWqi1eSuyUpnhM"
+        ):
             return NeuronInfoLite._null_neuron()
         else:
             neuron = NeuronInfoLite(**neuron_dict)
@@ -799,7 +808,9 @@ class StakeInfo:
 
         return cls(
             computekey_ss58=ss58_encode(decoded["computekey"], basedai.__ss58_format__),
-            personalkey_ss58=ss58_encode(decoded["personalkey"], basedai.__ss58_format__),
+            personalkey_ss58=ss58_encode(
+                decoded["personalkey"], basedai.__ss58_format__
+            ),
             stake=Balance.from_rao(decoded["stake"]),
         )
 

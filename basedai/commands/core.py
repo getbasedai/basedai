@@ -15,16 +15,17 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
-import re
-import torch
-import typing
 import argparse
-import numpy as np
-import basedai
+import re
+import typing
 from typing import List, Optional, Dict
-from rich.prompt import Prompt, Confirm
+
+import numpy as np
+from rich.prompt import Prompt
 from rich.table import Table
+import torch
+
+import basedai
 from .utils import get_delegates_details, DelegatesDetails
 
 from . import defaults
@@ -87,7 +88,9 @@ class CoreMemorizeCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
 
@@ -192,7 +195,9 @@ class CoreList:
                 ),
                 neuron_data.computekey,
                 "{:.5f}".format(
-                    float(basednode.get_total_stake_for_computekey(neuron_data.computekey))
+                    float(
+                        basednode.get_total_stake_for_computekey(neuron_data.computekey)
+                    )
                 ),
                 "Yes" if neuron_data.computekey in senate_members else "No",
             )
@@ -204,7 +209,9 @@ class CoreList:
 
     @staticmethod
     def add_args(parser: argparse.ArgumentParser):
-        parser = parser.add_parser("list", help="""List all Brains connected to the core of BasedAI.""")
+        parser = parser.add_parser(
+            "list", help="""List all Brains connected to the core of BasedAI."""
+        )
         basedai.basednode.add_args(parser)
 
     @staticmethod
@@ -245,7 +252,6 @@ class CoreSetIncreaseCommand:
     def _run(cli: "basedai.cli", basednode: "basedai.basednode"):
         r"""Set weights for core network."""
         wallet = basedai.wallet(config=cli.config)
-        subnets: List[basedai.SubnetInfo] = basednode.get_all_subnets_info()
 
         core = basednode.stem(0, lite=False)
         try:
@@ -293,12 +299,14 @@ class CoreSetIncreaseCommand:
             wallet_name = Prompt.ask("Enter wallet name", default=defaults.wallet.name)
             config.wallet.name = str(wallet_name)
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
         if not config.is_set("netuid") and not config.no_prompt:
-            config.netuid = int(Prompt.ask(f"Enter Brain ID (e.g. 1)"))
+            config.netuid = int(Prompt.ask("Enter Brain ID (e.g. 1)"))
         if not config.is_set("amount") and not config.no_prompt:
-            config.amount = float(Prompt.ask(f"Enter amount (e.g. 0.01)"))
+            config.amount = float(Prompt.ask("Enter amount (e.g. 0.01)"))
 
 
 class CoreSetDecreaseCommand:
@@ -334,7 +342,6 @@ class CoreSetDecreaseCommand:
     @staticmethod
     def _run(cli: "basedai.cli", basednode: "basedai.basednode"):
         wallet = basedai.wallet(config=cli.config)
-        subnets: List[basedai.SubnetInfo] = basednode.get_all_subnets_info()
 
         basedai.__console__.print(
             "Decreasing weight for subnet: {} by amount: {}".format(
@@ -381,12 +388,14 @@ class CoreSetDecreaseCommand:
             wallet_name = Prompt.ask("Enter wallet name", default=defaults.wallet.name)
             config.wallet.name = str(wallet_name)
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
         if not config.is_set("netuid") and not config.no_prompt:
-            config.netuid = int(Prompt.ask(f"Enter Brain ID (e.g. 1)"))
+            config.netuid = int(Prompt.ask("Enter Brain ID (e.g. 1)"))
         if not config.is_set("amount") and not config.no_prompt:
-            config.amount = float(Prompt.ask(f"Enter decrease amount (e.g. 0.01)"))
+            config.amount = float(Prompt.ask("Enter decrease amount (e.g. 0.01)"))
 
 
 class CoreSetWeightsCommand:
@@ -488,7 +497,9 @@ class CoreSetWeightsCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
 
@@ -531,10 +542,10 @@ class CoreGetWeightsCommand:
         weights = basednode.weights(0)
 
         table = Table(
-                show_footer=False,
-                show_header=True,
-                show_lines=True,
-                )
+            show_footer=False,
+            show_header=True,
+            show_lines=True,
+        )
         table.title = "[white]CORE - STEM WEIGHTS"
         table.add_column(
             "[white]BRAIN UID",

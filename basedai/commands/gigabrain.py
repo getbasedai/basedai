@@ -20,13 +20,13 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
 import argparse
-import basedai
+from typing import Optional, Dict
+
 from rich.prompt import Prompt, Confirm
 from rich.table import Table
-from rich.console import Console
-from typing import List, Union, Optional, Dict, Tuple
+
+import basedai
 from .utils import get_delegates_details, DelegatesDetails
 from . import defaults
 
@@ -117,9 +117,7 @@ class GigaBrainsCommand:
 
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
-        senate_parser = parser.add_parser(
-            "gigabrains", help="""View all GigaBrains."""
-        )
+        senate_parser = parser.add_parser("gigabrains", help="""View all GigaBrains.""")
 
         basedai.wallet.add_args(senate_parser)
         basedai.basednode.add_args(senate_parser)
@@ -280,7 +278,8 @@ class ProposalsCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
         proposals_parser = parser.add_parser(
-            "proposals", help="""View active Based Labs council proposals and their status"""
+            "proposals",
+            help="""View active Based Labs council proposals and their status""",
         )
 
         basedai.wallet.add_args(proposals_parser)
@@ -466,7 +465,9 @@ class GigaBrainsMemorizeCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
     @classmethod
@@ -522,7 +523,9 @@ class GigaBrainsResignCommand:
         wallet.computekey
         wallet.personalkey
 
-        if not basednode.is_senate_member(computekey_ss58=wallet.computekey.ss58_address):
+        if not basednode.is_senate_member(
+            computekey_ss58=wallet.computekey.ss58_address
+        ):
             console.print(
                 "Aborting: Computekey {} isn't a GigaBrain.".format(
                     wallet.computekey.ss58_address
@@ -539,7 +542,9 @@ class GigaBrainsResignCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
     @classmethod
@@ -599,7 +604,9 @@ class VoteCommand:
             )
             return
 
-        if not basednode.is_senate_member(computekey_ss58=wallet.computekey.ss58_address):
+        if not basednode.is_senate_member(
+            computekey_ss58=wallet.computekey.ss58_address
+        ):
             console.print(
                 "Aborting: Computekey {} isn't a GigaBrain.".format(
                     wallet.computekey.ss58_address
@@ -632,7 +639,9 @@ class VoteCommand:
             config.wallet.name = str(wallet_name)
 
         if not config.is_set("wallet.computekey") and not config.no_prompt:
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
         if config.proposal_hash == "" and not config.no_prompt:

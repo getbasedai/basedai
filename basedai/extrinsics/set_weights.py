@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -16,15 +16,15 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import basedai
-
-import torch
-from rich.prompt import Confirm
-from typing import Union
-import basedai.utils.weight_utils as weight_utils
 import multiprocessing
+from typing import Union
 
 from loguru import logger
+from rich.prompt import Confirm
+import torch
+
+import basedai
+import basedai.utils.weight_utils as weight_utils
 
 logger = logger.opt(colors=True)
 
@@ -138,7 +138,7 @@ def set_weights_extrinsic(
             if not wait_for_finalization and not wait_for_inclusion:
                 return True
 
-            if success == True:
+            if success:
                 basedai.__console__.print(
                     ":white_heavy_check_mark: [green]Finalized[/green]"
                 )

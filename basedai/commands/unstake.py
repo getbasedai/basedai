@@ -16,11 +16,13 @@
 # DEALINGS IN THE SOFTWARE.
 
 import sys
-import basedai
-from tqdm import tqdm
-from rich.prompt import Confirm, Prompt
-from basedai.utils.balance import Balance
 from typing import List, Union, Optional, Tuple
+
+from rich.prompt import Confirm, Prompt
+from tqdm import tqdm
+
+import basedai
+from basedai.utils.balance import Balance
 from .utils import get_computekey_wallets_for_wallet
 from . import defaults
 
@@ -68,7 +70,9 @@ class UnStakeCommand:
             and not config.get("all_computekeys")
             and not config.get("computekeys")
         ):
-            computekey = Prompt.ask("Enter computekey name", default=defaults.wallet.computekey)
+            computekey = Prompt.ask(
+                "Enter computekey name", default=defaults.wallet.computekey
+            )
             config.wallet.computekey = str(computekey)
 
         # Get amount.
@@ -115,7 +119,10 @@ class UnStakeCommand:
             "--amount", dest="amount", type=float, required=False
         )
         unstake_parser.add_argument(
-            "--computekey_ss58address", dest="computekey_ss58address", type=str, required=False
+            "--computekey_ss58address",
+            dest="computekey_ss58address",
+            type=str,
+            required=False,
         )
         unstake_parser.add_argument(
             "--max_stake",
@@ -173,7 +180,9 @@ class UnStakeCommand:
         computekeys_to_unstake_from: List[Tuple[Optional[str], str]] = []
         if cli.config.get("computekey_ss58address"):
             # Stake to specific computekey.
-            computekeys_to_unstake_from = [(None, cli.config.get("computekey_ss58address"))]
+            computekeys_to_unstake_from = [
+                (None, cli.config.get("computekey_ss58address"))
+            ]
         elif cli.config.get("all_computekeys"):
             # Stake to all computekeys.
             all_computekeys: List[basedai.wallet] = get_computekey_wallets_for_wallet(
@@ -191,9 +200,13 @@ class UnStakeCommand:
         elif cli.config.get("computekeys"):
             # Stake to specific computekeys.
             for computekey_ss58_or_computekey_name in cli.config.get("computekeys"):
-                if basedai.utils.is_valid_ss58_address(computekey_ss58_or_computekey_name):
+                if basedai.utils.is_valid_ss58_address(
+                    computekey_ss58_or_computekey_name
+                ):
                     # If the computekey is a valid ss58 address, we add it to the list.
-                    computekeys_to_unstake_from.append((None, computekey_ss58_or_computekey_name))
+                    computekeys_to_unstake_from.append(
+                        (None, computekey_ss58_or_computekey_name)
+                    )
                 else:
                     # If the computekey is not a valid ss58 address, we assume it is a computekey name.
                     #  We then get the computekey from the wallet and add it to the list.
@@ -228,12 +241,17 @@ class UnStakeCommand:
         final_computekeys: List[Tuple[str, str]] = []
         final_amounts: List[Union[float, Balance]] = []
         for computekey in tqdm(computekeys_to_unstake_from):
-            computekey: Tuple[Optional[str], str]  # (computekey_name (or None), computekey_ss58)
+            computekey: Tuple[
+                Optional[str], str
+            ]  # (computekey_name (or None), computekey_ss58)
             unstake_amount_based: float = cli.config.get(
                 "amount"
             )  # The amount specified to unstake.
-            computekey_stake: Balance = basednode.get_stake_for_personalkey_and_computekey(
-                computekey_ss58=computekey[1], personalkey_ss58=wallet.personalkeypub.ss58_address
+            computekey_stake: Balance = (
+                basednode.get_stake_for_personalkey_and_computekey(
+                    computekey_ss58=computekey[1],
+                    personalkey_ss58=wallet.personalkeypub.ss58_address,
+                )
             )
             if unstake_amount_based == None:
                 unstake_amount_based = computekey_stake.based
@@ -254,7 +272,9 @@ class UnStakeCommand:
                         continue
 
             final_amounts.append(unstake_amount_based)
-            final_computekeys.append(computekey)  # add both the name and the ss58 address.
+            final_computekeys.append(
+                computekey
+            )  # add both the name and the ss58 address.
 
         if len(final_computekeys) == 0:
             # No computekeys to unstake from.
@@ -288,7 +308,9 @@ class UnStakeCommand:
 
         basednode.unstake_multiple(
             wallet=wallet,
-            computekey_ss58s=[computekey_ss58 for _, computekey_ss58 in final_computekeys],
+            computekey_ss58s=[
+                computekey_ss58 for _, computekey_ss58 in final_computekeys
+            ],
             amounts=None if cli.config.get("unstake_all") else final_amounts,
             wait_for_inclusion=True,
             prompt=False,

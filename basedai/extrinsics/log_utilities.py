@@ -1,12 +1,14 @@
+import datetime
 import math
 import time
-import torch
+from typing import Dict, Set
+
 from rich import print as rich_print
 from rich.table import Table
 from rich.errors import MarkupError
 from rich.style import Style
-from typing import List, Tuple, Callable, Dict, Any, Union, Set
-import datetime
+import torch
+
 import basedai
 
 
@@ -219,7 +221,7 @@ class ValidatorLogger:
 
     def print_response_table(
         self,
-        batch_predictions: List,
+        batch_predictions: list,
         stats: Dict,
         sort_col: str,
         task_repeat: int = 4,
@@ -229,7 +231,7 @@ class ValidatorLogger:
         Prints the query response table with top prediction probabilities and texts for batch tasks.
 
         Args:
-            batch_predictions (:obj:`List[Union[str, Dict{torch.Tensor, str}]]`, required):
+            batch_predictions (:obj:`list[Union[str, Dict{torch.Tensor, str}]]`, required):
                 Predictions in string per task per ``uid``. In the format of ``[(task, {uid, "prob: phrase" })]`` of length batch size.
             stats (:obj:`Dict{Dict}`, required):
                 Statistics per endpoint for this batch. In the format of ``{uid, {statistics}}``.
@@ -497,7 +499,7 @@ class ValidatorLogger:
         stem_n: int,
         sample_uids: torch.Tensor,
         sample_weights: torch.Tensor,
-        include_uids: List = None,
+        include_uids: list | None = None,
         num_rows: int = None,
     ):
         r"""
@@ -624,8 +626,8 @@ class ValidatorLogger:
         blocks_per_epoch: int,
         epoch_steps: int,
         epoch: int,
-        responsive_uids: List,
-        queried_uids: List,
+        responsive_uids: list,
+        queried_uids: list,
         step_time: float,
         epoch_responsive_uids: Set,
         epoch_queried_uids: Set,
@@ -757,9 +759,7 @@ class ValidatorPrometheus:
         self.gauges.labels("step_time").set(step_time)
         self.gauges.labels("loss").set(loss)
 
-    def log_epoch_end(
-        self, uid: int, stem: "basedai.Stem", current_block: int
-    ):
+    def log_epoch_end(self, uid: int, stem: "basedai.Stem", current_block: int):
         r"""All prometheus logging at the end of epoch."""
         self.gauges.labels("epoch").inc()
         self.gauges.labels("set_weights").inc()

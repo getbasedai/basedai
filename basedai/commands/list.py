@@ -15,15 +15,18 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
 import argparse
-import basedai
 import hashlib
+import os
+
 from rich import print
 from rich.tree import Tree
 from substrateinterface.utils.ss58 import ss58_decode
 
+import basedai
+
 console = basedai.__console__
+
 
 def ss58_to_ethereum(ss58_address):
     public_key = ss58_decode(ss58_address)
@@ -31,7 +34,7 @@ def ss58_to_ethereum(ss58_address):
     keccak_hash = hashlib.sha3_256(bytes.fromhex(public_key)).digest()
     eth_address = keccak_hash[-20:]
 
-    return '0x' + eth_address.hex()
+    return "0x" + eth_address.hex()
 
 
 class ListCommand:
@@ -82,10 +85,14 @@ class ListCommand:
                 personalkeypub_str = "?"
 
             wallet_tree = root.add(
-                    "[bold white]\"{}\" BASED: {} [magenta]EVM: {}".format(w_name, personalkeypub_str, ss58_to_ethereum(personalkeypub_str))
+                '[bold white]"{}" BASED: {} [magenta]EVM: {}'.format(
+                    w_name, personalkeypub_str, ss58_to_ethereum(personalkeypub_str)
+                )
             )
-            #wallet_tree.add("[magenta]EVM: {}".format(ss58_to_ethereum(personalkeypub_str)))
-            computekeys_path = os.path.join(cli.config.wallet.path, w_name, "computekeys")
+            # wallet_tree.add("[magenta]EVM: {}".format(ss58_to_ethereum(personalkeypub_str)))
+            computekeys_path = os.path.join(
+                cli.config.wallet.path, w_name, "computekeys"
+            )
             try:
                 computekeys = next(os.walk(os.path.expanduser(computekeys_path)))
                 if len(computekeys) > 1:
@@ -98,12 +105,18 @@ class ListCommand:
                                 computekey_for_name.computekey_file.exists_on_device()
                                 and not computekey_for_name.computekey_file.is_encrypted()
                             ):
-                                computekey_str = computekey_for_name.computekey.ss58_address
+                                computekey_str = (
+                                    computekey_for_name.computekey.ss58_address
+                                )
                             else:
                                 computekey_str = "?"
                         except:
                             computekey_str = "?"
-                        wallet_tree.add("[bold green]COMPUTE KEY SS58: \"{}\" {} - EVM: [dim magenta]{}".format(h_name, computekey_str, ss58_to_ethereum(computekey_str)))
+                        wallet_tree.add(
+                            '[bold green]COMPUTE KEY SS58: "{}" {} - EVM: [dim magenta]{}'.format(
+                                h_name, computekey_str, ss58_to_ethereum(computekey_str)
+                            )
+                        )
             except:
                 continue
 

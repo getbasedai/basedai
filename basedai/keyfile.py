@@ -15,15 +15,13 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
 import base64
-import json
-import stat
 import getpass
-import basedai
-from basedai.errors import KeyFileError
-from typing import Optional
+import json
+import os
 from pathlib import Path
+import stat
+from typing import Optional
 
 from ansible_vault import Vault
 from ansible.parsing.vault import AnsibleVaultError
@@ -37,6 +35,9 @@ from password_strength import PasswordPolicy
 from substrateinterface.utils.ss58 import ss58_encode
 from termcolor import colored
 from rich.prompt import Confirm
+
+import basedai
+from basedai.errors import KeyFileError
 
 
 NACL_SALT = b"\x13q\x83\xdf\xf1Z\t\xbc\x9c\x90\xb5Q\x879\xe9\xb1"
@@ -83,7 +84,7 @@ def deserialize_keypair_from_keyfile_data(keyfile_data: bytes) -> "basedai.Keypa
     keyfile_data = keyfile_data.decode()
     try:
         keyfile_dict = dict(json.loads(keyfile_data))
-    except:
+    except Exception:
         string_value = str(keyfile_data)
         if string_value[:2] == "0x":
             string_value = ss58_encode(string_value)
@@ -570,7 +571,9 @@ class keyfile:
                                 "\nEnter password to update account file: "
                             )
                             decrypted_keyfile_data = decrypt_keyfile_data(
-                                keyfile_data, personalkey_name=self.name, password=password
+                                keyfile_data,
+                                personalkey_name=self.name,
+                                password=password,
                             )
                         except KeyFileError:
                             if not Confirm.ask(

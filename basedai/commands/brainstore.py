@@ -20,18 +20,18 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import sys
 import argparse
-import basedai
+
 import requests
 from rich.console import Console
 from rich.table import Table
-from typing import Any
-from . import defaults
 
-console = basedai.__console__
+import basedai
+
+console: Console = basedai.__console__  # type: ignore
 
 BRAIN_GIT_URL = "http://basedainet.com:5050/api/v1/orgs"
+
 
 class BrainStoreListCommand:
     """
@@ -73,11 +73,12 @@ class BrainStoreListCommand:
     @staticmethod
     def _run(cli: "basedai.cli", basednode: "basedai.basednode"):
         r"""Retrieves the list of Brains from the git host and displays them in order of amount staked."""
-        config = cli.config.copy()
         response = requests.get(f"{BRAIN_GIT_URL}/brains/repos")
         if response.status_code == 200:
             brains_list = response.json()
-            table = Table(show_header=True, header_style="bold cyan", border_style="white")
+            table = Table(
+                show_header=True, header_style="bold cyan", border_style="white"
+            )
             table.add_column("Name")
             table.add_column("Description")
             table.add_column("Token Address")
@@ -89,12 +90,14 @@ class BrainStoreListCommand:
                     brain["description"],
                     "0x0000000000000000000000000000000000",
                     brain["updated_at"],
-                    brain["html_url"]
+                    brain["html_url"],
                 )
                 table.add_row("")
             basedai.__console__.print(table)
         else:
-            basedai.__console__.print(f"[bold red]Failed[/bold red] to fetch brains list")
+            basedai.__console__.print(
+                "[bold red]Failed[/bold red] to fetch brains list"
+            )
 
     @staticmethod
     def add_args(parser: argparse.ArgumentParser):
@@ -107,7 +110,8 @@ class BrainStoreListCommand:
     def check_config(config: "basedai.config"):
         pass
 
-#class BrainsSubmitCommand:
+
+# class BrainsSubmitCommand:
 #    """Class for submitting brained repositories"""
 #
 #    def run(self, brain_id: str):
@@ -119,7 +123,7 @@ class BrainStoreListCommand:
 #        # Add arguments for submitting brains
 #        parser.add_argument('--brain.id', type=str, required=True, help="The ID of the brain to submit")
 #
-#class BrainsUpdateCommand:
+# class BrainsUpdateCommand:
 #    """Class for updating brained repositories"""
 #
 #    def run(self, brain_id: str):
@@ -130,7 +134,7 @@ class BrainStoreListCommand:
 #    def add_args(parser: argparse.ArgumentParser):
 #        parser.add_argument('--brain.id', type=str, required=True, help="The ID of the brain to update")
 #
-#class BrainsInstallCommand:
+# class BrainsInstallCommand:
 #    """Class for installing brained repositories"""
 #
 #    def run(self, brain_id: str):

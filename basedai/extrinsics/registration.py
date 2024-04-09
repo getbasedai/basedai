@@ -16,12 +16,13 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import basedai
-
-import torch
 import time
-from rich.prompt import Confirm
 from typing import List, Union, Optional, Tuple
+
+from rich.prompt import Confirm
+import torch
+
+import basedai
 from basedai.utils.registration import POWSolution, create_pow
 
 
@@ -173,7 +174,9 @@ def register_extrinsic(
                             return True
 
                         basedai.__console__.print(
-                            ":cross_mark: [red]Are you search this Brain accepts mine memories? Failed[/red]: error:{}".format(err_msg)
+                            ":cross_mark: [red]Are you search this Brain accepts mine memories? Failed[/red]: error:{}".format(
+                                err_msg
+                            )
                         )
                         time.sleep(1.5)
 
@@ -181,7 +184,8 @@ def register_extrinsic(
                     else:
                         basedai.__console__.print(":brain: Checking balance...")
                         is_registered = basednode.is_computekey_registered(
-                            netuid=netuid, computekey_ss58=wallet.computekey.ss58_address
+                            netuid=netuid,
+                            computekey_ss58=wallet.computekey.ss58_address,
                         )
                         if is_registered:
                             basedai.__console__.print(
@@ -272,7 +276,9 @@ def burned_register_extrinsic(
 
     if prompt:
         # Prompt user for confirmation.
-        if not Confirm.ask(f"Use {recycle_amount} to write to Brain's memory:{netuid}?"):
+        if not Confirm.ask(
+            f"Use {recycle_amount} to write to Brain's memory:{netuid}?"
+        ):
             return False
 
     with basedai.__console__.status(":brain: Activating the circuit with $BASED..."):

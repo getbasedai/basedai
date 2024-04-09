@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -16,10 +16,12 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import basedai
-from rich.prompt import Confirm
 from time import sleep
-from typing import List, Dict, Union, Optional
+from typing import Union, Optional
+
+from rich.prompt import Confirm
+
+import basedai
 from basedai.utils.balance import Balance
 
 
@@ -68,9 +70,7 @@ def add_stake_extrinsic(
     own_computekey: bool
 
     with basedai.__console__.status(
-        ":brain: Syncing with chain: [white]{}[/white] ...".format(
-            basednode.network
-        )
+        ":brain: Syncing with chain: [white]{}[/white] ...".format(basednode.network)
     ):
         old_balance = basednode.get_balance(wallet.personalkeypub.ss58_address)
         # Get computekey owner
@@ -88,7 +88,8 @@ def add_stake_extrinsic(
 
         # Get current stake
         old_stake = basednode.get_stake_for_personalkey_and_computekey(
-            personalkey_ss58=wallet.personalkeypub.ss58_address, computekey_ss58=computekey_ss58
+            personalkey_ss58=wallet.personalkeypub.ss58_address,
+            computekey_ss58=computekey_ss58,
         )
 
     # Convert to basedai.Balance
@@ -121,7 +122,10 @@ def add_stake_extrinsic(
             # We are delegating.
             if not Confirm.ask(
                 "Do you want to delegate:[bold white]\n  amount: {}\n  to: {}\n  take: {}\n  owner: {}[/bold white]".format(
-                    staking_balance, wallet.computekey_str, computekey_take, computekey_owner
+                    staking_balance,
+                    wallet.computekey_str,
+                    computekey_take,
+                    computekey_owner,
                 )
             ):
                 return False
@@ -148,7 +152,7 @@ def add_stake_extrinsic(
                 wait_for_finalization=wait_for_finalization,
             )
 
-        if staking_response == True:  # If we successfully staked.
+        if staking_response:  # If we successfully staked.
             # We only wait here if we expect finalization.
             if not wait_for_finalization and not wait_for_inclusion:
                 return True
@@ -183,9 +187,7 @@ def add_stake_extrinsic(
                 )
                 return True
         else:
-            basedai.__console__.print(
-                ":cross_mark: [red]Failed[/red]: Error unknown."
-            )
+            basedai.__console__.print(":cross_mark: [red]Failed[/red]: Error unknown.")
             return False
 
     except basedai.errors.NotRegisteredError as e:
@@ -203,8 +205,8 @@ def add_stake_extrinsic(
 def add_stake_multiple_extrinsic(
     basednode: "basedai.basednode",
     wallet: "basedai.wallet",
-    computekey_ss58s: List[str],
-    amounts: List[Union[Balance, float]] = None,
+    computekey_ss58s: list[str],
+    amounts: list[Union[Balance, float]] = None,
     wait_for_inclusion: bool = True,
     wait_for_finalization: bool = False,
     prompt: bool = False,
@@ -214,9 +216,9 @@ def add_stake_multiple_extrinsic(
     Args:
         wallet (basedai.wallet):
             Basedai wallet object for the personalkey.
-        computekey_ss58s (List[str]):
+        computekey_ss58s (list[str]):
             List of computekeys to stake to.
-        amounts (List[Union[Balance, float]]):
+        amounts (list[Union[Balance, float]]):
             List of amounts to stake. If ``None``, stake all to the first computekey.
         wait_for_inclusion (bool):
             If set, waits for the extrinsic to enter a block before returning ``true``, or returns ``false`` if the extrinsic fails to enter the block within the timeout.
@@ -237,14 +239,14 @@ def add_stake_multiple_extrinsic(
         return True
 
     if amounts is not None and len(amounts) != len(computekey_ss58s):
-        raise ValueError("amounts must be a list of the same length as computekey_ss58s")
+        raise ValueError(
+            "amounts must be a list of the same length as computekey_ss58s"
+        )
 
     if amounts is not None and not all(
         isinstance(amount, (Balance, float)) for amount in amounts
     ):
-        raise TypeError(
-            "amounts must be a [list of basedai.Balance or float] or None"
-        )
+        raise TypeError("amounts must be a [list of basedai.Balance or float] or None")
 
     if amounts is None:
         amounts = [None] * len(computekey_ss58s)
@@ -264,9 +266,7 @@ def add_stake_multiple_extrinsic(
 
     old_stakes = []
     with basedai.__console__.status(
-        ":brain: Syncing with chain: [white]{}[/white] ...".format(
-            basednode.network
-        )
+        ":brain: Syncing with chain: [white]{}[/white] ...".format(basednode.network)
     ):
         old_balance = basednode.get_balance(wallet.personalkeypub.ss58_address)
 
@@ -274,7 +274,8 @@ def add_stake_multiple_extrinsic(
         for computekey_ss58 in computekey_ss58s:
             old_stakes.append(
                 basednode.get_stake_for_personalkey_and_computekey(
-                    personalkey_ss58=wallet.personalkeypub.ss58_address, computekey_ss58=computekey_ss58
+                    personalkey_ss58=wallet.personalkeypub.ss58_address,
+                    computekey_ss58=computekey_ss58,
                 )
             )
 
@@ -342,7 +343,7 @@ def add_stake_multiple_extrinsic(
                 wait_for_finalization=wait_for_finalization,
             )
 
-            if staking_response == True:  # If we successfully staked.
+            if staking_response:  # If we successfully staked.
                 # We only wait here if we expect finalization.
 
                 if idx < len(computekey_ss58s) - 1:

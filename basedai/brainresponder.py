@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 # Copyright © 2024 Saul Finney
-# 
+#
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -16,17 +16,16 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import ast
-import sys
-import torch
-import json
 import base64
+import json
+import sys
 import typing
-import hashlib
+from typing import Optional, List, Any
+
 import pydantic
 from pydantic.schema import schema
+
 import basedai
-from typing import Optional, List, Any
 
 
 def get_size(obj, seen=None) -> int:

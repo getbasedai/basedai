@@ -17,11 +17,12 @@
 # DEALINGS IN THE SOFTWARE.
 
 # Imports
-import basedai
 
 import time
+
 from rich.prompt import Confirm
-from ..errors import *
+
+import basedai
 
 
 def register_gigabrains_extrinsic(
@@ -51,7 +52,9 @@ def register_gigabrains_extrinsic(
 
     if prompt:
         # Prompt user for confirmation.
-        if not Confirm.ask(f"Confirm delegate computekey to permanent memory in the GigaBrains?"):
+        if not Confirm.ask(
+            "Confirm delegate computekey to permanent memory in the GigaBrains?"
+        ):
             return False
 
     with basedai.__console__.status(":brain: Memorizing GigaBrain..."):
@@ -99,6 +102,7 @@ def register_gigabrains_extrinsic(
                     basedai.__console__.print(
                         ":cross_mark: [red]Unknown error. GigaBrain not found.[/red]"
                     )
+    return False
 
 
 def dismiss_gigabrains_extrinsic(
@@ -128,7 +132,7 @@ def dismiss_gigabrains_extrinsic(
 
     if prompt:
         # Prompt user for confirmation.
-        if not Confirm.ask(f"Remove delegate computekey from GigaBrains?"):
+        if not Confirm.ask("Remove delegate computekey from GigaBrains?"):
             return False
 
     with basedai.__console__.status(":brain: Leaving GigaBrains..."):
@@ -176,6 +180,7 @@ def dismiss_gigabrains_extrinsic(
                     basedai.__console__.print(
                         ":cross_mark: [red]Unknown error. GigaBrain membership still active.[/red]"
                     )
+    return False
 
 
 def vote_extrinsic(
@@ -265,3 +270,4 @@ def vote_extrinsic(
                     basedai.__console__.print(
                         ":cross_mark: [red]Unknown error. Couldn't find vote.[/red]"
                     )
+    return False
