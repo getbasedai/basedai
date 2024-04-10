@@ -315,7 +315,7 @@ class brainrequester(torch.nn.Module):
         try:
             loop = asyncio.get_event_loop()
             result = loop.run_until_complete(self.forward(*args, **kwargs))
-        except:
+        except Exception:
             new_loop = asyncio.new_event_loop()
             asyncio.set_event_loop(new_loop)
             result = loop.run_until_complete(self.forward(*args, **kwargs))
@@ -335,10 +335,10 @@ class brainrequester(torch.nn.Module):
         deserialize: bool = True,
         run_async: bool = True,
         streaming: bool = False,
-    ) -> List[
+    ) -> list[
         Union[
             AsyncGenerator[Any],
-            bittenst.Brainresponder,
+            basedai.Brainresponder,
             basedai.StreamingBrainresponder,
         ]
     ]:
@@ -408,7 +408,7 @@ class brainrequester(torch.nn.Module):
             is_stream: bool,
         ) -> Union[
             AsyncGenerator[Any],
-            bittenst.Brainresponder,
+            basedai.Brainresponder,
             basedai.StreamingBrainresponder,
         ]:
             """
@@ -432,7 +432,7 @@ class brainrequester(torch.nn.Module):
                 target_brainport,
             ) -> Union[
                 AsyncGenerator[Any],
-                bittenst.Brainresponder,
+                basedai.Brainresponder,
                 basedai.StreamingBrainresponder,
             ]:
                 """
