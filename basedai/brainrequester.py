@@ -336,7 +336,7 @@ class brainrequester(torch.nn.Module):
     ) -> List[
         Union[
             AsyncGenerator[Any],
-            bittenst.Brainresponder,
+            basedai.Brainresponder,
             basedai.StreamingBrainresponder,
         ]
     ]:
@@ -406,7 +406,7 @@ class brainrequester(torch.nn.Module):
             is_stream: bool,
         ) -> Union[
             AsyncGenerator[Any],
-            bittenst.Brainresponder,
+            basedai.Brainresponder,
             basedai.StreamingBrainresponder,
         ]:
             """
@@ -430,7 +430,7 @@ class brainrequester(torch.nn.Module):
                 target_brainport,
             ) -> Union[
                 AsyncGenerator[Any],
-                bittenst.Brainresponder,
+                basedai.Brainresponder,
                 basedai.StreamingBrainresponder,
             ]:
                 """
