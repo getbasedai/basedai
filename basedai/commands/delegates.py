@@ -18,18 +18,18 @@
 import argparse
 import os
 import sys
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
-from rich.table import Table
-from rich.prompt import Prompt
-from rich.prompt import Confirm
 from rich.console import Text
-from tqdm import tqdm
+from rich.prompt import Confirm, Prompt
+from rich.table import Table
 from substrateinterface.exceptions import SubstrateRequestException
+from tqdm import tqdm
 
 import basedai
-from .utils import get_delegates_details, DelegatesDetails
+
 from . import defaults
+from .utils import DelegatesDetails, get_delegates_details
 
 
 def _get_personalkey_wallets_for_path(path: str) -> List["basedai.wallet"]:
@@ -99,9 +99,9 @@ def show_delegates(
         for prev_delegate in prev_delegates:
             prev_delegates_dict[prev_delegate.computekey_ss58] = prev_delegate
 
-    registered_delegate_info: Optional[
-        Dict[str, DelegatesDetails]
-    ] = get_delegates_details(url=basedai.__delegates_details_url__)
+    registered_delegate_info: Optional[Dict[str, DelegatesDetails]] = (
+        get_delegates_details(url=basedai.__delegates_details_url__)
+    )
     if registered_delegate_info is None:
         basedai.__console__.print(
             ":warning:[yellow]Could not get delegate info from chain.[/yellow]"
@@ -795,9 +795,9 @@ class PortfolioCommand:
             delegates.sort(key=lambda delegate: delegate[0].total_stake, reverse=True)
             total_delegated += sum(my_delegates.values())
 
-            registered_delegate_info: Optional[
-                DelegatesDetails
-            ] = get_delegates_details(url=basedai.__delegates_details_url__)
+            registered_delegate_info: Optional[DelegatesDetails] = (
+                get_delegates_details(url=basedai.__delegates_details_url__)
+            )
             if registered_delegate_info is None:
                 basedai.__console__.print(
                     ":warning:[yellow]Could not get delegate info from chain.[/yellow]"

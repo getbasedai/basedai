@@ -9,24 +9,26 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of
 # the Software.
 
+import json
+from dataclasses import asdict, dataclass
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union
+
 # THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
 # THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 # THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 import torch
-import basedai
-
-import json
-from enum import Enum
-from dataclasses import dataclass, asdict
-from scalecodec.types import GenericCall
-from typing import List, Tuple, Dict, Optional, Any, TypedDict, Union
 from scalecodec.base import RuntimeConfiguration, ScaleBytes
 from scalecodec.type_registry import load_type_registry_preset
+from scalecodec.types import GenericCall
 from scalecodec.utils.ss58 import ss58_encode
 
-from .utils import networking as net, U16_MAX, U16_NORMALIZED_FLOAT
+import basedai
+
+from .utils import U16_MAX, U16_NORMALIZED_FLOAT
+from .utils import networking as net
 from .utils.balance import Balance
 
 custom_rpc_type_registry = {
@@ -834,10 +836,10 @@ class StakeInfo:
         cls, vec_u8: List[int]
     ) -> Dict[str, List["StakeInfo"]]:
         r"""Returns a list of StakeInfo objects from a ``vec_u8``."""
-        decoded: Optional[
-            List[Tuple(str, List[object])]
-        ] = from_scale_encoding_using_type_string(
-            input=vec_u8, type_string="Vec<(AccountId, Vec<StakeInfo>)>"
+        decoded: Optional[List[Tuple(str, List[object])]] = (
+            from_scale_encoding_using_type_string(
+                input=vec_u8, type_string="Vec<(AccountId, Vec<StakeInfo>)>"
+            )
         )
 
         if decoded is None:

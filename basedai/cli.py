@@ -34,52 +34,28 @@ import os
 import sys
 from typing import List, Optional
 
-import shtab
 import requests
+import shtab
 
 import basedai
-from .commands import (
-    StakeCommand,
-    StakeShow,
-    UnStakeCommand,
-    OverviewCommand,
-    PowMemorizeCommand,
-    MemorizeCommand,
-    RunFaucetCommand,
-    SwapComputekeyCommand,
-    NominateCommand,
-    ListDelegatesCommand,
-    DelegateStakeCommand,
-    DelegateUnstakeCommand,
-    PortfolioCommand,
-    NewPersonalkeyCommand,
-    NewComputekeyCommand,
-    RegenPersonalkeyCommand,
-    RegenPersonalkeypubCommand,
-    RegenComputekeyCommand,
-    WalletCreateCommand,
-    WalletBalanceCommand,
-    GetWalletHistoryCommand,
-    TransferCommand,
-    InspectCommand,
-    StemCommand,
-    ListCommand,
-    GigaBrainsCommand,
-    ProposalsCommand,
-    VoteCommand,
-    LinkBrainCommand,
-    BrainListCommand,
-    BrainParametersCommand,
-    BrainSetParametersCommand,
-    BrainGetParametersCommand,
-    CoreMemorizeCommand,
-    CoreList,
-    CoreSetWeightsCommand,
-    CoreGetWeightsCommand,
-    CoreSetIncreaseCommand,
-    CoreSetDecreaseCommand,
-    BrainStoreListCommand,
-)
+
+from .commands import (BrainGetParametersCommand, BrainListCommand,
+                       BrainParametersCommand, BrainSetParametersCommand,
+                       BrainStoreListCommand, CoreGetWeightsCommand, CoreList,
+                       CoreMemorizeCommand, CoreSetDecreaseCommand,
+                       CoreSetIncreaseCommand, CoreSetWeightsCommand,
+                       DelegateStakeCommand, DelegateUnstakeCommand,
+                       GetWalletHistoryCommand, GigaBrainsCommand,
+                       InspectCommand, LinkBrainCommand, ListCommand,
+                       ListDelegatesCommand, MemorizeCommand,
+                       NewComputekeyCommand, NewPersonalkeyCommand,
+                       NominateCommand, OverviewCommand, PortfolioCommand,
+                       PowMemorizeCommand, ProposalsCommand,
+                       RegenComputekeyCommand, RegenPersonalkeyCommand,
+                       RegenPersonalkeypubCommand, RunFaucetCommand,
+                       StakeCommand, StakeShow, StemCommand,
+                       SwapComputekeyCommand, TransferCommand, UnStakeCommand,
+                       VoteCommand, WalletBalanceCommand, WalletCreateCommand)
 
 # Create a console instance for CLI display.
 console = basedai.__console__

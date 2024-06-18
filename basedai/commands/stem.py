@@ -25,6 +25,7 @@ import argparse
 from rich.table import Table
 
 import basedai
+
 from .utils import check_netuid_set
 
 console = basedai.__console__

@@ -22,6 +22,7 @@ import sys
 from rich.prompt import Prompt
 
 import basedai
+
 from . import defaults
 
 console = basedai.__console__

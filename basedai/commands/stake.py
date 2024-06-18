@@ -22,15 +22,16 @@
 
 import argparse
 import sys
-from typing import List, Union, Optional, Dict, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from rich.prompt import Confirm, Prompt
 from tqdm import tqdm
 
 import basedai
 from basedai.utils.balance import Balance
-from .utils import get_computekey_wallets_for_wallet
+
 from . import defaults
+from .utils import get_computekey_wallets_for_wallet
 
 console = basedai.__console__
 
@@ -326,23 +327,27 @@ class StakeCommand:
         basedai.basednode.add_args(stake_parser)
 
 
+import argparse
 ### Stake list.
 import json
-import argparse
-import basedai
-from tqdm import tqdm
-from rich.table import Table
-from rich.prompt import Prompt
-from typing import Dict, Union, List, Tuple
 from concurrent.futures import ThreadPoolExecutor
-from .utils import check_netuid_set, get_delegates_details, DelegatesDetails
+from typing import Dict, List, Tuple, Union
+
+from rich.prompt import Prompt
+from rich.table import Table
+from tqdm import tqdm
+
+import basedai
+
 from . import defaults
+from .utils import DelegatesDetails, check_netuid_set, get_delegates_details
 
 console = basedai.__console__
 
 import os
+from typing import Dict, List, Optional, Tuple
+
 import basedai
-from typing import List, Tuple, Optional, Dict
 
 
 def _get_personalkey_wallets_for_path(path: str) -> List["basedai.wallet"]:
@@ -427,9 +432,9 @@ class StakeShow:
             wallets = _get_personalkey_wallets_for_path(cli.config.wallet.path)
         else:
             wallets = [basedai.wallet(config=cli.config)]
-        registered_delegate_info: Optional[
-            Dict[str, DelegatesDetails]
-        ] = get_delegates_details(url=basedai.__delegates_details_url__)
+        registered_delegate_info: Optional[Dict[str, DelegatesDetails]] = (
+            get_delegates_details(url=basedai.__delegates_details_url__)
+        )
 
         def get_stake_accounts(
             wallet, basednode

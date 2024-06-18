@@ -20,7 +20,7 @@ import base64
 import json
 import sys
 import typing
-from typing import Optional, List, Any
+from typing import Any, List, Optional
 
 import pydantic
 from pydantic.schema import schema

@@ -17,15 +17,16 @@
 
 import argparse
 import hashlib
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from rich.prompt import Prompt
 from rich.table import Table
 from substrateinterface.utils.ss58 import ss58_decode
 
 import basedai
+
 from . import defaults
-from .utils import get_delegates_details, DelegatesDetails, check_netuid_set
+from .utils import DelegatesDetails, check_netuid_set, get_delegates_details
 
 console = basedai.__console__
 

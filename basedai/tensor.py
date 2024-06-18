@@ -17,13 +17,13 @@
 # DEALINGS IN THE SOFTWARE.
 
 import base64
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
 import msgpack
 import msgpack_numpy
 import numpy
-import torch
 import pydantic
+import torch
 
 TORCH_DTYPES = {
     "torch.float16": torch.float16,

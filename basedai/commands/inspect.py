@@ -17,21 +17,18 @@
 
 import argparse
 import os
-from typing import List, Tuple, Optional, Dict
+from typing import Dict, List, Optional, Tuple
 
-from rich.table import Table
 from rich.prompt import Prompt
+from rich.table import Table
 from tqdm import tqdm
 
 import basedai
-from .utils import (
-    get_delegates_details,
-    DelegatesDetails,
-    get_computekey_wallets_for_wallet,
-    get_all_wallets_for_path,
-    filter_netuids_by_registered_computekeys,
-)
+
 from . import defaults
+from .utils import (DelegatesDetails, filter_netuids_by_registered_computekeys,
+                    get_all_wallets_for_path,
+                    get_computekey_wallets_for_wallet, get_delegates_details)
 
 console = basedai.__console__
 
@@ -138,9 +135,9 @@ class InspectCommand:
         )
         basedai.logging.debug(f"Netuids to check: {netuids}")
 
-        registered_delegate_info: Optional[
-            Dict[str, DelegatesDetails]
-        ] = get_delegates_details(url=basedai.__delegates_details_url__)
+        registered_delegate_info: Optional[Dict[str, DelegatesDetails]] = (
+            get_delegates_details(url=basedai.__delegates_details_url__)
+        )
         if registered_delegate_info is None:
             basedai.__console__.print(
                 ":warning:[yellow]Could not get delegate info from chain.[/yellow]"
@@ -183,10 +180,10 @@ class InspectCommand:
             "[overline white]Emission", footer_style="overline white", style="green"
         )
         for wallet in tqdm(wallets):
-            delegates: List[
-                Tuple(basedai.DelegateInfo, basedai.Balance)
-            ] = basednode.get_delegated(
-                personalkey_ss58=wallet.personalkeypub.ss58_address
+            delegates: List[Tuple(basedai.DelegateInfo, basedai.Balance)] = (
+                basednode.get_delegated(
+                    personalkey_ss58=wallet.personalkeypub.ss58_address
+                )
             )
             if not wallet.personalkeypub_file.exists_on_device():
                 continue

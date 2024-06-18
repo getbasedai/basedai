@@ -17,7 +17,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 from time import sleep
-from typing import Union, Optional
+from typing import Optional, Union
 
 from rich.prompt import Confirm
 

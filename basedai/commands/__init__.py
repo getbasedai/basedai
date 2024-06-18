@@ -62,60 +62,32 @@ defaults: Munch = munchify(
     }
 )
 
-from .stake import StakeCommand, StakeShow
-from .unstake import UnStakeCommand
-from .overview import OverviewCommand
-from .memorize import (
-    PowMemorizeCommand,
-    MemorizeCommand,
-    RunFaucetCommand,
-    SwapComputekeyCommand,
-)
-from .delegates import (
-    NominateCommand,
-    ListDelegatesCommand,
-    DelegateStakeCommand,
-    DelegateUnstakeCommand,
-    PortfolioCommand,
-)
-from .wallets import (
-    NewPersonalkeyCommand,
-    NewComputekeyCommand,
-    RegenPersonalkeyCommand,
-    RegenPersonalkeypubCommand,
-    RegenComputekeyCommand,
-    WalletCreateCommand,
-    WalletBalanceCommand,
-    GetWalletHistoryCommand,
-)
-from .transfer import TransferCommand
-from .inspect import InspectCommand
-from .stem import StemCommand
-from .list import ListCommand
-from .gigabrain import (
-    GigaBrainsCommand,
-    ProposalsCommand,
-    ShowVotesCommand,
-    GigaBrainsMemorizeCommand,
-    GigaBrainsResignCommand,
-    VoteCommand,
-)
-from .network import (
-    LinkBrainCommand,
-    BrainListCommand,
-    BrainParametersCommand,
-    BrainSetParametersCommand,
-    BrainGetParametersCommand,
-)
-from .core import (
-    CoreMemorizeCommand,
-    CoreList,
-    CoreSetWeightsCommand,
-    CoreGetWeightsCommand,
-    CoreSetIncreaseCommand,
-    CoreSetDecreaseCommand,
-)
 from .brainstore import BrainStoreListCommand
+from .core import (CoreGetWeightsCommand, CoreList, CoreMemorizeCommand,
+                   CoreSetDecreaseCommand, CoreSetIncreaseCommand,
+                   CoreSetWeightsCommand)
+from .delegates import (DelegateStakeCommand, DelegateUnstakeCommand,
+                        ListDelegatesCommand, NominateCommand,
+                        PortfolioCommand)
+from .gigabrain import (GigaBrainsCommand, GigaBrainsMemorizeCommand,
+                        GigaBrainsResignCommand, ProposalsCommand,
+                        ShowVotesCommand, VoteCommand)
+from .inspect import InspectCommand
+from .list import ListCommand
+from .memorize import (MemorizeCommand, PowMemorizeCommand, RunFaucetCommand,
+                       SwapComputekeyCommand)
+from .network import (BrainGetParametersCommand, BrainListCommand,
+                      BrainParametersCommand, BrainSetParametersCommand,
+                      LinkBrainCommand)
+from .overview import OverviewCommand
+from .stake import StakeCommand, StakeShow
+from .stem import StemCommand
+from .transfer import TransferCommand
+from .unstake import UnStakeCommand
+from .wallets import (GetWalletHistoryCommand, NewComputekeyCommand,
+                      NewPersonalkeyCommand, RegenComputekeyCommand,
+                      RegenPersonalkeyCommand, RegenPersonalkeypubCommand,
+                      WalletBalanceCommand, WalletCreateCommand)
 
 # from .identity import GetIdentityCommand, SetIdentityCommand
 
@@ -152,10 +124,10 @@ __all__ = [
     "GigaBrainsMemorizeCommand",
     "GigaBrainsResignCommand",
     "VoteCommand",
-    'LinkBrainCommand',
+    "LinkBrainCommand",
     "BrainListCommand",
-    'BrainParametersCommand',
-    'BrainSetParametersCommand',
+    "BrainParametersCommand",
+    "BrainSetParametersCommand",
     "BrainGetParametersCommand",
     "CoreMemorizeCommand",
     "CoreList",

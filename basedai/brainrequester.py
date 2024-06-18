@@ -20,13 +20,15 @@
 from __future__ import annotations
 
 import asyncio
-import uuid
 import time
-import torch
+import uuid
+from typing import Any, AsyncGenerator, List, Optional, Union
+
 import aiohttp
-import basedai
+import torch
 from fastapi import Response
-from typing import Union, Optional, List, Union, AsyncGenerator, Any
+
+import basedai
 
 
 class brainrequester(torch.nn.Module):
@@ -287,9 +289,7 @@ class brainrequester(torch.nn.Module):
             f"brainrequester | <-- | {brainresponder.get_total_size()} B | {brainresponder.name} | {brainresponder.brainport.computekey} | {brainresponder.brainport.ip}:{str(brainresponder.brainport.port)} | {brainresponder.brainrequester.status_code} | {brainresponder.brainrequester.status_message}"
         )
 
-    def query(
-        self, *args, **kwargs
-    ) -> Union[
+    def query(self, *args, **kwargs) -> Union[
         basedai.Brainresponder,
         List[basedai.Brainresponder],
         basedai.StreamingBrainresponder,

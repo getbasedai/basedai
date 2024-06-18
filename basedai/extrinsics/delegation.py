@@ -16,13 +16,14 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 from loguru import logger
 from rich.prompt import Confirm
 
 import basedai
 from basedai.utils.balance import Balance
+
 from ..errors import *
 
 logger = logger.opt(colors=True)

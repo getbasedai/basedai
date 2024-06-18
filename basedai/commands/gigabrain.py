@@ -21,14 +21,15 @@
 # DEALINGS IN THE SOFTWARE.
 
 import argparse
-from typing import Optional, Dict
+from typing import Dict, Optional
 
-from rich.prompt import Prompt, Confirm
+from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
 import basedai
-from .utils import get_delegates_details, DelegatesDetails
+
 from . import defaults
+from .utils import DelegatesDetails, get_delegates_details
 
 console = basedai.__console__
 
@@ -215,9 +216,9 @@ class ProposalsCommand:
         senate_members = basednode.get_senate_members()
         proposals = basednode.get_proposals()
 
-        registered_delegate_info: Optional[
-            Dict[str, DelegatesDetails]
-        ] = get_delegates_details(url=basedai.__delegates_details_url__)
+        registered_delegate_info: Optional[Dict[str, DelegatesDetails]] = (
+            get_delegates_details(url=basedai.__delegates_details_url__)
+        )
 
         table = Table(show_footer=False)
         table.title = (
@@ -347,9 +348,9 @@ class ShowVotesCommand:
             console.print(":cross_mark: [red]Failed[/red]: Proposal not found.")
             return
 
-        registered_delegate_info: Optional[
-            Dict[str, DelegatesDetails]
-        ] = get_delegates_details(url=basedai.__delegates_details_url__)
+        registered_delegate_info: Optional[Dict[str, DelegatesDetails]] = (
+            get_delegates_details(url=basedai.__delegates_details_url__)
+        )
 
         table = Table(show_footer=False)
         table.title = "[white]Votes for Proposal {}".format(proposal_hash)

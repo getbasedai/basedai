@@ -17,16 +17,17 @@
 # DEALINGS IN THE SOFTWARE.
 
 import hashlib
-from typing import Callable, Union, List, Optional, Dict, Literal
+from typing import Callable, Dict, List, Literal, Optional, Union
 
-import basedai
 import requests
 import scalecodec
-from substrateinterface.utils import ss58 as ss58
 import torch
+from substrateinterface.utils import ss58 as ss58
 
-from .wallet_utils import *
+import basedai
+
 from .registration import create_pow as create_pow
+from .wallet_utils import *
 
 RAOPERBASED = 1e9
 U16_MAX = 65535
@@ -162,9 +163,9 @@ def get_explorer_url_for_network(
 
     explorer_urls: Optional[Dict[str, str]] = {}
     # Will be None if the network is not known. i.e. not in network_map
-    explorer_root_urls: Optional[
-        Dict[str, str]
-    ] = get_explorer_root_url_by_network_from_map(network, network_map)
+    explorer_root_urls: Optional[Dict[str, str]] = (
+        get_explorer_root_url_by_network_from_map(network, network_map)
+    )
 
     if explorer_root_urls != {}:
         # We are on a known network.

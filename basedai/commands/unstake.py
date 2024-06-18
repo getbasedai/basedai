@@ -16,15 +16,16 @@
 # DEALINGS IN THE SOFTWARE.
 
 import sys
-from typing import List, Union, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 from rich.prompt import Confirm, Prompt
 from tqdm import tqdm
 
 import basedai
 from basedai.utils.balance import Balance
-from .utils import get_computekey_wallets_for_wallet
+
 from . import defaults
+from .utils import get_computekey_wallets_for_wallet
 
 console = basedai.__console__
 

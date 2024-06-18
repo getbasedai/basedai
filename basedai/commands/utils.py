@@ -15,16 +15,17 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-from dataclasses import dataclass
 import os
 import sys
-from typing import List, Dict, Any, Optional
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 import requests
-from rich.prompt import Confirm, PromptBase
 import torch
+from rich.prompt import Confirm, PromptBase
 
 import basedai
+
 from . import defaults
 
 console = basedai.__console__

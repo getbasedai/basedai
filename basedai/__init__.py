@@ -15,12 +15,11 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-from rich.console import Console
-from rich.traceback import install
-
 # Install and apply nest asyncio to allow the async functions
 # to run in a .ipynb
 import nest_asyncio
+from rich.console import Console
+from rich.traceback import install
 
 nest_asyncio.apply()
 
@@ -203,28 +202,27 @@ __type_registry__ = {
     },
 }
 
-from .errors import *
-
 from substrateinterface import Keypair as Keypair
-from .config import *
-from .keyfile import *
-from .wallet import *
 
-from .utils import *
-from .utils.balance import Balance as Balance
-from .chain_data import *
 from .basednode import basednode as basednode
-from .cli import cli as cli, COMMANDS as ALL_COMMANDS
-from .btlogging import logging as logging
-from .stem import stem as stem
-from .threadpool import PriorityThreadPoolExecutor as PriorityThreadPoolExecutor
-
-from .brainresponder import *
-from .stream import *
-from .tensor import *
 from .brainport import brainport as brainport
 from .brainrequester import brainrequester as brainrequester
-
+from .brainresponder import *
+from .btlogging import logging as logging
+from .chain_data import *
+from .cli import COMMANDS as ALL_COMMANDS
+from .cli import cli as cli
+from .config import *
+from .errors import *
+from .keyfile import *
+from .stem import stem as stem
+from .stream import *
+from .tensor import *
+from .threadpool import \
+    PriorityThreadPoolExecutor as PriorityThreadPoolExecutor
+from .utils import *
+from .utils.balance import Balance as Balance
+from .wallet import *
 
 configs = [
     brainport.config(),

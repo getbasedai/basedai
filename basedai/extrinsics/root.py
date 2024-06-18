@@ -19,13 +19,12 @@
 import time
 from typing import Union
 
+import torch
 from loguru import logger
 from rich.prompt import Confirm
-import torch
 
 import basedai
 import basedai.utils.weight_utils as weight_utils
-
 
 logger = logger.opt(colors=True)
 

@@ -6,7 +6,6 @@
 __author__ = "Brian Quinlan (brian@sweetapp.com)"
 
 import argparse
-from concurrent.futures import _base
 import itertools
 import os
 import queue
@@ -14,11 +13,13 @@ import random
 import sys
 import threading
 import time
-from typing import Callable
 import weakref
+from concurrent.futures import _base
+from typing import Callable
+
+from loguru import logger
 
 import basedai
-from loguru import logger
 
 # Workers are created as daemon threads. This is done to allow the interpreter
 # to exit when there are still idle threads in a ThreadPoolExecutor's thread

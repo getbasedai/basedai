@@ -16,68 +16,48 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import copy
-import torch
 import argparse
-import basedai
-import scalecodec
+import copy
+import os
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, Union
 
-from retry import retry
+import scalecodec
+import torch
 from loguru import logger
-from typing import List, Dict, Union, Optional, Tuple, TypedDict, Any
-from substrateinterface.base import QueryMapResult, SubstrateInterface
+from retry import retry
 from scalecodec.base import RuntimeConfiguration
 from scalecodec.type_registry import load_type_registry_preset
+from substrateinterface.base import QueryMapResult, SubstrateInterface
+
+import basedai
 
 # Local imports.
-from .chain_data import (
-    NeuronInfo,
-    DelegateInfo,
-    PrometheusInfo,
-    SubnetInfo,
-    SubnetHyperparameters,
-    StakeInfo,
-    NeuronInfoLite,
-    BrainportInfo,
-    ProposalVoteData,
-    ProposalCallData,
-    IPInfo,
-    custom_rpc_type_registry,
-)
+from .chain_data import (BrainportInfo, DelegateInfo, IPInfo, NeuronInfo,
+                         NeuronInfoLite, PrometheusInfo, ProposalCallData,
+                         ProposalVoteData, StakeInfo, SubnetHyperparameters,
+                         SubnetInfo, custom_rpc_type_registry)
 from .errors import *
-from .extrinsics.network import (
-    register_subnetwork_extrinsic,
-    set_hyperparameter_extrinsic,
-)
-from .extrinsics.staking import add_stake_extrinsic, add_stake_multiple_extrinsic
-from .extrinsics.unstaking import unstake_extrinsic, unstake_multiple_extrinsic
-from .extrinsics.serving import (
-    serve_extrinsic,
-    serve_brainport_extrinsic,
-    publish_metadata,
-    get_metadata,
-)
-from .extrinsics.registration import (
-    register_extrinsic,
-    burned_register_extrinsic,
-    run_faucet_extrinsic,
-    swap_computekey_extrinsic,
-)
-from .extrinsics.transfer import transfer_extrinsic
-from .extrinsics.set_weights import set_weights_extrinsic, ttl_set_weights_extrinsic
+from .extrinsics.delegation import (delegate_extrinsic, nominate_extrinsic,
+                                    undelegate_extrinsic)
+from .extrinsics.gigabrains import (dismiss_gigabrains_extrinsic,
+                                    register_gigabrains_extrinsic,
+                                    vote_extrinsic)
+from .extrinsics.network import (register_subnetwork_extrinsic,
+                                 set_hyperparameter_extrinsic)
 from .extrinsics.prometheus import prometheus_extrinsic
-from .extrinsics.delegation import (
-    delegate_extrinsic,
-    nominate_extrinsic,
-    undelegate_extrinsic,
-)
-from .extrinsics.gigabrains import (
-    register_gigabrains_extrinsic,
-    dismiss_gigabrains_extrinsic,
-    vote_extrinsic,
-)
-from .extrinsics.root import root_register_extrinsic, set_root_weights_extrinsic
+from .extrinsics.registration import (burned_register_extrinsic,
+                                      register_extrinsic, run_faucet_extrinsic,
+                                      swap_computekey_extrinsic)
+from .extrinsics.root import (root_register_extrinsic,
+                              set_root_weights_extrinsic)
+from .extrinsics.serving import (get_metadata, publish_metadata,
+                                 serve_brainport_extrinsic, serve_extrinsic)
+from .extrinsics.set_weights import (set_weights_extrinsic,
+                                     ttl_set_weights_extrinsic)
+from .extrinsics.staking import (add_stake_extrinsic,
+                                 add_stake_multiple_extrinsic)
+from .extrinsics.transfer import transfer_extrinsic
+from .extrinsics.unstaking import unstake_extrinsic, unstake_multiple_extrinsic
 from .types import BrainportServeCallParams, PrometheusServeCallParams
 from .utils import U16_NORMALIZED_FLOAT, ss58_to_vec_u8
 from .utils.balance import Balance

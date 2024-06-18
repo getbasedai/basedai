@@ -22,6 +22,7 @@ from rich.prompt import Confirm
 
 import basedai
 import basedai.utils.networking as net
+
 from ..errors import MetadataError
 
 
@@ -268,8 +269,9 @@ def publish_metadata(
             raise MetadataError(response.error_message)
 
 
-from retry import retry
 from typing import Optional
+
+from retry import retry
 
 
 def get_metadata(

@@ -19,42 +19,37 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
-import uuid
-import copy
-import json
-import time
-import base64
-import asyncio
-import inspect
-import uvicorn
 import argparse
-import traceback
-import threading
-import basedai
+import asyncio
+import base64
 import contextlib
+import copy
+import inspect
+import json
+import os
+import threading
+import time
+import traceback
+import uuid
+from inspect import Parameter, Signature, signature
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-from inspect import signature, Signature, Parameter
+import uvicorn
+from fastapi import APIRouter, Depends, FastAPI, Request, Response
 from fastapi.responses import JSONResponse
-from substrateinterface import Keypair
-from fastapi import FastAPI, APIRouter, Request, Response, Depends
-from starlette.types import Scope, Message
-from starlette.responses import Response
+from starlette.middleware.base import (BaseHTTPMiddleware,
+                                       RequestResponseEndpoint)
 from starlette.requests import Request
-from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
-from typing import Dict, Optional, Tuple, Union, List, Callable, Any
+from starlette.responses import Response
+from starlette.types import Message, Scope
+from substrateinterface import Keypair
 
-from basedai.errors import (
-    InvalidRequestNameError,
-    BrainresponderParsingError,
-    UnknownBrainresponderError,
-    NotVerifiedException,
-    BlacklistedException,
-    PriorityException,
-    RunException,
-    PostProcessException,
-    InternalServerError,
-)
+import basedai
+from basedai.errors import (BlacklistedException, BrainresponderParsingError,
+                            InternalServerError, InvalidRequestNameError,
+                            NotVerifiedException, PostProcessException,
+                            PriorityException, RunException,
+                            UnknownBrainresponderError)
 
 
 class FastAPIThreadedServer(uvicorn.Server):

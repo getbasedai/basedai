@@ -1,8 +1,8 @@
 import argparse
 from sys import getsizeof
 
-from rich.table import Table
 from rich.prompt import Prompt
+from rich.table import Table
 
 import basedai
 

@@ -24,26 +24,25 @@
 # DEALINGS IN THE SOFTWARE.
 
 import argparse
-from concurrent.futures import ProcessPoolExecutor
-from collections import defaultdict
 import hashlib
-from typing import List, Optional, Dict, Tuple
+from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor
+from typing import Dict, List, Optional, Tuple
 
 from fuzzywuzzy import fuzz
 from rich.align import Align
-from rich.table import Table
 from rich.prompt import Prompt
+from rich.table import Table
 from substrateinterface.utils.ss58 import ss58_decode
 from tqdm import tqdm
 
 import basedai
+
 from . import defaults
-from .utils import (
-    get_computekey_wallets_for_wallet,
-    get_personalkey_wallets_for_path,
-    get_all_wallets_for_path,
-    filter_netuids_by_registered_computekeys,
-)
+from .utils import (filter_netuids_by_registered_computekeys,
+                    get_all_wallets_for_path,
+                    get_computekey_wallets_for_wallet,
+                    get_personalkey_wallets_for_path)
 
 console = basedai.__console__
 

@@ -16,15 +16,15 @@
 # DEALINGS IN THE SOFTWARE.
 
 import argparse
-from copy import deepcopy
 import sys
+from copy import deepcopy
 
-from rich.prompt import Prompt, Confirm
+from rich.prompt import Confirm, Prompt
 
 import basedai
-from .utils import check_netuid_set, check_for_cuda_reg_config
 
 from . import defaults
+from .utils import check_for_cuda_reg_config, check_netuid_set
 
 console = basedai.__console__
 

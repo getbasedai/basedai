@@ -21,8 +21,9 @@ from typing import Union
 from rich.prompt import Confirm
 
 import basedai
-from ..utils.balance import Balance
+
 from ..utils import is_valid_basedai_address_or_public_key
+from ..utils.balance import Balance
 
 
 def transfer_extrinsic(

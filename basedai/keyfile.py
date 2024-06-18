@@ -19,26 +19,25 @@ import base64
 import getpass
 import json
 import os
-from pathlib import Path
 import stat
+from pathlib import Path
 from typing import Optional
 
-from ansible_vault import Vault
 from ansible.parsing.vault import AnsibleVaultError
-from cryptography.exceptions import InvalidSignature, InvalidKey
+from ansible_vault import Vault
+from cryptography.exceptions import InvalidKey, InvalidSignature
 from cryptography.fernet import Fernet, InvalidToken
-from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from nacl import pwhash, secret
 from password_strength import PasswordPolicy
+from rich.prompt import Confirm
 from substrateinterface.utils.ss58 import ss58_encode
 from termcolor import colored
-from rich.prompt import Confirm
 
 import basedai
 from basedai.errors import KeyFileError
-
 
 NACL_SALT = b"\x13q\x83\xdf\xf1Z\t\xbc\x9c\x90\xb5Q\x879\xe9\xb1"
 

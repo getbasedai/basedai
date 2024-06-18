@@ -3,11 +3,11 @@ import math
 import time
 from typing import Dict, Set
 
+import torch
 from rich import print as rich_print
-from rich.table import Table
 from rich.errors import MarkupError
 from rich.style import Style
-import torch
+from rich.table import Table
 
 import basedai
 

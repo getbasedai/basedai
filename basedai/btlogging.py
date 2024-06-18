@@ -24,8 +24,8 @@ import os
 import re
 import sys
 
-from loguru import logger
 import torch
+from loguru import logger
 
 import basedai
 

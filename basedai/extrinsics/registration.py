@@ -17,10 +17,10 @@
 # DEALINGS IN THE SOFTWARE.
 
 import time
-from typing import List, Union, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
-from rich.prompt import Confirm
 import torch
+from rich.prompt import Confirm
 
 import basedai
 from basedai.utils.registration import POWSolution, create_pow

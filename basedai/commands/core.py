@@ -18,17 +18,17 @@
 import argparse
 import re
 import typing
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 import numpy as np
+import torch
 from rich.prompt import Prompt
 from rich.table import Table
-import torch
 
 import basedai
-from .utils import get_delegates_details, DelegatesDetails
 
 from . import defaults
+from .utils import DelegatesDetails, get_delegates_details
 
 console = basedai.__console__
 

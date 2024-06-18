@@ -24,7 +24,7 @@ import argparse
 import hashlib
 import os
 import sys
-from typing import Optional, List
+from typing import List, Optional
 
 import requests
 from rich.prompt import Prompt
@@ -32,8 +32,9 @@ from rich.table import Table
 from substrateinterface.utils.ss58 import ss58_decode
 
 import basedai
-from . import defaults
+
 from ..utils import RAOPERBASED
+from . import defaults
 
 
 class RegenPersonalkeyCommand:

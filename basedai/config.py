@@ -22,12 +22,12 @@ Implementation of the config class, which manages the configuration of different
 
 import argparse
 import copy
-from copy import deepcopy
 import os
 import sys
-from typing import Optional, Dict, Any, TypeVar, Type
-import yaml
+from copy import deepcopy
+from typing import Any, Dict, Optional, Type, TypeVar
 
+import yaml
 from munch import DefaultMunch
 
 
@@ -246,7 +246,9 @@ class config(DefaultMunch):
 
     @staticmethod
     def __parse_args__(
-        args: list[str], parser: argparse.ArgumentParser | None = None, strict: bool = False
+        args: list[str],
+        parser: argparse.ArgumentParser | None = None,
+        strict: bool = False,
     ) -> argparse.Namespace:
         """Parses the passed args use the passed parser.
 

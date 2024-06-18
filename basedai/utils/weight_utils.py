@@ -18,9 +18,11 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+from typing import List, Tuple
+
 import torch
+
 import basedai
-from typing import Tuple, List
 
 U32_MAX = 4294967295
 U16_MAX = 65535
