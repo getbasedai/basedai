@@ -335,7 +335,7 @@ class brainrequester(torch.nn.Module):
         deserialize: bool = True,
         run_async: bool = True,
         streaming: bool = False,
-    ) -> List[Union[AsyncGenerator[Any], bittenst.Brainresponder, basedai.StreamingBrainresponder]]:
+    ) -> List[Union[AsyncGenerator[Any], basedai.Brainresponder, basedai.StreamingBrainresponder]]:
         """
         Asynchronously sends requests to one or multiple Brainports and collates their responses.
 
@@ -400,7 +400,7 @@ class brainrequester(torch.nn.Module):
 
         async def query_all_brainports(
             is_stream: bool,
-        ) -> Union[AsyncGenerator[Any], bittenst.Brainresponder, basedai.StreamingBrainresponder]:
+        ) -> Union[AsyncGenerator[Any], basedai.Brainresponder, basedai.StreamingBrainresponder]:
             """
             Handles the processing of requests to all targeted brainports, accommodating both streaming and non-streaming responses.
 
@@ -421,7 +421,7 @@ class brainrequester(torch.nn.Module):
             async def single_brainport_response(
                 target_brainport,
             ) -> Union[
-                AsyncGenerator[Any], bittenst.Brainresponder, basedai.StreamingBrainresponder
+                AsyncGenerator[Any], basedai.Brainresponder, basedai.StreamingBrainresponder
             ]:
                 """
                 Manages the request and response process for a single brainport, supporting both streaming and non-streaming modes.
