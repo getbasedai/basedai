@@ -34,7 +34,6 @@ class FHERunCommand:
         fhe_run_parser.add_argument('--use_cerberus', action='store_true', help='Use Cerberus Squeezing optimization')
         fhe_run_parser.add_argument('--squeeze_rate', type=float, default=0.1, help='Cerberus Squeeze rate')
         fhe_run_parser.add_argument('--use_secure_container', action='store_true', help='Use secure compute container for FHE tasks')
-        fhe_run_parser.add_argument('--use_secure_container', action='store_true', help='Use secure compute container for FHE tasks')
 
     @classmethod
     def run(cls, cli):
@@ -81,34 +80,34 @@ class FHERunCommand:
     @classmethod
     def run_in_secure_container(cls, encrypted_data, library, operation, use_cerberus, squeeze_rate):
         logger.info("Setting up secure container for FHE operation")
-        
+
         # 1. Set up a secure container using Docker
         container_name = f"fhe_container_{library}_{operation}"
         docker_image = f"fhe_{library}:latest"  # Assume we have pre-built Docker images for each FHE library
-        
+
         try:
             # Pull the Docker image if not present
             os.system(f"docker pull {docker_image}")
-            
+
             # Run the container
             container_id = os.popen(f"docker run -d --name {container_name} {docker_image}").read().strip()
-            
+
             # 2. Send the encrypted data and operation parameters to the container
             cls.send_data_to_container(container_id, encrypted_data, operation, use_cerberus, squeeze_rate)
-            
+
             # 3. Run the FHE operation inside the container
             os.system(f"docker exec {container_id} python /app/run_fhe.py")
-            
+
             # 4. Receive the encrypted result from the container
             result = cls.receive_result_from_container(container_id)
-            
+
             # Clean up: stop and remove the container
             os.system(f"docker stop {container_id}")
             os.system(f"docker rm {container_id}")
-            
+
             # 5. Return the result
             return result
-        
+
         except Exception as e:
             logger.error(f"Error in secure container execution: {str(e)}")
             raise FHEError(f"Secure container execution failed: {str(e)}")
@@ -233,10 +232,10 @@ class FHERunCommand:
         try:
             # Deserialize the context
             context = ts.context_from(encrypted_data['context'])
-            
+
             # Decrypt the received data
             x = ts.ckks_vector_from(context, encrypted_data['encrypted_data'])
-            
+
             if operation == 'square':
                 result = x.square()
             elif operation == 'add':
@@ -263,10 +262,10 @@ class FHERunCommand:
             # In a real scenario, you would need to securely exchange public keys
             # This is a simplified example
             public_key, private_key = paillier.generate_paillier_keypair()
-            
+
             # Decrypt the received data
             x = [public_key.encrypt(v) for v in encrypted_data['encrypted_data']]
-            
+
             if operation == 'square':
                 result = [xi * xi for xi in x]
             elif operation == 'add':
@@ -298,7 +297,7 @@ class FHERunCommand:
         # 3. Run the FHE operation inside the container
         # 4. Receive the encrypted result from the container
         # 5. Return the result
-        
+
         logger.info("Running FHE operation in secure container")
         # Placeholder implementation
         if library == 'tenseal':
