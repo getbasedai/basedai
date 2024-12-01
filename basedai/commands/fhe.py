@@ -26,118 +26,113 @@ class FHERunCommand:
         fhe_run_parser = parser.add_parser('run', help='Run FHE operations')
         fhe_run_parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
         fhe_run_parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
-        fhe_run_parser.add_argument('--command', type=float, required=True, help='FHE command to run (the initial value)')
         fhe_run_parser.add_argument('--library', type=str, choices=['tenseal', 'paillier'], required=True, help='FHE library to use')
         fhe_run_parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
-        fhe_run_parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
+        fhe_run_parser.add_argument('--peer', type=str, required=True, help='Peer address to receive encrypted data from')
 
     @classmethod
     def run(cls, cli):
         try:
             address = cli.config.address
             balance = cli.config.balance
-            command = cli.config.command
             library = cli.config.library
             operation = cli.config.operation
-            value = cli.config.value
+            peer = cli.config.peer
 
             logger.info(f"Running FHE command for address: {address}")
             logger.info(f"Minimum balance: {balance}")
-            logger.info(f"Initial value: {command}")
             logger.info(f"Using FHE library: {library}")
             logger.info(f"Operation: {operation}")
+            logger.info(f"Receiving data from peer: {peer}")
 
-            if operation in ['add', 'multiply', 'mean', 'variance'] and value is None:
-                raise ValueError("Value(s) must be provided for add, multiply, mean, or variance operations")
+            # Receive encrypted data from the peer
+            encrypted_data = cls.receive_encrypted_data(peer)
 
             if library == 'tenseal':
-                result = cls.run_tenseal(command, operation, value)
+                result = cls.run_tenseal(encrypted_data, operation)
             elif library == 'paillier':
-                result = cls.run_paillier(command, operation, value)
+                result = cls.run_paillier(encrypted_data, operation)
 
             logger.info(f"FHE operation result: {result}")
 
-            # Example instructions for each operation
-            cls.print_example_instructions()
+            # Send the result back to the peer
+            cls.send_result_to_peer(peer, result)
 
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             raise FHEError(f"FHE operation failed: {str(e)}")
 
     @staticmethod
-    def print_example_instructions():
-        examples = {
-            "square": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation square",
-            "add": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library concrete --operation add --value 3",
-            "mean": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library paillier --operation mean --value 3 4 5",
-            "variance": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation variance --value 3 4 5",
-        }
-
-        print("\nExample FHE operation commands:")
-        for operation, example in examples.items():
-            print(f"{operation.capitalize()}:")
-            print(f"  {example}\n")
+    def receive_encrypted_data(peer: str):
+        # TODO: Implement actual peer-to-peer communication to receive encrypted data
+        # This is a placeholder and should be replaced with actual P2P logic
+        logger.info(f"Receiving encrypted data from peer: {peer}")
+        return {"encrypted_data": [1.0, 2.0, 3.0], "context": "serialized_context"}
 
     @staticmethod
-    def run_tenseal(command: str, operation: str, value: list = None):
-        try:
-            context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
-            context.global_scale = 2**40
-            context.generate_galois_keys()
+    def send_result_to_peer(peer: str, result):
+        # TODO: Implement actual peer-to-peer communication to send the result
+        # This is a placeholder and should be replaced with actual P2P logic
+        logger.info(f"Sending result to peer: {peer}")
+        logger.info(f"Result: {result}")
 
-            x = ts.ckks_vector(context, [float(command)])
+    @staticmethod
+    def run_tenseal(encrypted_data: dict, operation: str):
+        try:
+            # Deserialize the context
+            context = ts.context_from(encrypted_data['context'])
+            
+            # Decrypt the received data
+            x = ts.ckks_vector_from(context, encrypted_data['encrypted_data'])
+            
             if operation == 'square':
                 result = x.square()
             elif operation == 'add':
-                y = ts.ckks_vector(context, value)
-                result = x + y
+                result = x + x  # Example of adding the vector to itself
             elif operation == 'multiply':
-                y = ts.ckks_vector(context, value)
-                result = x * y
+                result = x * x  # Example of multiplying the vector by itself
             elif operation == 'mean':
-                y = ts.ckks_vector(context, value)
-                result = (x + y.sum()) / (len(value) + 1)
+                result = x.sum() / len(x)
             elif operation == 'variance':
-                y = ts.ckks_vector(context, value)
-                mean = (x + y.sum()) / (len(value) + 1)
-                var = ((x - mean).square() + ((y - mean).square()).sum()) / (len(value) + 1)
+                mean = x.sum() / len(x)
+                var = ((x - mean).square().sum()) / len(x)
                 result = var
             else:
                 raise ValueError(f"Unsupported operation: {operation}")
 
-            decrypted_result = result.decrypt()
-            logger.info(f"TenSEAL result: {operation}({command}, {value}) = {decrypted_result}")
+            return result.serialize()
         except Exception as e:
             logger.error(f"TenSEAL operation failed: {str(e)}")
             raise FHEError(f"TenSEAL operation failed: {str(e)}")
 
     @staticmethod
-    def run_paillier(command: str, operation: str, value: list = None):
+    def run_paillier(encrypted_data: dict, operation: str):
         try:
+            # In a real scenario, you would need to securely exchange public keys
+            # This is a simplified example
             public_key, private_key = paillier.generate_paillier_keypair()
-            x = public_key.encrypt(float(command))
+            
+            # Decrypt the received data
+            x = [public_key.encrypt(v) for v in encrypted_data['encrypted_data']]
+            
             if operation == 'square':
-                result = x * x
+                result = [xi * xi for xi in x]
             elif operation == 'add':
-                y = [public_key.encrypt(v) for v in value]
-                result = x + sum(y)
+                result = sum(x)
             elif operation == 'multiply':
-                result = x
-                for v in value:
-                    result *= v
+                result = x[0]
+                for xi in x[1:]:
+                    result *= xi
             elif operation == 'mean':
-                y = [public_key.encrypt(v) for v in value]
-                result = (x + sum(y)) / (len(value) + 1)
+                result = sum(x) / len(x)
             elif operation == 'variance':
-                y = [public_key.encrypt(v) for v in value]
-                mean = (x + sum(y)) / (len(value) + 1)
-                var = ((x - mean)**2 + sum((yi - mean)**2 for yi in y)) / (len(value) + 1)
+                mean = sum(x) / len(x)
+                var = sum((xi - mean)**2 for xi in x) / len(x)
                 result = var
             else:
                 raise ValueError(f"Unsupported operation: {operation}")
 
-            decrypted_result = private_key.decrypt(result)
-            logger.info(f"Paillier result: {operation}({command}, {value}) = {decrypted_result}")
+            return private_key.decrypt(result)
         except Exception as e:
             logger.error(f"Paillier operation failed: {str(e)}")
             raise FHEError(f"Paillier operation failed: {str(e)}")
