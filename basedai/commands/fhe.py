@@ -5,7 +5,6 @@ import asyncio
 import websockets
 import os
 import tenseal as ts
-import concrete.numpy as cnp
 import pyfhel
 from phe import paillier
 import ollama
@@ -28,7 +27,7 @@ class FHERunCommand:
         parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
         parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
         parser.add_argument('--command', type=float, required=True, help='FHE command to run (the initial value)')
-        parser.add_argument('--library', type=str, choices=['tenseal', 'concrete', 'pyfhel', 'paillier'], required=True, help='FHE library to use')
+        parser.add_argument('--library', type=str, choices=['tenseal', 'pyfhel', 'paillier'], required=True, help='FHE library to use')
         parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
         parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
 
@@ -53,8 +52,6 @@ class FHERunCommand:
 
             if library == 'tenseal':
                 result = cls.run_tenseal(command, operation, value)
-            elif library == 'concrete':
-                result = cls.run_concrete(command, operation, value)
             elif library == 'pyfhel':
                 result = cls.run_pyfhel(command, operation, value)
             elif library == 'paillier':
@@ -116,42 +113,6 @@ class FHERunCommand:
         except Exception as e:
             logger.error(f"TenSEAL operation failed: {str(e)}")
             raise FHEError(f"TenSEAL operation failed: {str(e)}")
-
-    @staticmethod
-    def run_concrete(command: str, operation: str, value: list = None):
-        try:
-            compiler = cnp.Compiler({"p_error": 1/2**10})
-            
-            if operation == 'square':
-                @compiler.compile(inputset=[(3.14,)])
-                def compute(x):
-                    return x ** 2
-            elif operation == 'add':
-                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
-                def compute(*args):
-                    return sum(args)
-            elif operation == 'multiply':
-                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
-                def compute(*args):
-                    return np.prod(args)
-            elif operation == 'mean':
-                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
-                def compute(*args):
-                    return sum(args) / len(args)
-            elif operation == 'variance':
-                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
-                def compute(*args):
-                    mean = sum(args) / len(args)
-                    return sum((x - mean) ** 2 for x in args) / len(args)
-            else:
-                raise ValueError(f"Unsupported operation: {operation}")
-
-            inputs = [float(command)] + value
-            circuit = compute.encrypt_run_decrypt(*inputs)
-            logger.info(f"Concrete result: {operation}({command}, {value}) = {circuit}")
-        except Exception as e:
-            logger.error(f"Concrete operation failed: {str(e)}")
-            raise FHEError(f"Concrete operation failed: {str(e)}")
 
     @staticmethod
     def run_pyfhel(command: str, operation: str, value: list = None):
