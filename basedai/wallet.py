@@ -93,6 +93,8 @@ class wallet:
         computekey_file, personalkey_file, personalkeypub_file: Properties that return respective key file objects.
         regenerate_personalkey, regenerate_computekey, regenerate_personalkeypub: Methods to regenerate keys from different sources.
         config, help, add_args: Utility methods for configuration and assistance.
+        accept_payment: Method to accept payments for work.
+        broadcast_cost: Method to broadcast the cost of services.
 
     The wallet class is a fundamental component for users to interact securely with the Basedai network, facilitating both operational tasks and transactions involving value transfer across the network.
 
@@ -116,6 +118,12 @@ class wallet:
 
         # Access personalkey property, must use password to unlock
         my_wallet.personalkey
+
+        # Accept payment for work
+        my_wallet.accept_payment(amount=10, payer_address="0x1234...")
+
+        # Broadcast cost of services
+        my_wallet.broadcast_cost(service="compute", cost=5)
     """
 
     @classmethod
@@ -466,6 +474,38 @@ class wallet:
         if self._personalkeypub == None:
             self._personalkeypub = self.personalkeypub_file.keypair
         return self._personalkeypub
+
+    def accept_payment(self, amount: float, payer_address: str) -> bool:
+        """
+        Accepts a payment for work from the specified payer address.
+
+        Args:
+            amount (float): The amount of BASED to be received.
+            payer_address (str): The address of the payer.
+
+        Returns:
+            bool: True if the payment was successfully accepted, False otherwise.
+        """
+        # TODO: Implement the actual payment acceptance logic here
+        # This might involve interacting with the Basedai blockchain
+        print(f"Accepting payment of {amount} BASED from {payer_address}")
+        return True
+
+    def broadcast_cost(self, service: str, cost: float) -> bool:
+        """
+        Broadcasts the cost of a service to the network.
+
+        Args:
+            service (str): The name of the service being offered.
+            cost (float): The cost of the service in BASED.
+
+        Returns:
+            bool: True if the cost was successfully broadcast, False otherwise.
+        """
+        # TODO: Implement the actual cost broadcasting logic here
+        # This might involve interacting with the Basedai blockchain or a dedicated price feed
+        print(f"Broadcasting cost of {cost} BASED for service: {service}")
+        return True
 
     def create_personalkey_from_uri(
         self,
