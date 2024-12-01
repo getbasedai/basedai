@@ -34,6 +34,7 @@ class FHERunCommand:
         fhe_run_parser.add_argument('--use_cerberus', action='store_true', help='Use Cerberus Squeezing optimization')
         fhe_run_parser.add_argument('--squeeze_rate', type=float, default=0.1, help='Cerberus Squeeze rate')
         fhe_run_parser.add_argument('--use_secure_container', action='store_true', help='Use secure compute container for FHE tasks')
+        fhe_run_parser.add_argument('--use_secure_container', action='store_true', help='Use secure compute container for FHE tasks')
 
     @classmethod
     def run(cls, cli):
@@ -251,6 +252,23 @@ class FHERunCommand:
         except Exception as e:
             logger.error(f"Paillier operation failed: {str(e)}")
             raise FHEError(f"Paillier operation failed: {str(e)}")
+
+    @classmethod
+    def run_in_secure_container(cls, encrypted_data, library, operation, use_cerberus, squeeze_rate):
+        # TODO: Implement secure container logic
+        # This method should:
+        # 1. Set up a secure container (e.g., using Docker or a trusted execution environment)
+        # 2. Send the encrypted data and operation parameters to the container
+        # 3. Run the FHE operation inside the container
+        # 4. Receive the encrypted result from the container
+        # 5. Return the result
+        
+        logger.info("Running FHE operation in secure container")
+        # Placeholder implementation
+        if library == 'tenseal':
+            return cls.run_tenseal(encrypted_data, operation, use_cerberus, squeeze_rate)
+        elif library == 'paillier':
+            return cls.run_paillier(encrypted_data, operation, use_cerberus, squeeze_rate)
 
 class FHEConfigCommand:
     @classmethod
