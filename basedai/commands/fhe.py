@@ -1,6 +1,5 @@
 import argparse
 import basedai
-from basedai.commands import BasedCommand
 import json
 import asyncio
 import websockets
