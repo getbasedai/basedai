@@ -341,8 +341,8 @@ class FHEDiscoverCommand:
             logger.error(f"Failed to discover FHE servers: {str(e)}")
             raise FHEError(f"Failed to discover FHE servers: {str(e)}")
 
-    @staticmethod
-    def discover_fhe_servers(discovery_server, num_threads):
+    @classmethod
+    def discover_fhe_servers(cls, discovery_server, num_threads):
         import threading
         import random
         from btdht import DHT
@@ -358,12 +358,12 @@ class FHEDiscoverCommand:
                         for node in nodes:
                             ip, port = node
                             # Verify if the node is running BasedAI
-                            if self.verify_basedai_node(ip, port):
+                            if cls.verify_basedai_node(ip, port):
                                 server = {
                                     "name": f"FHE Server {i}",
                                     "address": ip,
                                     "port": port,
-                                    "capacity": self.get_node_capacity(ip, port)
+                                    "capacity": cls.get_node_capacity(ip, port)
                                 }
                                 results.append(server)
                 except Exception as e:
@@ -384,12 +384,14 @@ class FHEDiscoverCommand:
 
         return sorted(all_servers, key=lambda x: x['capacity'], reverse=True)
 
-    def verify_basedai_node(self, ip, port):
+    @classmethod
+    def verify_basedai_node(cls, ip, port):
         # TODO: Implement verification logic
         # This should check if the node is running BasedAI software
         return True
 
-    def get_node_capacity(self, ip, port):
+    @classmethod
+    def get_node_capacity(cls, ip, port):
         # TODO: Implement capacity retrieval
         # This should query the node for its current capacity
         return random.randint(50, 100)
