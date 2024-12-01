@@ -28,7 +28,7 @@ class FHERunCommand(BasedCommand):
     def add_args(cls, parser: argparse.ArgumentParser):
         parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
         parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
-        parser.add_argument('--command', type=str, required=True, help='FHE command to run')
+        parser.add_argument('--command', type=float, required=True, help='FHE command to run (the initial value)')
         parser.add_argument('--library', type=str, choices=['tenseal', 'concrete', 'pyfhel', 'paillier'], required=True, help='FHE library to use')
         parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
         parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
@@ -45,7 +45,7 @@ class FHERunCommand(BasedCommand):
 
             logger.info(f"Running FHE command for address: {address}")
             logger.info(f"Minimum balance: {balance}")
-            logger.info(f"Command: {command}")
+            logger.info(f"Initial value: {command}")
             logger.info(f"Using FHE library: {library}")
             logger.info(f"Operation: {operation}")
 
@@ -53,16 +53,37 @@ class FHERunCommand(BasedCommand):
                 raise ValueError("Value(s) must be provided for add, multiply, mean, or variance operations")
 
             if library == 'tenseal':
-                cls.run_tenseal(command, operation, value)
+                result = cls.run_tenseal(command, operation, value)
             elif library == 'concrete':
-                cls.run_concrete(command, operation, value)
+                result = cls.run_concrete(command, operation, value)
             elif library == 'pyfhel':
-                cls.run_pyfhel(command, operation, value)
+                result = cls.run_pyfhel(command, operation, value)
             elif library == 'paillier':
-                cls.run_paillier(command, operation, value)
+                result = cls.run_paillier(command, operation, value)
+
+            logger.info(f"FHE operation result: {result}")
+
+            # Example instructions for each operation
+            cls.print_example_instructions()
+
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             raise FHEError(f"FHE operation failed: {str(e)}")
+
+    @staticmethod
+    def print_example_instructions():
+        examples = {
+            "square": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation square",
+            "add": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library concrete --operation add --value 3",
+            "multiply": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library pyfhel --operation multiply --value 3",
+            "mean": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library paillier --operation mean --value 3 4 5",
+            "variance": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation variance --value 3 4 5",
+        }
+
+        print("\nExample FHE operation commands:")
+        for operation, example in examples.items():
+            print(f"{operation.capitalize()}:")
+            print(f"  {example}\n")
 
     @staticmethod
     def run_tenseal(command: str, operation: str, value: list = None):
@@ -205,6 +226,7 @@ class FHEConfigCommand(BasedCommand):
         parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
         parser.add_argument('--port', type=int, required=True, help='Port to listen on')
         parser.add_argument('--ollama_model', type=str, default='llama2', help='Ollama model to use')
+        parser.add_argument('--name', type=str, required=True, help='Name of this FHE server')
 
     @classmethod
     def run(cls, cli):
@@ -212,11 +234,13 @@ class FHEConfigCommand(BasedCommand):
             discovery_server = cli.config.discovery_server
             port = cli.config.port
             ollama_model = cli.config.ollama_model
+            name = cli.config.name
 
             config = {
                 "discovery_server": discovery_server,
                 "port": port,
-                "ollama_model": ollama_model
+                "ollama_model": ollama_model,
+                "name": name
             }
 
             config_path = 'fhe_config.json'
@@ -224,9 +248,17 @@ class FHEConfigCommand(BasedCommand):
                 json.dump(config, f)
 
             logger.info(f"FHE configuration saved to {config_path}")
+            
+            # Register this server with the discovery server
+            cls.register_with_discovery_server(config)
         except Exception as e:
             logger.error(f"Failed to save FHE configuration: {str(e)}")
             raise FHEError(f"Failed to save FHE configuration: {str(e)}")
+
+    @staticmethod
+    def register_with_discovery_server(config):
+        # TODO: Implement the actual registration process
+        logger.info(f"Registering FHE server '{config['name']}' with discovery server at {config['discovery_server']}")
 
 class FHEStartServerCommand(BasedCommand):
     @classmethod
@@ -246,12 +278,40 @@ class FHEStartServerCommand(BasedCommand):
 
             port = config['port']
             ollama_model = config.get('ollama_model', 'llama2')
+            name = config['name']
 
-            logger.info(f"Starting FHE server on port {port}")
+            logger.info(f"Starting FHE server '{name}' on port {port}")
             asyncio.get_event_loop().run_until_complete(cls.start_server(port, ollama_model))
         except Exception as e:
             logger.error(f"Failed to start FHE server: {str(e)}")
             raise FHEError(f"Failed to start FHE server: {str(e)}")
+
+class FHEDiscoverCommand(BasedCommand):
+    @classmethod
+    def add_args(cls, parser: argparse.ArgumentParser):
+        parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
+
+    @classmethod
+    def run(cls, cli):
+        try:
+            discovery_server = cli.config.discovery_server
+            servers = cls.discover_fhe_servers(discovery_server)
+            
+            print("Available FHE servers:")
+            for server in servers:
+                print(f"Name: {server['name']}, Address: {server['address']}, Port: {server['port']}")
+        except Exception as e:
+            logger.error(f"Failed to discover FHE servers: {str(e)}")
+            raise FHEError(f"Failed to discover FHE servers: {str(e)}")
+
+    @staticmethod
+    def discover_fhe_servers(discovery_server):
+        # TODO: Implement the actual discovery process
+        # This is a placeholder implementation
+        return [
+            {"name": "FHE Server 1", "address": "fhe1.example.com", "port": 8080},
+            {"name": "FHE Server 2", "address": "fhe2.example.com", "port": 8081},
+        ]
 
     @staticmethod
     async def start_server(port: int, ollama_model: str):
