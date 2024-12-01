@@ -22,7 +22,7 @@ class FHEError(Exception):
     """Base exception for FHE-related errors."""
     pass
 
-class FHERunCommand(BasedCommand):
+class FHERunCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
         parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
@@ -219,7 +219,7 @@ class FHERunCommand(BasedCommand):
             logger.error(f"Paillier operation failed: {str(e)}")
             raise FHEError(f"Paillier operation failed: {str(e)}")
 
-class FHEConfigCommand(BasedCommand):
+class FHEConfigCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
         parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
@@ -259,7 +259,7 @@ class FHEConfigCommand(BasedCommand):
         # TODO: Implement the actual registration process
         logger.info(f"Registering FHE server '{config['name']}' with discovery server at {config['discovery_server']}")
 
-class FHEStartServerCommand(BasedCommand):
+class FHEStartServerCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
         parser.add_argument('--config', type=str, default='fhe_config.json', help='Path to the configuration file')
@@ -285,7 +285,7 @@ class FHEStartServerCommand(BasedCommand):
             logger.error(f"Failed to start FHE server: {str(e)}")
             raise FHEError(f"Failed to start FHE server: {str(e)}")
 
-class FHEDiscoverCommand(BasedCommand):
+class FHEDiscoverCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
         parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
