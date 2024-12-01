@@ -1,0 +1,338 @@
+objects:
+  role: {}
+plugins:
+  become: {}
+  cache: {}
+  callback: {}
+  cliconf: {}
+  connection: {}
+  httpapi:
+    mso:
+      description: MSO Ansible HTTPAPI Plugin.
+      name: mso
+      version_added: 1.2.0
+  inventory: {}
+  lookup: {}
+  module:
+    mso_backup:
+      description: Manages backups
+      name: mso_backup
+      namespace: ''
+      version_added: null
+    mso_backup_schedule:
+      description: Manages backup schedules
+      name: mso_backup_schedule
+      namespace: ''
+      version_added: null
+    mso_dhcp_option_policy:
+      description: Manage DHCP Option policies.
+      name: mso_dhcp_option_policy
+      namespace: ''
+      version_added: null
+    mso_dhcp_option_policy_option:
+      description: Manage DHCP options in a DHCP Option policy.
+      name: mso_dhcp_option_policy_option
+      namespace: ''
+      version_added: null
+    mso_dhcp_relay_policy:
+      description: Manage DHCP Relay policies.
+      name: mso_dhcp_relay_policy
+      namespace: ''
+      version_added: null
+    mso_dhcp_relay_policy_provider:
+      description: Manage DHCP providers in a DHCP Relay policy.
+      name: mso_dhcp_relay_policy_provider
+      namespace: ''
+      version_added: null
+    mso_label:
+      description: Manage labels
+      name: mso_label
+      namespace: ''
+      version_added: null
+    mso_remote_location:
+      description: Manages remote locations
+      name: mso_remote_location
+      namespace: ''
+      version_added: null
+    mso_rest:
+      description: Direct access to the Cisco MSO REST API
+      name: mso_rest
+      namespace: ''
+      version_added: null
+    mso_role:
+      description: Manage roles
+      name: mso_role
+      namespace: ''
+      version_added: null
+    mso_schema:
+      description: Manage schemas
+      name: mso_schema
+      namespace: ''
+      version_added: null
+    mso_schema_clone:
+      description: Clone schemas
+      name: mso_schema_clone
+      namespace: ''
+      version_added: null
+    mso_schema_site:
+      description: Manage sites in schemas
+      name: mso_schema_site
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp:
+      description: Manage site-local Application Network Profiles (ANPs) in schema
+        template
+      name: mso_schema_site_anp
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp_epg:
+      description: Manage site-local Endpoint Groups (EPGs) in schema template
+      name: mso_schema_site_anp_epg
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp_epg_domain:
+      description: Manage site-local EPG domains in schema template
+      name: mso_schema_site_anp_epg_domain
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp_epg_selector:
+      description: Manage site-local EPG selector in schema templates
+      name: mso_schema_site_anp_epg_selector
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp_epg_staticleaf:
+      description: Manage site-local EPG static leafs in schema template
+      name: mso_schema_site_anp_epg_staticleaf
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp_epg_staticport:
+      description: Manage site-local EPG static ports in schema template
+      name: mso_schema_site_anp_epg_staticport
+      namespace: ''
+      version_added: null
+    mso_schema_site_anp_epg_subnet:
+      description: Manage site-local EPG subnets in schema template
+      name: mso_schema_site_anp_epg_subnet
+      namespace: ''
+      version_added: null
+    mso_schema_site_bd:
+      description: Manage site-local Bridge Domains (BDs) in schema template
+      name: mso_schema_site_bd
+      namespace: ''
+      version_added: null
+    mso_schema_site_bd_l3out:
+      description: Manage site-local BD l3out's in schema template
+      name: mso_schema_site_bd_l3out
+      namespace: ''
+      version_added: null
+    mso_schema_site_bd_subnet:
+      description: Manage site-local BD subnets in schema template
+      name: mso_schema_site_bd_subnet
+      namespace: ''
+      version_added: null
+    mso_schema_site_external_epg:
+      description: Manage External EPG in schema of sites
+      name: mso_schema_site_external_epg
+      namespace: ''
+      version_added: null
+    mso_schema_site_external_epg_selector:
+      description: Manage External EPG selector in schema of cloud sites
+      name: mso_schema_site_external_epg_selector
+      namespace: ''
+      version_added: null
+    mso_schema_site_l3out:
+      description: Manage site-local layer3 Out (L3Outs) in schema template
+      name: mso_schema_site_l3out
+      namespace: ''
+      version_added: null
+    mso_schema_site_service_graph:
+      description: Manage Service Graph in schema sites
+      name: mso_schema_site_service_graph
+      namespace: ''
+      version_added: null
+    mso_schema_site_vrf:
+      description: Manage site-local VRFs in schema template
+      name: mso_schema_site_vrf
+      namespace: ''
+      version_added: null
+    mso_schema_site_vrf_region:
+      description: Manage site-local VRF regions in schema template
+      name: mso_schema_site_vrf_region
+      namespace: ''
+      version_added: null
+    mso_schema_site_vrf_region_cidr:
+      description: Manage site-local VRF region CIDRs in schema template
+      name: mso_schema_site_vrf_region_cidr
+      namespace: ''
+      version_added: null
+    mso_schema_site_vrf_region_cidr_subnet:
+      description: Manage site-local VRF regions in schema template
+      name: mso_schema_site_vrf_region_cidr_subnet
+      namespace: ''
+      version_added: null
+    mso_schema_site_vrf_region_hub_network:
+      description: Manage site-local VRF region hub network in schema template
+      name: mso_schema_site_vrf_region_hub_network
+      namespace: ''
+      version_added: null
+    mso_schema_template:
+      description: Manage templates in schemas
+      name: mso_schema_template
+      namespace: ''
+      version_added: null
+    mso_schema_template_anp:
+      description: Manage Application Network Profiles (ANPs) in schema templates
+      name: mso_schema_template_anp
+      namespace: ''
+      version_added: null
+    mso_schema_template_anp_epg:
+      description: Manage Endpoint Groups (EPGs) in schema templates
+      name: mso_schema_template_anp_epg
+      namespace: ''
+      version_added: null
+    mso_schema_template_anp_epg_contract:
+      description: Manage EPG contracts in schema templates
+      name: mso_schema_template_anp_epg_contract
+      namespace: ''
+      version_added: null
+    mso_schema_template_anp_epg_selector:
+      description: Manage EPG selector in schema templates
+      name: mso_schema_template_anp_epg_selector
+      namespace: ''
+      version_added: null
+    mso_schema_template_anp_epg_subnet:
+      description: Manage EPG subnets in schema templates
+      name: mso_schema_template_anp_epg_subnet
+      namespace: ''
+      version_added: null
+    mso_schema_template_bd:
+      description: Manage Bridge Domains (BDs) in schema templates
+      name: mso_schema_template_bd
+      namespace: ''
+      version_added: null
+    mso_schema_template_bd_dhcp_policy:
+      description: Manage BD DHCP Policy in schema templates
+      name: mso_schema_template_bd_dhcp_policy
+      namespace: ''
+      version_added: null
+    mso_schema_template_bd_subnet:
+      description: Manage BD subnets in schema templates
+      name: mso_schema_template_bd_subnet
+      namespace: ''
+      version_added: null
+    mso_schema_template_clone:
+      description: Clone templates
+      name: mso_schema_template_clone
+      namespace: ''
+      version_added: null
+    mso_schema_template_contract_filter:
+      description: Manage contract filters in schema templates
+      name: mso_schema_template_contract_filter
+      namespace: ''
+      version_added: null
+    mso_schema_template_contract_service_graph:
+      description: Manage the service graph association with a contract in schema
+        template
+      name: mso_schema_template_contract_service_graph
+      namespace: ''
+      version_added: null
+    mso_schema_template_deploy:
+      description: Deploy schema templates to sites
+      name: mso_schema_template_deploy
+      namespace: ''
+      version_added: null
+    mso_schema_template_deploy_status:
+      description: Check query of objects before deployment to site
+      name: mso_schema_template_deploy_status
+      namespace: ''
+      version_added: null
+    mso_schema_template_external_epg:
+      description: Manage external EPGs in schema templates
+      name: mso_schema_template_external_epg
+      namespace: ''
+      version_added: null
+    mso_schema_template_external_epg_contract:
+      description: Manage Extrnal EPG contracts in schema templates
+      name: mso_schema_template_external_epg_contract
+      namespace: ''
+      version_added: 0.0.8
+    mso_schema_template_external_epg_selector:
+      description: Manage External EPG selector in schema templates
+      name: mso_schema_template_external_epg_selector
+      namespace: ''
+      version_added: null
+    mso_schema_template_external_epg_subnet:
+      description: Manage External EPG subnets in schema templates
+      name: mso_schema_template_external_epg_subnet
+      namespace: ''
+      version_added: 0.0.8
+    mso_schema_template_filter_entry:
+      description: Manage filter entries in schema templates
+      name: mso_schema_template_filter_entry
+      namespace: ''
+      version_added: null
+    mso_schema_template_l3out:
+      description: Manage l3outs in schema templates
+      name: mso_schema_template_l3out
+      namespace: ''
+      version_added: null
+    mso_schema_template_migrate:
+      description: Migrate Bridge Domains (BDs) and EPGs between templates
+      name: mso_schema_template_migrate
+      namespace: ''
+      version_added: null
+    mso_schema_template_service_graph:
+      description: Manage Service Graph in schema templates
+      name: mso_schema_template_service_graph
+      namespace: ''
+      version_added: null
+    mso_schema_template_vrf:
+      description: Manage VRFs in schema templates
+      name: mso_schema_template_vrf
+      namespace: ''
+      version_added: null
+    mso_schema_template_vrf_contract:
+      description: Manage vrf contracts in schema templates
+      name: mso_schema_template_vrf_contract
+      namespace: ''
+      version_added: 0.0.8
+    mso_schema_validate:
+      description: Validate the schema before deploying it to site
+      name: mso_schema_validate
+      namespace: ''
+      version_added: 1.3.0
+    mso_service_node_type:
+      description: Manage Service Node Types
+      name: mso_service_node_type
+      namespace: ''
+      version_added: null
+    mso_site:
+      description: Manage sites
+      name: mso_site
+      namespace: ''
+      version_added: null
+    mso_tenant:
+      description: Manage tenants
+      name: mso_tenant
+      namespace: ''
+      version_added: null
+    mso_tenant_site:
+      description: Manage tenants with cloud sites.
+      name: mso_tenant_site
+      namespace: ''
+      version_added: null
+    mso_user:
+      description: Manage users
+      name: mso_user
+      namespace: ''
+      version_added: null
+    mso_version:
+      description: Get version of MSO
+      name: mso_version
+      namespace: ''
+      version_added: null
+  netconf: {}
+  shell: {}
+  strategy: {}
+  vars: {}
+version: 2.1.0

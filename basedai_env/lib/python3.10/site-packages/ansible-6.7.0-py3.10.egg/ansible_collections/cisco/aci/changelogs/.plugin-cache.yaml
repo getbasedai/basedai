@@ -1,0 +1,780 @@
+objects:
+  role: {}
+plugins:
+  become: {}
+  cache: {}
+  callback: {}
+  cliconf: {}
+  connection: {}
+  httpapi: {}
+  inventory: {}
+  lookup:
+    interface_range:
+      description: query interfaces from a range or comma separated list of ranges
+      name: interface_range
+      version_added: null
+  module:
+    aci_aaa_ssh_auth:
+      description: Manage AAA SSH auth (aaaSshAuth) objects.
+      name: aci_aaa_ssh_auth
+      namespace: ''
+      version_added: null
+    aci_aaa_user:
+      description: Manage AAA users (aaa:User)
+      name: aci_aaa_user
+      namespace: ''
+      version_added: null
+    aci_aaa_user_certificate:
+      description: Manage AAA user certificates (aaa:UserCert)
+      name: aci_aaa_user_certificate
+      namespace: ''
+      version_added: null
+    aci_aaa_user_domain:
+      description: Manage AAA user domain (aaaUserDomain) objects.
+      name: aci_aaa_user_domain
+      namespace: ''
+      version_added: null
+    aci_aaa_user_role:
+      description: Manage AAA user role (aaaUserRole) objects.
+      name: aci_aaa_user_role
+      namespace: ''
+      version_added: null
+    aci_access_port_block_to_access_port:
+      description: Manage port blocks of Fabric interface policy leaf profile interface
+        selectors (infra:HPortS, infra:PortBlk)
+      name: aci_access_port_block_to_access_port
+      namespace: ''
+      version_added: null
+    aci_access_port_to_interface_policy_leaf_profile:
+      description: Manage Fabric interface policy leaf profile interface selectors
+        (infra:HPortS, infra:RsAccBaseGrp, infra:PortBlk)
+      name: aci_access_port_to_interface_policy_leaf_profile
+      namespace: ''
+      version_added: null
+    aci_access_sub_port_block_to_access_port:
+      description: Manage sub port blocks of Fabric interface policy leaf profile
+        interface selectors (infra:HPortS, infra:SubPortBlk)
+      name: aci_access_sub_port_block_to_access_port
+      namespace: ''
+      version_added: null
+    aci_aep:
+      description: Manage attachable Access Entity Profile (AEP) objects (infra:AttEntityP,
+        infra:ProvAcc)
+      name: aci_aep
+      namespace: ''
+      version_added: null
+    aci_aep_to_domain:
+      description: Bind AEPs to Physical or Virtual Domains (infra:RsDomP)
+      name: aci_aep_to_domain
+      namespace: ''
+      version_added: null
+    aci_aep_to_epg:
+      description: Bind EPG to AEP (infra:RsFuncToEpg).
+      name: aci_aep_to_epg
+      namespace: ''
+      version_added: null
+    aci_ap:
+      description: Manage top level Application Profile (AP) objects (fv:Ap)
+      name: aci_ap
+      namespace: ''
+      version_added: null
+    aci_bd:
+      description: Manage Bridge Domains (BD) objects (fv:BD)
+      name: aci_bd
+      namespace: ''
+      version_added: null
+    aci_bd_dhcp_label:
+      description: Manage DHCP Labels (dhcp:Lbl)
+      name: aci_bd_dhcp_label
+      namespace: ''
+      version_added: null
+    aci_bd_subnet:
+      description: Manage Subnets (fv:Subnet)
+      name: aci_bd_subnet
+      namespace: ''
+      version_added: null
+    aci_bd_to_l3out:
+      description: Bind Bridge Domain to L3 Out (fv:RsBDToOut)
+      name: aci_bd_to_l3out
+      namespace: ''
+      version_added: null
+    aci_bgp_rr_asn:
+      description: Manage BGP Route Reflector ASN.
+      name: aci_bgp_rr_asn
+      namespace: ''
+      version_added: null
+    aci_bgp_rr_node:
+      description: Manage BGP Route Reflector objects.
+      name: aci_bgp_rr_node
+      namespace: ''
+      version_added: null
+    aci_bulk_static_binding_to_epg:
+      description: Bind static paths to EPGs (fv:RsPathAtt)
+      name: aci_bulk_static_binding_to_epg
+      namespace: ''
+      version_added: null
+    aci_cloud_ap:
+      description: Manage Cloud Application Profile (AP) (cloud:App)
+      name: aci_cloud_ap
+      namespace: ''
+      version_added: null
+    aci_cloud_aws_provider:
+      description: Manage Cloud AWS Provider (cloud:AwsProvider)
+      name: aci_cloud_aws_provider
+      namespace: ''
+      version_added: null
+    aci_cloud_bgp_asn:
+      description: Manage Cloud APIC BGP Autonomous System Profile (cloud:BgpAsP)
+      name: aci_cloud_bgp_asn
+      namespace: ''
+      version_added: 2.1.0
+    aci_cloud_cidr:
+      description: Manage CIDR under Cloud Context Profile (cloud:Cidr)
+      name: aci_cloud_cidr
+      namespace: ''
+      version_added: null
+    aci_cloud_ctx_profile:
+      description: Manage Cloud Context Profile (cloud:CtxProfile)
+      name: aci_cloud_ctx_profile
+      namespace: ''
+      version_added: null
+    aci_cloud_epg:
+      description: Manage Cloud EPG (cloud:EPg)
+      name: aci_cloud_epg
+      namespace: ''
+      version_added: null
+    aci_cloud_epg_selector:
+      description: Manage Cloud Endpoint Selector (cloud:EPSelector)
+      name: aci_cloud_epg_selector
+      namespace: ''
+      version_added: null
+    aci_cloud_external_epg:
+      description: Manage Cloud External EPG (cloud:ExtEPg)
+      name: aci_cloud_external_epg
+      namespace: ''
+      version_added: null
+    aci_cloud_external_epg_selector:
+      description: Manage Cloud Endpoint Selector for External EPGs (cloud:ExtEPSelector)
+      name: aci_cloud_external_epg_selector
+      namespace: ''
+      version_added: null
+    aci_cloud_provider:
+      description: Query Cloud Provider information (cloud:ProvP)
+      name: aci_cloud_provider
+      namespace: ''
+      version_added: null
+    aci_cloud_region:
+      description: Manage Cloud Providers Region (cloud:Region)
+      name: aci_cloud_region
+      namespace: ''
+      version_added: null
+    aci_cloud_subnet:
+      description: Manage Cloud Subnet (cloud:Subnet)
+      name: aci_cloud_subnet
+      namespace: ''
+      version_added: null
+    aci_cloud_vpn_gateway:
+      description: Manage cloudRouterP in Cloud Context Profile (cloud:cloudRouterP)
+      name: aci_cloud_vpn_gateway
+      namespace: ''
+      version_added: null
+    aci_cloud_zone:
+      description: Manage Cloud Availability Zone (cloud:Zone)
+      name: aci_cloud_zone
+      namespace: ''
+      version_added: null
+    aci_config_rollback:
+      description: Provides rollback and rollback preview functionality (config:ImportP)
+      name: aci_config_rollback
+      namespace: ''
+      version_added: null
+    aci_config_snapshot:
+      description: Manage Config Snapshots (config:Snapshot, config:ExportP)
+      name: aci_config_snapshot
+      namespace: ''
+      version_added: null
+    aci_contract:
+      description: Manage contract resources (vz:BrCP)
+      name: aci_contract
+      namespace: ''
+      version_added: null
+    aci_contract_export:
+      description: Manage contract interfaces (vz:CPIf)
+      name: aci_contract_export
+      namespace: ''
+      version_added: null
+    aci_contract_subject:
+      description: Manage initial Contract Subjects (vz:Subj)
+      name: aci_contract_subject
+      namespace: ''
+      version_added: null
+    aci_contract_subject_to_filter:
+      description: Bind Contract Subjects to Filters (vz:RsSubjFiltAtt)
+      name: aci_contract_subject_to_filter
+      namespace: ''
+      version_added: null
+    aci_contract_subject_to_service_graph:
+      description: Bind contract subject to service graph (vz:RsSubjGraphAtt).
+      name: aci_contract_subject_to_service_graph
+      namespace: ''
+      version_added: null
+    aci_dhcp_relay:
+      description: Manage DHCP relay policies.
+      name: aci_dhcp_relay
+      namespace: ''
+      version_added: null
+    aci_dhcp_relay_provider:
+      description: Manage DHCP relay policy providers.
+      name: aci_dhcp_relay_provider
+      namespace: ''
+      version_added: null
+    aci_dns_domain:
+      description: Manage DNS Provider (dnsDomain) objects.
+      name: aci_dns_domain
+      namespace: ''
+      version_added: null
+    aci_dns_profile:
+      description: Manage DNS Profile (dnsProfile) objects.
+      name: aci_dns_profile
+      namespace: ''
+      version_added: null
+    aci_dns_provider:
+      description: Manage DNS Provider (dnsProv) objects.
+      name: aci_dns_provider
+      namespace: ''
+      version_added: null
+    aci_domain:
+      description: Manage physical, virtual, bridged, routed or FC domain profiles
+        (phys:DomP, vmm:DomP, l2ext:DomP, l3ext:DomP, fc:DomP)
+      name: aci_domain
+      namespace: ''
+      version_added: null
+    aci_domain_to_encap_pool:
+      description: Bind Domain to Encap Pools (infra:RsVlanNs)
+      name: aci_domain_to_encap_pool
+      namespace: ''
+      version_added: null
+    aci_domain_to_vlan_pool:
+      description: Bind Domain to VLAN Pools (infra:RsVlanNs)
+      name: aci_domain_to_vlan_pool
+      namespace: ''
+      version_added: null
+    aci_encap_pool:
+      description: Manage encap pools (fvns:VlanInstP, fvns:VxlanInstP, fvns:VsanInstP)
+      name: aci_encap_pool
+      namespace: ''
+      version_added: null
+    aci_encap_pool_range:
+      description: Manage encap ranges assigned to pools (fvns:EncapBlk, fvns:VsanEncapBlk)
+      name: aci_encap_pool_range
+      namespace: ''
+      version_added: null
+    aci_epg:
+      description: Manage End Point Groups (EPG) objects (fv:AEPg)
+      name: aci_epg
+      namespace: ''
+      version_added: null
+    aci_epg_monitoring_policy:
+      description: Manage monitoring policies (mon:EPGPol)
+      name: aci_epg_monitoring_policy
+      namespace: ''
+      version_added: null
+    aci_epg_to_contract:
+      description: Bind EPGs to Contracts (fv:RsCons, fv:RsProv)
+      name: aci_epg_to_contract
+      namespace: ''
+      version_added: null
+    aci_epg_to_contract_interface:
+      description: Bind EPGs to Consumed Contracts Interface (fv:RsConsIf).
+      name: aci_epg_to_contract_interface
+      namespace: ''
+      version_added: null
+    aci_epg_to_contract_master:
+      description: Manage End Point Group (EPG) contract master relationships (fv:RsSecInherited)
+      name: aci_epg_to_contract_master
+      namespace: ''
+      version_added: null
+    aci_epg_to_domain:
+      description: Bind EPGs to Domains (fv:RsDomAtt)
+      name: aci_epg_to_domain
+      namespace: ''
+      version_added: null
+    aci_esg:
+      description: Manage Endpoint Security Groups (ESGs) objects (fv:ESg)
+      name: aci_esg
+      namespace: ''
+      version_added: null
+    aci_esg_contract_master:
+      description: Manage ESG contract master relationships (fv:RsSecInherited)
+      name: aci_esg_contract_master
+      namespace: ''
+      version_added: null
+    aci_esg_epg_selector:
+      description: Manage ESG - EPG Selectors (fv:fvEPgSelector)
+      name: aci_esg_epg_selector
+      namespace: ''
+      version_added: null
+    aci_esg_ip_subnet_selector:
+      description: Manage ESG IP Subnet selector(fv:EPSelector)
+      name: aci_esg_ip_subnet_selector
+      namespace: ''
+      version_added: null
+    aci_esg_tag_selector:
+      description: Manage ESG Tag Selectors (fv:TagSelector)
+      name: aci_esg_tag_selector
+      namespace: ''
+      version_added: null
+    aci_fabric_leaf_profile:
+      description: Manage fabric leaf profiles (fabric:LeafP).
+      name: aci_fabric_leaf_profile
+      namespace: ''
+      version_added: null
+    aci_fabric_leaf_switch_assoc:
+      description: Manage leaf switch bindings to profiles and policy groups (fabric:LeafS
+        and fabric:RsLeNodePGrp).
+      name: aci_fabric_leaf_switch_assoc
+      namespace: ''
+      version_added: null
+    aci_fabric_node:
+      description: Manage Fabric Node Members (fabric:NodeIdentP)
+      name: aci_fabric_node
+      namespace: ''
+      version_added: null
+    aci_fabric_scheduler:
+      description: This modules creates ACI schedulers.
+      name: aci_fabric_scheduler
+      namespace: ''
+      version_added: null
+    aci_fabric_spine_profile:
+      description: Manage fabric spine profiles (fabric:SpineP).
+      name: aci_fabric_spine_profile
+      namespace: ''
+      version_added: null
+    aci_fabric_spine_switch_assoc:
+      description: Manage spine switch bindings to profiles and policy groups (fabric:SpineS
+        and fabric:RsSpNodePGrp).
+      name: aci_fabric_spine_switch_assoc
+      namespace: ''
+      version_added: null
+    aci_fabric_switch_block:
+      description: Manage switch blocks (fabric:NodeBlk).
+      name: aci_fabric_switch_block
+      namespace: ''
+      version_added: null
+    aci_fabric_switch_policy_group:
+      description: Manage Fabric Switch Policy Group objects.
+      name: aci_fabric_switch_policy_group
+      namespace: ''
+      version_added: null
+    aci_filter:
+      description: Manages top level filter objects (vz:Filter)
+      name: aci_filter
+      namespace: ''
+      version_added: null
+    aci_filter_entry:
+      description: Manage filter entries (vz:Entry)
+      name: aci_filter_entry
+      namespace: ''
+      version_added: null
+    aci_firmware_group:
+      description: This module creates a firmware group
+      name: aci_firmware_group
+      namespace: ''
+      version_added: null
+    aci_firmware_group_node:
+      description: This modules adds and remove nodes from the firmware group
+      name: aci_firmware_group_node
+      namespace: ''
+      version_added: null
+    aci_firmware_policy:
+      description: This creates a firmware policy
+      name: aci_firmware_policy
+      namespace: ''
+      version_added: null
+    aci_firmware_source:
+      description: Manage firmware image sources (firmware:OSource)
+      name: aci_firmware_source
+      namespace: ''
+      version_added: null
+    aci_interface_blacklist:
+      description: Enabling or Disabling physical interfaces.
+      name: aci_interface_blacklist
+      namespace: ''
+      version_added: null
+    aci_interface_description:
+      description: Setting and removing description on physical interfaces.
+      name: aci_interface_description
+      namespace: ''
+      version_added: null
+    aci_interface_policy_cdp:
+      description: Manage CDP interface policies (cdp:IfPol)
+      name: aci_interface_policy_cdp
+      namespace: ''
+      version_added: null
+    aci_interface_policy_fc:
+      description: Manage Fibre Channel interface policies (fc:IfPol)
+      name: aci_interface_policy_fc
+      namespace: ''
+      version_added: null
+    aci_interface_policy_l2:
+      description: Manage Layer 2 interface policies (l2:IfPol)
+      name: aci_interface_policy_l2
+      namespace: ''
+      version_added: null
+    aci_interface_policy_leaf_breakout_port_group:
+      description: Manage fabric interface policy leaf breakout port group (infra:BrkoutPortGrp)
+      name: aci_interface_policy_leaf_breakout_port_group
+      namespace: ''
+      version_added: null
+    aci_interface_policy_leaf_policy_group:
+      description: Manage fabric interface policy leaf policy groups (infra:AccBndlGrp,
+        infra:AccPortGrp)
+      name: aci_interface_policy_leaf_policy_group
+      namespace: ''
+      version_added: null
+    aci_interface_policy_leaf_profile:
+      description: Manage fabric interface policy leaf profiles (infra:AccPortP)
+      name: aci_interface_policy_leaf_profile
+      namespace: ''
+      version_added: null
+    aci_interface_policy_link_level:
+      description: Manage Link Level interface policies (fabric:HIfPol)
+      name: aci_interface_policy_link_level
+      namespace: ''
+      version_added: null
+    aci_interface_policy_lldp:
+      description: Manage LLDP interface policies (lldp:IfPol)
+      name: aci_interface_policy_lldp
+      namespace: ''
+      version_added: null
+    aci_interface_policy_mcp:
+      description: Manage MCP interface policies (mcp:IfPol)
+      name: aci_interface_policy_mcp
+      namespace: ''
+      version_added: null
+    aci_interface_policy_ospf:
+      description: Manage OSPF interface policies (ospf:IfPol)
+      name: aci_interface_policy_ospf
+      namespace: ''
+      version_added: null
+    aci_interface_policy_port_channel:
+      description: Manage port channel interface policies (lacp:LagPol)
+      name: aci_interface_policy_port_channel
+      namespace: ''
+      version_added: null
+    aci_interface_policy_port_security:
+      description: Manage port security (l2:PortSecurityPol)
+      name: aci_interface_policy_port_security
+      namespace: ''
+      version_added: null
+    aci_interface_selector_to_switch_policy_leaf_profile:
+      description: Bind interface selector profiles to switch policy leaf profiles
+        (infra:RsAccPortP)
+      name: aci_interface_selector_to_switch_policy_leaf_profile
+      namespace: ''
+      version_added: null
+    aci_l2out:
+      description: Manage Layer2 Out (L2Out) objects.
+      name: aci_l2out
+      namespace: ''
+      version_added: null
+    aci_l2out_extepg:
+      description: Manage External Network Instance (L2Out External EPG) objects (l2extInstP).
+      name: aci_l2out_extepg
+      namespace: ''
+      version_added: null
+    aci_l2out_extepg_to_contract:
+      description: Bind Contracts to L2 External End Point Groups (EPGs)
+      name: aci_l2out_extepg_to_contract
+      namespace: ''
+      version_added: null
+    aci_l2out_logical_interface_path:
+      description: Manage Layer 2 Outside (L2Out) logical interface path (l2extRsPathL2OutAtt)
+      name: aci_l2out_logical_interface_path
+      namespace: ''
+      version_added: null
+    aci_l2out_logical_interface_profile:
+      description: Manage Layer 2 Outside (L2Out) interface profiles (l2ext:LIfP)
+      name: aci_l2out_logical_interface_profile
+      namespace: ''
+      version_added: null
+    aci_l2out_logical_node_profile:
+      description: Manage Layer 2 Outside (L2Out) logical node profiles (l2ext:LNodeP)
+      name: aci_l2out_logical_node_profile
+      namespace: ''
+      version_added: null
+    aci_l3out:
+      description: Manage Layer 3 Outside (L3Out) objects (l3ext:Out)
+      name: aci_l3out
+      namespace: ''
+      version_added: null
+    aci_l3out_bgp_peer:
+      description: Manage Layer 3 Outside (L3Out) BGP Peers (bgp:PeerP)
+      name: aci_l3out_bgp_peer
+      namespace: ''
+      version_added: null
+    aci_l3out_extepg:
+      description: Manage External Network Instance Profile (ExtEpg) objects (l3extInstP:instP)
+      name: aci_l3out_extepg
+      namespace: ''
+      version_added: null
+    aci_l3out_extepg_to_contract:
+      description: Bind Contracts to External End Point Groups (EPGs)
+      name: aci_l3out_extepg_to_contract
+      namespace: ''
+      version_added: null
+    aci_l3out_extsubnet:
+      description: Manage External Subnet objects (l3extSubnet:extsubnet)
+      name: aci_l3out_extsubnet
+      namespace: ''
+      version_added: null
+    aci_l3out_interface:
+      description: Manage Layer 3 Outside (L3Out) interfaces (l3ext:RsPathL3OutAtt)
+      name: aci_l3out_interface
+      namespace: ''
+      version_added: null
+    aci_l3out_interface_secondary_ip:
+      description: Manage Layer 3 Outside (L3Out) interface secondary IP addresses
+        (l3ext:Ip).
+      name: aci_l3out_interface_secondary_ip
+      namespace: ''
+      version_added: null
+    aci_l3out_logical_interface_profile:
+      description: Manage Layer 3 Outside (L3Out) logical interface profiles (l3ext:LIfP)
+      name: aci_l3out_logical_interface_profile
+      namespace: ''
+      version_added: null
+    aci_l3out_logical_interface_profile_ospf_policy:
+      description: Manage Layer 3 Outside (L3Out) logical interface profile (l3ext:LIfP)
+        OSPF policy (ospfIfP)
+      name: aci_l3out_logical_interface_profile_ospf_policy
+      namespace: ''
+      version_added: null
+    aci_l3out_logical_interface_vpc_member:
+      description: Manage Member Node objects (l3ext:Member)
+      name: aci_l3out_logical_interface_vpc_member
+      namespace: ''
+      version_added: null
+    aci_l3out_logical_node:
+      description: Manage Layer 3 Outside (L3Out) logical node profile nodes (l3ext:RsNodeL3OutAtt)
+      name: aci_l3out_logical_node
+      namespace: ''
+      version_added: null
+    aci_l3out_logical_node_profile:
+      description: Manage Layer 3 Outside (L3Out) logical node profiles (l3extLNodeP:lnodep)
+      name: aci_l3out_logical_node_profile
+      namespace: ''
+      version_added: null
+    aci_l3out_route_tag_policy:
+      description: Manage route tag policies (l3ext:RouteTagPol)
+      name: aci_l3out_route_tag_policy
+      namespace: ''
+      version_added: null
+    aci_l3out_static_routes:
+      description: Manage Static routes object (l3ext:ipRouteP)
+      name: aci_l3out_static_routes
+      namespace: ''
+      version_added: null
+    aci_l3out_static_routes_nexthop:
+      description: Manage nexthops for static routes (ip:NexthopP)
+      name: aci_l3out_static_routes_nexthop
+      namespace: ''
+      version_added: null
+    aci_maintenance_group:
+      description: This creates an ACI maintenance group
+      name: aci_maintenance_group
+      namespace: ''
+      version_added: null
+    aci_maintenance_group_node:
+      description: Manage maintenance group nodes
+      name: aci_maintenance_group_node
+      namespace: ''
+      version_added: null
+    aci_maintenance_policy:
+      description: Manage firmware maintenance policies
+      name: aci_maintenance_policy
+      namespace: ''
+      version_added: null
+    aci_node_mgmt_epg:
+      description: In band or Out of band management EPGs
+      name: aci_node_mgmt_epg
+      namespace: ''
+      version_added: null
+    aci_ntp_policy:
+      description: Manage NTP policies.
+      name: aci_ntp_policy
+      namespace: ''
+      version_added: null
+    aci_ntp_server:
+      description: Manage NTP servers.
+      name: aci_ntp_server
+      namespace: ''
+      version_added: null
+    aci_rest:
+      description: Direct access to the Cisco APIC REST API
+      name: aci_rest
+      namespace: ''
+      version_added: null
+    aci_snmp_client:
+      description: Manage SNMP clients (snmp:ClientP).
+      name: aci_snmp_client
+      namespace: ''
+      version_added: null
+    aci_snmp_client_group:
+      description: Manage SNMP client groups (snmp:ClientGrpP).
+      name: aci_snmp_client_group
+      namespace: ''
+      version_added: null
+    aci_snmp_community_policy:
+      description: Manage SNMP community policies (snmp:CommunityP).
+      name: aci_snmp_community_policy
+      namespace: ''
+      version_added: null
+    aci_snmp_policy:
+      description: Manage Syslog groups (snmp:Pol).
+      name: aci_snmp_policy
+      namespace: ''
+      version_added: null
+    aci_snmp_user:
+      description: Manage SNMP v3 Users (snmp:UserP).
+      name: aci_snmp_user
+      namespace: ''
+      version_added: null
+    aci_static_binding_to_epg:
+      description: Bind static paths to EPGs (fv:RsPathAtt)
+      name: aci_static_binding_to_epg
+      namespace: ''
+      version_added: null
+    aci_static_node_mgmt_address:
+      description: In band or Out of band management IP address
+      name: aci_static_node_mgmt_address
+      namespace: ''
+      version_added: null
+    aci_switch_leaf_selector:
+      description: Bind leaf selectors to switch policy leaf profiles (infra:LeafS,
+        infra:NodeBlk, infra:RsAccNodePGrep)
+      name: aci_switch_leaf_selector
+      namespace: ''
+      version_added: null
+    aci_switch_policy_leaf_profile:
+      description: Manage switch policy leaf profiles (infra:NodeP)
+      name: aci_switch_policy_leaf_profile
+      namespace: ''
+      version_added: null
+    aci_switch_policy_vpc_protection_group:
+      description: Manage switch policy explicit vPC protection groups (fabric:ExplicitGEp,
+        fabric:NodePEp).
+      name: aci_switch_policy_vpc_protection_group
+      namespace: ''
+      version_added: null
+    aci_syslog_group:
+      description: Manage Syslog groups (syslog:Group, syslog:Console, syslog:File
+        and syslog:Prof).
+      name: aci_syslog_group
+      namespace: ''
+      version_added: null
+    aci_syslog_remote_dest:
+      description: Manage Syslog Remote Destinations (syslog:RemoteDest).
+      name: aci_syslog_remote_dest
+      namespace: ''
+      version_added: null
+    aci_syslog_source:
+      description: Manage Syslog Source objects (syslog:Src)
+      name: aci_syslog_source
+      namespace: ''
+      version_added: null
+    aci_system:
+      description: Query the ACI system information (top:System)
+      name: aci_system
+      namespace: ''
+      version_added: null
+    aci_taboo_contract:
+      description: Manage taboo contracts (vz:BrCP)
+      name: aci_taboo_contract
+      namespace: ''
+      version_added: null
+    aci_tag:
+      description: Tagging of ACI objects
+      name: aci_tag
+      namespace: ''
+      version_added: null
+    aci_tenant:
+      description: Manage tenants (fv:Tenant)
+      name: aci_tenant
+      namespace: ''
+      version_added: null
+    aci_tenant_action_rule_profile:
+      description: Manage action rule profiles (rtctrl:AttrP)
+      name: aci_tenant_action_rule_profile
+      namespace: ''
+      version_added: null
+    aci_tenant_ep_retention_policy:
+      description: Manage End Point (EP) retention protocol policies (fv:EpRetPol)
+      name: aci_tenant_ep_retention_policy
+      namespace: ''
+      version_added: null
+    aci_tenant_span_dst_group:
+      description: Manage SPAN destination groups (span:DestGrp)
+      name: aci_tenant_span_dst_group
+      namespace: ''
+      version_added: null
+    aci_tenant_span_src_group:
+      description: Manage SPAN source groups (span:SrcGrp)
+      name: aci_tenant_span_src_group
+      namespace: ''
+      version_added: null
+    aci_tenant_span_src_group_to_dst_group:
+      description: Bind SPAN source groups to destination groups (span:SpanLbl)
+      name: aci_tenant_span_src_group_to_dst_group
+      namespace: ''
+      version_added: null
+    aci_vlan_pool:
+      description: Manage VLAN pools (fvns:VlanInstP)
+      name: aci_vlan_pool
+      namespace: ''
+      version_added: null
+    aci_vlan_pool_encap_block:
+      description: Manage encap blocks assigned to VLAN pools (fvns:EncapBlk)
+      name: aci_vlan_pool_encap_block
+      namespace: ''
+      version_added: null
+    aci_vmm_controller:
+      description: Manage VMM Controller for virtual domains profiles (vmm:CtrlrP)
+      name: aci_vmm_controller
+      namespace: ''
+      version_added: null
+    aci_vmm_credential:
+      description: Manage virtual domain credential profiles (vmm:UsrAccP)
+      name: aci_vmm_credential
+      namespace: ''
+      version_added: null
+    aci_vmm_uplink:
+      description: Manage VMM uplinks (vmm:UplinkP)
+      name: aci_vmm_uplink
+      namespace: ''
+      version_added: null
+    aci_vmm_uplink_container:
+      description: Manage VMM uplink containers (vmm:UplinkPCont)
+      name: aci_vmm_uplink_container
+      namespace: ''
+      version_added: null
+    aci_vmm_vswitch_policy:
+      description: Manage vSwitch policy for VMware virtual domains profiles (vmm:DomP)
+      name: aci_vmm_vswitch_policy
+      namespace: ''
+      version_added: null
+    aci_vrf:
+      description: Manage contexts or VRFs (fv:Ctx)
+      name: aci_vrf
+      namespace: ''
+      version_added: null
+    aci_vzany_to_contract:
+      description: Attach contracts to vzAny (vz:RsAnyToProv, vz:RsAnyToCons, vz:RsAnyToConsIf)
+      name: aci_vzany_to_contract
+      namespace: ''
+      version_added: null
+  netconf: {}
+  shell: {}
+  strategy: {}
+  vars: {}
+version: 2.3.0
