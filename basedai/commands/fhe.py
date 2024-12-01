@@ -23,12 +23,13 @@ class FHEError(Exception):
 class FHERunCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
-        parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
-        parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
-        parser.add_argument('--command', type=float, required=True, help='FHE command to run (the initial value)')
-        parser.add_argument('--library', type=str, choices=['tenseal', 'paillier'], required=True, help='FHE library to use')
-        parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
-        parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
+        fhe_run_parser = parser.add_parser('run', help='Run FHE operations')
+        fhe_run_parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
+        fhe_run_parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
+        fhe_run_parser.add_argument('--command', type=float, required=True, help='FHE command to run (the initial value)')
+        fhe_run_parser.add_argument('--library', type=str, choices=['tenseal', 'paillier'], required=True, help='FHE library to use')
+        fhe_run_parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
+        fhe_run_parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
 
     @classmethod
     def run(cls, cli):
@@ -144,10 +145,11 @@ class FHERunCommand:
 class FHEConfigCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
-        parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
-        parser.add_argument('--port', type=int, required=True, help='Port to listen on')
-        parser.add_argument('--ollama_model', type=str, default='llama2', help='Ollama model to use')
-        parser.add_argument('--name', type=str, required=True, help='Name of this FHE server')
+        fhe_config_parser = parser.add_parser('config', help='Configure FHE server')
+        fhe_config_parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
+        fhe_config_parser.add_argument('--port', type=int, required=True, help='Port to listen on')
+        fhe_config_parser.add_argument('--ollama_model', type=str, default='llama2', help='Ollama model to use')
+        fhe_config_parser.add_argument('--name', type=str, required=True, help='Name of this FHE server')
 
     @classmethod
     def run(cls, cli):
@@ -184,7 +186,8 @@ class FHEConfigCommand:
 class FHEStartServerCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
-        parser.add_argument('--config', type=str, default='fhe_config.json', help='Path to the configuration file')
+        fhe_start_server_parser = parser.add_parser('start_server', help='Start FHE server')
+        fhe_start_server_parser.add_argument('--config', type=str, default='fhe_config.json', help='Path to the configuration file')
 
     @classmethod
     def run(cls, cli):
@@ -210,7 +213,8 @@ class FHEStartServerCommand:
 class FHEDiscoverCommand:
     @classmethod
     def add_args(cls, parser: argparse.ArgumentParser):
-        parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
+        fhe_discover_parser = parser.add_parser('discover', help='Discover FHE servers')
+        fhe_discover_parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
 
     @classmethod
     def run(cls, cli):
