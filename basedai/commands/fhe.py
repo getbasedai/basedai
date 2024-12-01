@@ -5,7 +5,6 @@ import asyncio
 import websockets
 import os
 import tenseal as ts
-import pyfhel
 from phe import paillier
 import ollama
 from typing import Any, Dict
@@ -27,7 +26,7 @@ class FHERunCommand:
         parser.add_argument('--address', type=str, required=True, help='Address that signed the work')
         parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
         parser.add_argument('--command', type=float, required=True, help='FHE command to run (the initial value)')
-        parser.add_argument('--library', type=str, choices=['tenseal', 'pyfhel', 'paillier'], required=True, help='FHE library to use')
+        parser.add_argument('--library', type=str, choices=['tenseal', 'paillier'], required=True, help='FHE library to use')
         parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
         parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
 
@@ -52,8 +51,6 @@ class FHERunCommand:
 
             if library == 'tenseal':
                 result = cls.run_tenseal(command, operation, value)
-            elif library == 'pyfhel':
-                result = cls.run_pyfhel(command, operation, value)
             elif library == 'paillier':
                 result = cls.run_paillier(command, operation, value)
 
@@ -71,7 +68,6 @@ class FHERunCommand:
         examples = {
             "square": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation square",
             "add": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library concrete --operation add --value 3",
-            "multiply": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library pyfhel --operation multiply --value 3",
             "mean": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library paillier --operation mean --value 3 4 5",
             "variance": "basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation variance --value 3 4 5",
         }
@@ -113,41 +109,6 @@ class FHERunCommand:
         except Exception as e:
             logger.error(f"TenSEAL operation failed: {str(e)}")
             raise FHEError(f"TenSEAL operation failed: {str(e)}")
-
-    @staticmethod
-    def run_pyfhel(command: str, operation: str, value: list = None):
-        try:
-            HE = pyfhel.Pyfhel()
-            HE.contextGen(scheme='bfv', n=2**14, t_bits=20)
-            HE.keyGen()
-            HE.relinKeyGen()
-            HE.rotateKeyGen()
-
-            x = HE.encryptFrac(float(command))
-            if operation == 'square':
-                result = x * x
-            elif operation == 'add':
-                y = [HE.encryptFrac(v) for v in value]
-                result = x + sum(y)
-            elif operation == 'multiply':
-                y = [HE.encryptFrac(v) for v in value]
-                result = x * HE.cumProd(y)
-            elif operation == 'mean':
-                y = [HE.encryptFrac(v) for v in value]
-                result = (x + sum(y)) / (len(value) + 1)
-            elif operation == 'variance':
-                y = [HE.encryptFrac(v) for v in value]
-                mean = (x + sum(y)) / (len(value) + 1)
-                var = ((x - mean)**2 + sum((yi - mean)**2 for yi in y)) / (len(value) + 1)
-                result = var
-            else:
-                raise ValueError(f"Unsupported operation: {operation}")
-
-            decrypted_result = HE.decryptFrac(result)
-            logger.info(f"Pyfhel result: {operation}({command}, {value}) = {decrypted_result}")
-        except Exception as e:
-            logger.error(f"Pyfhel operation failed: {str(e)}")
-            raise FHEError(f"Pyfhel operation failed: {str(e)}")
 
     @staticmethod
     def run_paillier(command: str, operation: str, value: list = None):
@@ -208,7 +169,7 @@ class FHEConfigCommand:
                 json.dump(config, f)
 
             logger.info(f"FHE configuration saved to {config_path}")
-            
+
             # Register this server with the discovery server
             cls.register_with_discovery_server(config)
         except Exception as e:
@@ -256,7 +217,7 @@ class FHEDiscoverCommand:
         try:
             discovery_server = cli.config.discovery_server
             servers = cls.discover_fhe_servers(discovery_server)
-            
+
             print("Available FHE servers:")
             for server in servers:
                 print(f"Name: {server['name']}, Address: {server['address']}, Port: {server['port']}")
@@ -279,13 +240,13 @@ class FHEDiscoverCommand:
             try:
                 async for message in websocket:
                     logger.info(f"Received message: {message}")
-                    
+
                     # Process the message using Ollama
                     response = ollama.generate(model=ollama_model, prompt=message)
-                    
+
                     # Encrypt the response before sending
                     encrypted_response = FHEStartServerCommand.encrypt_response(response['response'])
-                    
+
                     # Send the encrypted Ollama response back
                     await websocket.send(json.dumps(encrypted_response))
             except websockets.exceptions.ConnectionClosed:
@@ -313,10 +274,10 @@ class FHEDiscoverCommand:
 
             # Convert the response string to a list of ASCII values
             ascii_values = [ord(char) for char in response]
-            
+
             # Encrypt the ASCII values
             encrypted_vector = ts.ckks_vector(context, ascii_values)
-            
+
             # Serialize the encrypted vector
             serialized_vector = encrypted_vector.serialize()
 
