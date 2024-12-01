@@ -25,7 +25,7 @@ import nest_asyncio
 nest_asyncio.apply()
 
 # BasedAI code and protocol version.
-__version__ = "1.0.6"
+__version__ = "1.0.7"
 
 version_split = __version__.split(".")
 __version_as_int__ = (
@@ -86,7 +86,9 @@ __ss58_format__ = 42
 # Wallet ss58 address length
 __ss58_address_length__ = 48
 
-__networks__ = ["local", "prometheus", "test", "archive", "cyan"]
+__networks__ = ["mainnet", "local", "prometheus", "test", "archive", "cyan"]
+
+__mainnet_entrypoint__ = "wss://mainnet.basedaibridge.com:443/ws"
 
 __cyan_entrypoint__ = "wss://cyan.basedaibridge.com:443/ws"
 
@@ -110,8 +112,8 @@ __betaai_symbol__: str = chr(0x03B2)
 ## Must all be polkadotjs explorer urls
 __network_explorer_map__ = {
     "mainnet": {
-        "local": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fprometheus.basedaibridge.com%3A443#/explorer",
-        "endpoint": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fprometheus.basedaibridge.com%3A443#/explorer",
+        "local": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fmainnet.basedaibridge.com%3A443#/explorer",
+        "endpoint": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fmainnet.basedaibridge.com%3A443#/explorer",
         "cyan": "https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Fcyan.basedaibridge.com%3A443/ws#/explorer",
     },
     "basedaiscan": {

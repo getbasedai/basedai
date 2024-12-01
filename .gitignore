@@ -1,0 +1,4 @@
+.DS_Store
+.aider*
+build
+basedai.egg-info

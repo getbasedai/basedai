@@ -97,7 +97,7 @@ class basednode:
     The Basednode class in BasedAI serves as a crucial interface for interacting with the BasedAI blockchain, facilitating a range of operations essential for the decentralized machine learning network.
 
     Args:
-        network (str): The name of the BasedAI network (e.g., 'cyan', 'prometheus', 'test', 'archive', 'local') the instance is connected to, determining the blockchain interaction context.
+        network (str): The name of the BasedAI network (e.g., 'mainnet', 'prometheus', 'test', 'archive', 'local') the instance is connected to, determining the blockchain interaction context.
         chain_endpoint (str): The blockchain node endpoint URL, enabling direct communication with the Basedai blockchain for transaction processing and data retrieval.
 
     Example Usage::
@@ -147,9 +147,9 @@ class basednode:
     def add_args(cls, parser: argparse.ArgumentParser, prefix: str = None):
         prefix_str = "" if prefix == None else prefix + "."
         try:
-            default_network = os.getenv("BT_BASEDNODE_NETWORK") or "cyan"
+            default_network = os.getenv("BT_BASEDNODE_NETWORK") or "mainnet"
             default_chain_endpoint = (
-                os.getenv("BT_BASEDNODE_CHAIN_ENDPOINT") or basedai.__cyan_entrypoint__
+                os.getenv("BT_BASEDNODE_CHAIN_ENDPOINT") or basedai.__mainnet_entrypoint__
             )
             parser.add_argument(
                 "--" + prefix_str + "basednode.network",
@@ -204,6 +204,8 @@ class basednode:
                 return network, basedai.__prometheus_entrypoint__
             elif network == "local":
                 return network, basedai.__local_entrypoint__
+            elif network == "mainnet":
+                return network, basedai.__mainnet_entrypoint__
             elif network == "test":
                 return network, basedai.__prometheus_test_entrypoint__
             elif network == "cyan":
@@ -212,10 +214,10 @@ class basednode:
                 return network, basedai.__archive_entrypoint__
         else:
             if (
-                network == basedai.__prometheus_entrypoint__
-                or "prometheus.basedaibridge.com" in network
+                network == basedai.__mainnet_entrypoint__
+                or "mainnet.basedaibridge.com" in network
             ):
-                return "prometheus", basedai.__prometheus_entrypoint__
+                return "mainnet", basedai.__mainnet_entrypoint__
             elif (
                 network == basedai.__prometheus_test_entrypoint__
                 or "prometheus.basedaibridge.com" in network

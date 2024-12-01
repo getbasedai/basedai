@@ -174,7 +174,7 @@ def print_status_bar():
     ansi_color = "\033[1;36m"
     ansi_reset = "\033[0m"
     #height = basedai.stem(0).block.item()
-    height = "TESTNET (2 of 2)"
+    height = "MAINNET"
 
     try:
         response = requests.get("http://basedainet.com:5051")
@@ -183,7 +183,7 @@ def print_status_bar():
         price = "NA"
 
     #status_bar_content = f"NETWORK: {ansi_color}prometheus{ansi_reset} | COST: {ansi_color}${price}{ansi_reset} (𝔹) | STATUS: {ansi_color}{height}{ansi_reset}"
-    status_bar_content = f"NETWORK: {ansi_color}cyan{ansi_reset} | COST: ${price} (𝔹) | STATUS: {height}"
+    status_bar_content = f"NETWORK: {ansi_color}mainnet{ansi_reset} | COST: ${price} (𝔹) | STATUS: {height}"
     print(header)
     border_length = len(status_bar_content.strip()) - 9
     #print('═' * (len(status_bar_content.strip()) - 11))
