@@ -220,7 +220,7 @@ class FHEStartServerCommand(BasedCommand):
                     response = ollama.generate(model=ollama_model, prompt=message)
                     
                     # Encrypt the response before sending
-                    encrypted_response = cls.encrypt_response(response['response'])
+                    encrypted_response = FHEStartServerCommand.encrypt_response(response['response'])
                     
                     # Send the encrypted Ollama response back
                     await websocket.send(json.dumps(encrypted_response))
