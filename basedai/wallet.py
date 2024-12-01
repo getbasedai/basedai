@@ -63,6 +63,8 @@ def display_mnemonic_msg(keypair: Keypair, key_type: str):
     print("")
 
 
+from typing import Dict, Any
+
 class wallet:
     """
     The wallet class in the Basedai framework handles wallet functionality, crucial for participating in the Basedai network.

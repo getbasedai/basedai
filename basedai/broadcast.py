@@ -1,5 +1,7 @@
 import basedai
 
+from typing import Dict, Any
+
 class Broadcaster:
     """
     The Broadcaster class handles the broadcasting of service details, costs, and other relevant information
