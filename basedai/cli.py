@@ -37,6 +37,7 @@ import os
 import requests
 from typing import List, Optional
 from .commands import *
+from .commands.fhe import FHERunCommand, FHEConfigCommand, FHEStartServerCommand
 
 # Create a console instance for CLI display.
 console = basedai.__console__
@@ -146,6 +147,16 @@ COMMANDS = {
         "commands": {
             "set": BrainSetParametersCommand,
             "get": BrainGetParametersCommand,
+        },
+    },
+    "fhe": {
+        "name": "fhe",
+        "aliases": ["f", "fhe"],
+        "help": "Commands for FHE operations and peering.",
+        "commands": {
+            "run": FHERunCommand,
+            "config": FHEConfigCommand,
+            "start_server": FHEStartServerCommand,
         },
     }
 }
