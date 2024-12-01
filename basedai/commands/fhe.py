@@ -302,28 +302,52 @@ class FHEDiscoverCommand:
     def add_args(cls, parser: argparse.ArgumentParser):
         fhe_discover_parser = parser.add_parser('discover', help='Discover FHE servers')
         fhe_discover_parser.add_argument('--discovery_server', type=str, required=True, help='Discovery server address')
+        fhe_discover_parser.add_argument('--num_threads', type=int, default=4, help='Number of threads for parallel discovery')
 
     @classmethod
     def run(cls, cli):
         try:
             discovery_server = cli.config.discovery_server
-            servers = cls.discover_fhe_servers(discovery_server)
+            num_threads = cli.config.num_threads
+            servers = cls.discover_fhe_servers(discovery_server, num_threads)
 
             print("Available FHE servers:")
             for server in servers:
-                print(f"Name: {server['name']}, Address: {server['address']}, Port: {server['port']}")
+                print(f"Name: {server['name']}, Address: {server['address']}, Port: {server['port']}, Capacity: {server['capacity']}")
         except Exception as e:
             logger.error(f"Failed to discover FHE servers: {str(e)}")
             raise FHEError(f"Failed to discover FHE servers: {str(e)}")
 
     @staticmethod
-    def discover_fhe_servers(discovery_server):
-        # TODO: Implement the actual discovery process
-        # This is a placeholder implementation
-        return [
-            {"name": "FHE Server 1", "address": "fhe1.example.com", "port": 8080},
-            {"name": "FHE Server 2", "address": "fhe2.example.com", "port": 8081},
-        ]
+    def discover_fhe_servers(discovery_server, num_threads):
+        # TODO: Implement the actual discovery process using parallel threads
+        # This should interact with the Basedai blockchain or a dedicated service registry
+        import threading
+        import random
+
+        def discover_chunk(chunk, results):
+            for i in chunk:
+                server = {
+                    "name": f"FHE Server {i}",
+                    "address": f"fhe{i}.example.com",
+                    "port": 8080 + i,
+                    "capacity": random.randint(50, 100)
+                }
+                results.append(server)
+
+        all_servers = []
+        threads = []
+        chunk_size = 10 // num_threads
+        for i in range(num_threads):
+            chunk = range(i * chunk_size, (i + 1) * chunk_size)
+            thread = threading.Thread(target=discover_chunk, args=(chunk, all_servers))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        return sorted(all_servers, key=lambda x: x['capacity'], reverse=True)
 
     @staticmethod
     async def start_server(port: int, ollama_model: str):
