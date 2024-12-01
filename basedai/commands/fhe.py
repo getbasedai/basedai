@@ -31,6 +31,8 @@ class FHERunCommand:
         fhe_run_parser.add_argument('--library', type=str, choices=['tenseal', 'paillier'], required=True, help='FHE library to use')
         fhe_run_parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
         fhe_run_parser.add_argument('--peer', type=str, required=True, help='Peer address to receive encrypted data from')
+        fhe_run_parser.add_argument('--use_cerberus', action='store_true', help='Use Cerberus Squeezing optimization')
+        fhe_run_parser.add_argument('--squeeze_rate', type=float, default=0.1, help='Cerberus Squeeze rate')
 
     @classmethod
     def run(cls, cli):
@@ -40,20 +42,25 @@ class FHERunCommand:
             library = cli.config.library
             operation = cli.config.operation
             peer = cli.config.peer
+            use_cerberus = cli.config.use_cerberus
+            squeeze_rate = cli.config.squeeze_rate
 
             logger.info(f"Running FHE command for address: {address}")
             logger.info(f"Minimum balance: {balance}")
             logger.info(f"Using FHE library: {library}")
             logger.info(f"Operation: {operation}")
             logger.info(f"Receiving data from peer: {peer}")
+            logger.info(f"Using Cerberus Squeezing: {use_cerberus}")
+            if use_cerberus:
+                logger.info(f"Squeeze rate: {squeeze_rate}")
 
             # Receive encrypted data from the peer
             encrypted_data = cls.receive_encrypted_data(peer)
 
             if library == 'tenseal':
-                result = cls.run_tenseal(encrypted_data, operation)
+                result = cls.run_tenseal(encrypted_data, operation, use_cerberus, squeeze_rate)
             elif library == 'paillier':
-                result = cls.run_paillier(encrypted_data, operation)
+                result = cls.run_paillier(encrypted_data, operation, use_cerberus, squeeze_rate)
 
             logger.info(f"FHE operation result: {result}")
 
@@ -63,6 +70,78 @@ class FHERunCommand:
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             raise FHEError(f"FHE operation failed: {str(e)}")
+
+    @staticmethod
+    def run_tenseal(encrypted_data, operation, use_cerberus, squeeze_rate):
+        import tenseal as ts
+        import numpy as np
+
+        context = ts.context_from(encrypted_data['context'])
+        x = ts.ckks_vector_from(context, encrypted_data['encrypted_data'])
+
+        if use_cerberus:
+            # Apply Cerberus Squeezing
+            entropy = np.ones(len(x))
+            squeeze_threshold = 0.5
+
+        if operation == 'square':
+            result = x.square()
+        elif operation == 'add':
+            result = x + x
+        elif operation == 'multiply':
+            result = x * x
+        elif operation == 'mean':
+            result = x.sum() / len(x)
+        elif operation == 'variance':
+            mean = x.sum() / len(x)
+            var = ((x - mean).square().sum()) / len(x)
+            result = var
+
+        if use_cerberus:
+            # Apply Cerberus Squeezing
+            for i in range(len(result)):
+                if entropy[i] > squeeze_threshold:
+                    result[i] *= x[i]
+                entropy[i] *= np.exp(-squeeze_rate * abs(float(result[i])))
+
+        return result.serialize()
+
+    @staticmethod
+    def run_paillier(encrypted_data, operation, use_cerberus, squeeze_rate):
+        from phe import paillier
+        import numpy as np
+
+        public_key, private_key = paillier.generate_paillier_keypair()
+        x = [public_key.encrypt(v) for v in encrypted_data['encrypted_data']]
+
+        if use_cerberus:
+            # Apply Cerberus Squeezing
+            entropy = np.ones(len(x))
+            squeeze_threshold = 0.5
+
+        if operation == 'square':
+            result = [xi * xi for xi in x]
+        elif operation == 'add':
+            result = sum(x)
+        elif operation == 'multiply':
+            result = x[0]
+            for xi in x[1:]:
+                result *= xi
+        elif operation == 'mean':
+            result = sum(x) / len(x)
+        elif operation == 'variance':
+            mean = sum(x) / len(x)
+            var = sum((xi - mean)**2 for xi in x) / len(x)
+            result = var
+
+        if use_cerberus:
+            # Apply Cerberus Squeezing
+            for i in range(len(result)):
+                if entropy[i] > squeeze_threshold:
+                    result[i] *= x[i]
+                entropy[i] *= np.exp(-squeeze_rate * abs(float(private_key.decrypt(result[i]))))
+
+        return private_key.decrypt(result)
 
     @staticmethod
     async def receive_encrypted_data(peer: str):
