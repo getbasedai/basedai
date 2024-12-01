@@ -475,36 +475,46 @@ class wallet:
             self._personalkeypub = self.personalkeypub_file.keypair
         return self._personalkeypub
 
-    def accept_payment(self, amount: float, payer_address: str) -> bool:
+    def accept_payment(self, payment_info: Dict[str, Any]) -> bool:
         """
-        Accepts a payment for work from the specified payer address.
+        Accepts a payment for work with complex payment types.
 
         Args:
-            amount (float): The amount of BASED to be received.
-            payer_address (str): The address of the payer.
+            payment_info (Dict[str, Any]): A dictionary containing payment details.
+                Expected keys:
+                - 'amount' (float): The amount of BASED to be received.
+                - 'payer_address' (str): The address of the payer.
+                - 'payment_type' (str): The type of payment (e.g., 'instant', 'subscription', 'escrow').
+                - 'additional_data' (Dict): Any additional data required for the specific payment type.
 
         Returns:
             bool: True if the payment was successfully accepted, False otherwise.
         """
         # TODO: Implement the actual payment acceptance logic here
-        # This might involve interacting with the Basedai blockchain
-        print(f"Accepting payment of {amount} BASED from {payer_address}")
+        # This should handle different payment types and interact with the Basedai blockchain
+        print(f"Accepting payment: {payment_info}")
         return True
 
-    def broadcast_cost(self, service: str, cost: float) -> bool:
+    def broadcast_service_details(self, service_info: Dict[str, Any]) -> bool:
         """
-        Broadcasts the cost of a service to the network.
+        Broadcasts detailed service information to the network.
 
         Args:
-            service (str): The name of the service being offered.
-            cost (float): The cost of the service in BASED.
+            service_info (Dict[str, Any]): A dictionary containing service details.
+                Expected keys:
+                - 'name' (str): The name of the service being offered.
+                - 'cost' (float): The base cost of the service in BASED.
+                - 'payment_types' (List[str]): Supported payment types for this service.
+                - 'description' (str): A brief description of the service.
+                - 'availability' (str): Availability information (e.g., '24/7', 'weekdays only').
+                - 'performance_metrics' (Dict): Any relevant performance metrics.
 
         Returns:
-            bool: True if the cost was successfully broadcast, False otherwise.
+            bool: True if the service details were successfully broadcast, False otherwise.
         """
-        # TODO: Implement the actual cost broadcasting logic here
-        # This might involve interacting with the Basedai blockchain or a dedicated price feed
-        print(f"Broadcasting cost of {cost} BASED for service: {service}")
+        # TODO: Implement the actual service details broadcasting logic here
+        # This should interact with the Basedai blockchain or a dedicated service registry
+        print(f"Broadcasting service details: {service_info}")
         return True
 
     def create_personalkey_from_uri(

@@ -105,6 +105,77 @@ basedcli help
 
 The BasedAI package includes essential tools included `basedai` (the Python operations package for developers) and `basedcli` (for setting up mining, validation activities, and querying ZK-LLMs). Learn more in the [official documentation](https://docs.getbased.ai). 
 
+## Complex Payment Types and Service Broadcasting
+
+BasedAI now supports more complex payment types and enhanced service broadcasting. Here's how to use these new features:
+
+### Accepting Complex Payments
+
+To accept a payment with complex payment types:
+
+```python
+wallet = basedai.wallet()
+payment_info = {
+    'amount': 100.0,
+    'payer_address': '0x1234...',
+    'payment_type': 'subscription',
+    'additional_data': {
+        'duration': '1 month',
+        'start_date': '2024-09-18'
+    }
+}
+success = wallet.accept_payment(payment_info)
+```
+
+### Broadcasting Service Details
+
+To broadcast detailed service information:
+
+```python
+broadcaster = basedai.Broadcaster(wallet)
+service_info = {
+    'name': 'Advanced Data Processing',
+    'cost': 50.0,
+    'payment_types': ['instant', 'subscription', 'escrow'],
+    'description': 'High-performance data processing service',
+    'availability': '24/7',
+    'performance_metrics': {
+        'avg_response_time': 0.5,
+        'success_rate': 0.99
+    }
+}
+success = broadcaster.broadcast_service_details(service_info)
+```
+
+### Updating Service Status
+
+To update the status of a service:
+
+```python
+status = {
+    'available': True,
+    'capacity': 100,
+    'response_time': 0.3,
+    'queue_length': 5
+}
+success = broadcaster.update_service_status('Advanced Data Processing', status)
+```
+
+### Broadcasting Node Metrics
+
+To broadcast various metrics about your node:
+
+```python
+metrics = {
+    'capacity': 500,
+    'uptime': 720.5,
+    'success_rate': 0.995,
+    'average_response_time': 0.4,
+    'supported_services': ['Data Processing', 'Machine Learning']
+}
+success = broadcaster.broadcast_node_metrics(metrics)
+```
+
 ## Governance and Voting
 
 BasedAI embraces decentralized decision-making through Pepecoin-linked "Brains". Owners of GigaBrains, representing significant staked contributions, can participate in voting on key network decisions, upholding the ecosystem's democratic governance model.
