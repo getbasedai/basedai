@@ -13,6 +13,7 @@ import ollama
 from typing import Any, Dict
 import logging
 import secrets
+import numpy as np
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -29,8 +30,8 @@ class FHERunCommand(BasedCommand):
         parser.add_argument('--balance', type=float, required=True, help='Minimum balance required')
         parser.add_argument('--command', type=str, required=True, help='FHE command to run')
         parser.add_argument('--library', type=str, choices=['tenseal', 'concrete', 'pyfhel', 'paillier'], required=True, help='FHE library to use')
-        parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply'], required=True, help='FHE operation to perform')
-        parser.add_argument('--value', type=float, help='Additional value for add or multiply operations')
+        parser.add_argument('--operation', type=str, choices=['square', 'add', 'multiply', 'mean', 'variance'], required=True, help='FHE operation to perform')
+        parser.add_argument('--value', type=float, nargs='+', help='Additional value(s) for operations')
 
     @classmethod
     def run(cls, cli):
@@ -48,8 +49,8 @@ class FHERunCommand(BasedCommand):
             logger.info(f"Using FHE library: {library}")
             logger.info(f"Operation: {operation}")
 
-            if operation in ['add', 'multiply'] and value is None:
-                raise ValueError("Value must be provided for add or multiply operations")
+            if operation in ['add', 'multiply', 'mean', 'variance'] and value is None:
+                raise ValueError("Value(s) must be provided for add, multiply, mean, or variance operations")
 
             if library == 'tenseal':
                 cls.run_tenseal(command, operation, value)
@@ -64,7 +65,7 @@ class FHERunCommand(BasedCommand):
             raise FHEError(f"FHE operation failed: {str(e)}")
 
     @staticmethod
-    def run_tenseal(command: str, operation: str, value: float = None):
+    def run_tenseal(command: str, operation: str, value: list = None):
         try:
             context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
             context.global_scale = 2**40
@@ -74,20 +75,30 @@ class FHERunCommand(BasedCommand):
             if operation == 'square':
                 result = x.square()
             elif operation == 'add':
-                result = x + value
+                y = ts.ckks_vector(context, value)
+                result = x + y
             elif operation == 'multiply':
-                result = x * value
+                y = ts.ckks_vector(context, value)
+                result = x * y
+            elif operation == 'mean':
+                y = ts.ckks_vector(context, value)
+                result = (x + y.sum()) / (len(value) + 1)
+            elif operation == 'variance':
+                y = ts.ckks_vector(context, value)
+                mean = (x + y.sum()) / (len(value) + 1)
+                var = ((x - mean).square() + ((y - mean).square()).sum()) / (len(value) + 1)
+                result = var
             else:
                 raise ValueError(f"Unsupported operation: {operation}")
 
-            decrypted_result = result.decrypt()[0]
-            logger.info(f"TenSEAL result: {operation}({command}) = {decrypted_result}")
+            decrypted_result = result.decrypt()
+            logger.info(f"TenSEAL result: {operation}({command}, {value}) = {decrypted_result}")
         except Exception as e:
             logger.error(f"TenSEAL operation failed: {str(e)}")
             raise FHEError(f"TenSEAL operation failed: {str(e)}")
 
     @staticmethod
-    def run_concrete(command: str, operation: str, value: float = None):
+    def run_concrete(command: str, operation: str, value: list = None):
         try:
             compiler = cnp.Compiler({"p_error": 1/2**10})
             
@@ -96,61 +107,94 @@ class FHERunCommand(BasedCommand):
                 def compute(x):
                     return x ** 2
             elif operation == 'add':
-                @compiler.compile(inputset=[(3.14,)])
-                def compute(x):
-                    return x + value
+                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
+                def compute(*args):
+                    return sum(args)
             elif operation == 'multiply':
-                @compiler.compile(inputset=[(3.14,)])
-                def compute(x):
-                    return x * value
+                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
+                def compute(*args):
+                    return np.prod(args)
+            elif operation == 'mean':
+                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
+                def compute(*args):
+                    return sum(args) / len(args)
+            elif operation == 'variance':
+                @compiler.compile(inputset=[(3.14,)] * (len(value) + 1))
+                def compute(*args):
+                    mean = sum(args) / len(args)
+                    return sum((x - mean) ** 2 for x in args) / len(args)
             else:
                 raise ValueError(f"Unsupported operation: {operation}")
 
-            circuit = compute.encrypt_run_decrypt(float(command))
-            logger.info(f"Concrete result: {operation}({command}) = {circuit}")
+            inputs = [float(command)] + value
+            circuit = compute.encrypt_run_decrypt(*inputs)
+            logger.info(f"Concrete result: {operation}({command}, {value}) = {circuit}")
         except Exception as e:
             logger.error(f"Concrete operation failed: {str(e)}")
             raise FHEError(f"Concrete operation failed: {str(e)}")
 
     @staticmethod
-    def run_pyfhel(command: str, operation: str, value: float = None):
+    def run_pyfhel(command: str, operation: str, value: list = None):
         try:
             HE = pyfhel.Pyfhel()
             HE.contextGen(scheme='bfv', n=2**14, t_bits=20)
             HE.keyGen()
+            HE.relinKeyGen()
+            HE.rotateKeyGen()
 
-            x = HE.encryptInt(int(float(command)))
+            x = HE.encryptFrac(float(command))
             if operation == 'square':
                 result = x * x
             elif operation == 'add':
-                result = x + HE.encryptInt(int(value))
+                y = [HE.encryptFrac(v) for v in value]
+                result = x + sum(y)
             elif operation == 'multiply':
-                result = x * HE.encryptInt(int(value))
+                y = [HE.encryptFrac(v) for v in value]
+                result = x * HE.cumProd(y)
+            elif operation == 'mean':
+                y = [HE.encryptFrac(v) for v in value]
+                result = (x + sum(y)) / (len(value) + 1)
+            elif operation == 'variance':
+                y = [HE.encryptFrac(v) for v in value]
+                mean = (x + sum(y)) / (len(value) + 1)
+                var = ((x - mean)**2 + sum((yi - mean)**2 for yi in y)) / (len(value) + 1)
+                result = var
             else:
                 raise ValueError(f"Unsupported operation: {operation}")
 
-            decrypted_result = HE.decryptInt(result)
-            logger.info(f"Pyfhel result: {operation}({command}) = {decrypted_result}")
+            decrypted_result = HE.decryptFrac(result)
+            logger.info(f"Pyfhel result: {operation}({command}, {value}) = {decrypted_result}")
         except Exception as e:
             logger.error(f"Pyfhel operation failed: {str(e)}")
             raise FHEError(f"Pyfhel operation failed: {str(e)}")
 
     @staticmethod
-    def run_paillier(command: str, operation: str, value: float = None):
+    def run_paillier(command: str, operation: str, value: list = None):
         try:
             public_key, private_key = paillier.generate_paillier_keypair()
             x = public_key.encrypt(float(command))
             if operation == 'square':
                 result = x * x
             elif operation == 'add':
-                result = x + value
+                y = [public_key.encrypt(v) for v in value]
+                result = x + sum(y)
             elif operation == 'multiply':
-                result = x * value
+                result = x
+                for v in value:
+                    result *= v
+            elif operation == 'mean':
+                y = [public_key.encrypt(v) for v in value]
+                result = (x + sum(y)) / (len(value) + 1)
+            elif operation == 'variance':
+                y = [public_key.encrypt(v) for v in value]
+                mean = (x + sum(y)) / (len(value) + 1)
+                var = ((x - mean)**2 + sum((yi - mean)**2 for yi in y)) / (len(value) + 1)
+                result = var
             else:
                 raise ValueError(f"Unsupported operation: {operation}")
 
             decrypted_result = private_key.decrypt(result)
-            logger.info(f"Paillier result: {operation}({command}) = {decrypted_result}")
+            logger.info(f"Paillier result: {operation}({command}, {value}) = {decrypted_result}")
         except Exception as e:
             logger.error(f"Paillier operation failed: {str(e)}")
             raise FHEError(f"Paillier operation failed: {str(e)}")
@@ -241,10 +285,25 @@ class FHEStartServerCommand(BasedCommand):
     def encrypt_response(response: str) -> Dict[str, Any]:
         # This is a placeholder for actual FHE encryption
         # In a real implementation, you would use one of the FHE libraries to encrypt the response
-        # For demonstration, we'll just use a simple XOR encryption
-        key = secrets.token_bytes(len(response))
-        encrypted = bytes(a ^ b for a, b in zip(response.encode(), key))
-        return {
-            "encrypted_data": encrypted.hex(),
-            "key": key.hex()
-        }
+        # For demonstration, we'll use TenSEAL for actual FHE encryption
+        try:
+            context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
+            context.global_scale = 2**40
+            context.generate_galois_keys()
+
+            # Convert the response string to a list of ASCII values
+            ascii_values = [ord(char) for char in response]
+            
+            # Encrypt the ASCII values
+            encrypted_vector = ts.ckks_vector(context, ascii_values)
+            
+            # Serialize the encrypted vector
+            serialized_vector = encrypted_vector.serialize()
+
+            return {
+                "encrypted_data": serialized_vector.hex(),
+                "context": context.serialize().hex()
+            }
+        except Exception as e:
+            logger.error(f"FHE encryption failed: {str(e)}")
+            raise FHEError(f"FHE encryption failed: {str(e)}")
