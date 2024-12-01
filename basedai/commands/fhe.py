@@ -11,6 +11,8 @@ from typing import Any, Dict
 import logging
 import secrets
 import numpy as np
+import json
+import websockets
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -63,18 +65,29 @@ class FHERunCommand:
             raise FHEError(f"FHE operation failed: {str(e)}")
 
     @staticmethod
-    def receive_encrypted_data(peer: str):
-        # TODO: Implement actual peer-to-peer communication to receive encrypted data
-        # This is a placeholder and should be replaced with actual P2P logic
-        logger.info(f"Receiving encrypted data from peer: {peer}")
-        return {"encrypted_data": [1.0, 2.0, 3.0], "context": "serialized_context"}
+    async def receive_encrypted_data(peer: str):
+        try:
+            async with websockets.connect(f"ws://{peer}") as websocket:
+                logger.info(f"Connected to peer: {peer}")
+                await websocket.send("REQUEST_ENCRYPTED_DATA")
+                response = await websocket.recv()
+                data = json.loads(response)
+                logger.info(f"Received encrypted data from peer: {peer}")
+                return data
+        except Exception as e:
+            logger.error(f"Error receiving data from peer {peer}: {str(e)}")
+            return None
 
     @staticmethod
-    def send_result_to_peer(peer: str, result):
-        # TODO: Implement actual peer-to-peer communication to send the result
-        # This is a placeholder and should be replaced with actual P2P logic
-        logger.info(f"Sending result to peer: {peer}")
-        logger.info(f"Result: {result}")
+    async def send_result_to_peer(peer: str, result):
+        try:
+            async with websockets.connect(f"ws://{peer}") as websocket:
+                logger.info(f"Connected to peer: {peer}")
+                await websocket.send(json.dumps({"result": result}))
+                logger.info(f"Sent result to peer: {peer}")
+                logger.debug(f"Result: {result}")
+        except Exception as e:
+            logger.error(f"Error sending result to peer {peer}: {str(e)}")
 
     @staticmethod
     def run_tenseal(encrypted_data: dict, operation: str):
