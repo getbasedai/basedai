@@ -80,20 +80,56 @@ class FHERunCommand:
 
     @classmethod
     def run_in_secure_container(cls, encrypted_data, library, operation, use_cerberus, squeeze_rate):
-        # TODO: Implement secure container logic
-        # This method should:
-        # 1. Set up a secure container (e.g., using Docker or a trusted execution environment)
-        # 2. Send the encrypted data and operation parameters to the container
-        # 3. Run the FHE operation inside the container
-        # 4. Receive the encrypted result from the container
-        # 5. Return the result
+        logger.info("Setting up secure container for FHE operation")
         
-        logger.info("Running FHE operation in secure container")
-        # Placeholder implementation
-        if library == 'tenseal':
-            return cls.run_tenseal(encrypted_data, operation, use_cerberus, squeeze_rate)
-        elif library == 'paillier':
-            return cls.run_paillier(encrypted_data, operation, use_cerberus, squeeze_rate)
+        # 1. Set up a secure container using Docker
+        container_name = f"fhe_container_{library}_{operation}"
+        docker_image = f"fhe_{library}:latest"  # Assume we have pre-built Docker images for each FHE library
+        
+        try:
+            # Pull the Docker image if not present
+            os.system(f"docker pull {docker_image}")
+            
+            # Run the container
+            container_id = os.popen(f"docker run -d --name {container_name} {docker_image}").read().strip()
+            
+            # 2. Send the encrypted data and operation parameters to the container
+            cls.send_data_to_container(container_id, encrypted_data, operation, use_cerberus, squeeze_rate)
+            
+            # 3. Run the FHE operation inside the container
+            os.system(f"docker exec {container_id} python /app/run_fhe.py")
+            
+            # 4. Receive the encrypted result from the container
+            result = cls.receive_result_from_container(container_id)
+            
+            # Clean up: stop and remove the container
+            os.system(f"docker stop {container_id}")
+            os.system(f"docker rm {container_id}")
+            
+            # 5. Return the result
+            return result
+        
+        except Exception as e:
+            logger.error(f"Error in secure container execution: {str(e)}")
+            raise FHEError(f"Secure container execution failed: {str(e)}")
+
+    @classmethod
+    def send_data_to_container(cls, container_id, encrypted_data, operation, use_cerberus, squeeze_rate):
+        # Serialize and send data to the container
+        data = {
+            "encrypted_data": encrypted_data,
+            "operation": operation,
+            "use_cerberus": use_cerberus,
+            "squeeze_rate": squeeze_rate
+        }
+        serialized_data = json.dumps(data)
+        os.system(f"docker exec {container_id} bash -c 'echo \'{serialized_data}\' > /app/input_data.json'")
+
+    @classmethod
+    def receive_result_from_container(cls, container_id):
+        # Receive and deserialize result from the container
+        result_json = os.popen(f"docker exec {container_id} cat /app/output_data.json").read()
+        return json.loads(result_json)["result"]
 
     @staticmethod
     def run_tenseal(encrypted_data, operation, use_cerberus, squeeze_rate):
