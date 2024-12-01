@@ -24,7 +24,7 @@ For detailed understanding of the BasedAI network and its groundbreaking approac
 
 In the BasedAI ecosystem, users participate through an integrated wallet system that supports operations with BasedAI's native token, $BASED. The wallet enables users to stake tokens on different Brains in the ecosystem and earn rewards for contributions.
 
-To get started with managing wallets and tokens:
+## Wallet Management
 
 1. Create a new wallet through the BasedAI CLI:
 ```bash
@@ -32,29 +32,65 @@ To get started with managing wallets and tokens:
 basedcli wallet new_personalkey
 ```
 
-2. Interact with your wallet via the BasedAI CLI. 
+2. Interact with your wallet via the BasedAI CLI:
 ```bash
 # check the balances of your wallet 
 basedcli wallet balance
 ```
-3. Join as a Brain miner or validators with a compute key: 
-```bash
-# check the balances of your wallet 
-basedcli wallet new_personalkey
-```
 
+3. Join as a Brain miner or validator with a compute key:
 ```bash
 # create a new compute wallet for agents operating on your behalf in the network
 basedcli wallet new_computekey
 ```
 
-2. Interact with your wallet via the BasedAI CLI. 
-```bash
-# check the balances of your wallet 
-basedcli wallet balance
-```
-
 For further instructions on token management and participation in the network, please refer to the [official documentation](https://docs.getbased.ai/).
+
+## Configuring and Deploying FHE Operations for ZK-LLM
+
+BasedAI introduces Zero-Knowledge Large Language Models (ZK-LLMs) using Fully Homomorphic Encryption (FHE). Here's how to configure and deploy FHE operations:
+
+1. Configure the FHE server:
+```bash
+basedcli fhe config --discovery_server <discovery_server_address> --port <port_number> --ollama_model <model_name> --name <server_name>
+```
+This command sets up the FHE server configuration, including the discovery server address, port to listen on, Ollama model to use, and a name for your FHE server.
+
+2. Start the FHE server:
+```bash
+basedcli fhe start_server --config fhe_config.json
+```
+This command starts the FHE server using the configuration file created in the previous step.
+
+3. Discover available FHE servers:
+```bash
+basedcli fhe discover --discovery_server <discovery_server_address>
+```
+Use this command to find available FHE servers in the network.
+
+4. Run FHE operations:
+```bash
+basedcli fhe run --address <your_address> --balance <min_balance> --command <initial_value> --library <fhe_library> --operation <operation_type> --value <additional_values>
+```
+This command allows you to perform FHE operations such as square, add, multiply, mean, and variance on encrypted data.
+
+Example FHE operations:
+- Square operation:
+  ```bash
+  basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library tenseal --operation square
+  ```
+- Addition operation:
+  ```bash
+  basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library concrete --operation add --value 3
+  ```
+- Mean calculation:
+  ```bash
+  basedcli fhe run --address <your_address> --balance <min_balance> --command 5 --library paillier --operation mean --value 3 4 5
+  ```
+
+These FHE operations enable secure, privacy-preserving computations on encrypted data, forming the foundation of ZK-LLMs in the BasedAI network.
+
+For more detailed information on FHE operations and ZK-LLMs, please refer to our [research paper](https://arxiv.org/abs/2403.01008) and the [official documentation](https://docs.getbased.ai/).
 
 ## Using the CLI
 
