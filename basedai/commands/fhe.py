@@ -320,20 +320,32 @@ class FHEDiscoverCommand:
 
     @staticmethod
     def discover_fhe_servers(discovery_server, num_threads):
-        # TODO: Implement the actual discovery process using parallel threads
-        # This should interact with the Basedai blockchain or a dedicated service registry
         import threading
         import random
+        from btdht import DHT
 
         def discover_chunk(chunk, results):
+            dht = DHT()
+            dht.start()
             for i in chunk:
-                server = {
-                    "name": f"FHE Server {i}",
-                    "address": f"fhe{i}.example.com",
-                    "port": 8080 + i,
-                    "capacity": random.randint(50, 100)
-                }
-                results.append(server)
+                try:
+                    # Use BitTorrent DHT to find nodes
+                    nodes = dht.get_peers(f"basedai:fhe:server:{i}")
+                    if nodes:
+                        for node in nodes:
+                            ip, port = node
+                            # Verify if the node is running BasedAI
+                            if self.verify_basedai_node(ip, port):
+                                server = {
+                                    "name": f"FHE Server {i}",
+                                    "address": ip,
+                                    "port": port,
+                                    "capacity": self.get_node_capacity(ip, port)
+                                }
+                                results.append(server)
+                except Exception as e:
+                    basedai.logging.error(f"Error discovering FHE server {i}: {str(e)}")
+            dht.stop()
 
         all_servers = []
         threads = []
@@ -348,6 +360,16 @@ class FHEDiscoverCommand:
             thread.join()
 
         return sorted(all_servers, key=lambda x: x['capacity'], reverse=True)
+
+    def verify_basedai_node(self, ip, port):
+        # TODO: Implement verification logic
+        # This should check if the node is running BasedAI software
+        return True
+
+    def get_node_capacity(self, ip, port):
+        # TODO: Implement capacity retrieval
+        # This should query the node for its current capacity
+        return random.randint(50, 100)
 
     @staticmethod
     async def start_server(port: int, ollama_model: str):
